@@ -18,8 +18,7 @@ import androidx.compose.animation.scaleOut
 import com.akslabs.Suchak.R
 import com.akslabs.Suchak.api.BotApi
 import com.akslabs.Suchak.data.localdb.DbHolder
-import com.akslabs.Suchak.data.localdb.entities.Photo
-import com.akslabs.Suchak.data.localdb.entities.RemotePhoto
+
 import com.github.kotlintelegrambot.entities.files.Document
 import com.github.kotlintelegrambot.network.fold
 import java.io.File
@@ -114,51 +113,7 @@ suspend fun sendFileViaUri(
     }
 }
 
-suspend fun sendFileApi(
-    botApi: BotApi,
-    channelId: Long,
-    pathUri: Uri,
-    file: File,
-    extension: String,
-) {
-    var resFile: Document? = null
-    botApi.sendFile(file, channelId).fold(
-        { response ->
-            resFile = response?.result?.document
-        }
-    )
-    resFile?.let {
-        // Find the existing photo record by pathUri
-        val existingPhotos = DbHolder.database.photoDao().getAll()
-        val existingPhoto = existingPhotos.find { photo -> photo.pathUri == pathUri.toString() }
 
-        if (existingPhoto != null) {
-            // Update the existing photo with remoteId
-            val updatedPhoto = existingPhoto.copy(remoteId = it.fileId)
-            DbHolder.database.photoDao().updatePhotos(updatedPhoto)
-        } else {
-            // Create new photo record if not found (fallback)
-            val photo = Photo(
-                pathUri.lastPathSegment ?: "",
-                it.fileId,
-                extension,
-                pathUri.toString()
-            )
-            DbHolder.database.photoDao().updatePhotos(photo)
-        }
-
-        val remotePhoto = RemotePhoto(
-            remoteId = it.fileId,
-            photoType = extension,
-            fileName = file.name,
-            fileSize = file.length(),
-            uploadedAt = System.currentTimeMillis(),
-            thumbnailCached = false
-        )
-        DbHolder.database.remotePhotoDao().insertAll(remotePhoto)
-        Log.d(TAG, "sendFile: Success!")
-    } ?: Log.d(TAG, "sendFile: Failed!")
-}
 
 suspend fun Context.toastFromMainThread(msg: String?, length: Int = Toast.LENGTH_LONG) =
     withContext(Dispatchers.Main) {

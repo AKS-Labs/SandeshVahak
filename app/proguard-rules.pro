@@ -153,7 +153,6 @@
 
 # Preserve Entities and DAOs
 -keep class com.akslabs.Suchak.database.** { *; }
--keep class com.akslabs.Suchak.data.localdb.entities.Photo { *; }
 
 # Telegram bot api
 -keep class com.github.kotlintelegrambot.** { *; }

@@ -70,14 +70,14 @@ interface PermissionTextProvider {
     fun getDescription(isPermanentlyDeclined: Boolean): String
 }
 
-class PhotosPermissionTextProvider : PermissionTextProvider {
+class SmsPermissionTextProvider : PermissionTextProvider {
     override fun getDescription(isPermanentlyDeclined: Boolean): String {
         return if (isPermanentlyDeclined) {
-            "It seems you permanently declined photos permission. " +
+            "It seems you permanently declined SMS permission. " +
                 "You can go to the app settings to grant it."
         } else {
-            "This app needs access to your photos so that you can back " +
-                "them up to Telegram."
+            "This app needs access to your SMS messages so that you can sync " +
+                "them to Telegram."
         }
     }
 }

@@ -1,14 +1,14 @@
 <!-- ---------- Header ---------- -->
 <div align="center">
   <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" width="120" height="120">
-  <h1>🚀 Suchak</h1>
-  <h3>📱 Your Private SMS & Photo Sync Companion</h3>
-  <p><strong>Instantly sync your SMS messages and photos to Telegram without any third-party servers!</strong></p>
-  <p>🔒 <em>Complete privacy • No telemetry • Your data stays yours</em></p>
+  <h1>📱 Suchak</h1>
+  <h3>🚀 Your Personal SMS Vault with Unlimited Cloud Storage</h3>
+  <p><strong>Transform Telegram into your private, unlimited SMS backup solution!</strong></p>
+  <p>🔒 <em>100% Private • No Telemetry • Your Data, Your Control</em></p>
 
 <!-- ---------- Badges ---------- -->
   <div align="center">
-    <img alt="License" src="https://img.shields.io/github/license/AKS-Labs/Suchak?color=c3e7ff&style=flat-square">
+    <img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square">
     <img alt="Downloads" src="https://img.shields.io/github/downloads/AKS-Labs/Suchak/total?color=c3e7ff&style=flat-square">
     <img alt="Last commit" src="https://img.shields.io/github/last-commit/AKS-Labs/Suchak?color=c3e7ff&style=flat-square">
     <img alt="Repo size" src="https://img.shields.io/github/repo-size/AKS-Labs/Suchak?color=c3e7ff&style=flat-square">
@@ -27,22 +27,14 @@
 
 ---
 
-## 🌟 What Makes Suchak Special?
+## 🌟 **What is Suchak?**
 
-**Suchak** transforms your Telegram into a powerful, private cloud storage solution for SMS messages and photos! Unlike other backup apps that rely on third-party servers, Suchak creates a direct, secure connection between your device and your own Telegram bot.
+Transform **Telegram into your personal, unlimited SMS vault!** Suchak is a revolutionary SMS backup app that gives you free, unlimited cloud storage while keeping your messages completely private.
 
-### 💡 **The Problem We Solve**
-- 📱 **Lost SMS History**: Switching phones means losing precious text messages
-- 🔒 **Privacy Concerns**: Most backup services store your data on their servers
-- 💰 **Storage Limits**: Cloud services charge for storage space
-- 🔄 **Complex Setup**: Existing solutions are complicated and unreliable
-
-### ✨ **The Suchak Solution**
-- 🚀 **Instant SMS Sync**: Real-time synchronization of all your text messages
-- 🔐 **Zero Third-Party Servers**: Direct communication with your Telegram bot only
-- 📸 **Unlimited Photo Backup**: Leverage Telegram's generous storage limits
-- 🎯 **One-Time Setup**: Configure once, sync forever
-- 🆓 **Completely Free**: No subscriptions, no hidden costs
+### 💡 **How It Works**
+1. **🤖 Create a Telegram Bot** (2 minutes setup)
+2. **📱 Connect Suchak** to your bot
+3. **☁️ Enjoy Unlimited Backup** - Your SMS messages sync automatically!
 
 ---
 
@@ -55,12 +47,7 @@
 - 🔍 **Search & Filter**: Find any message across your entire history
 - 📱 **Cross-Device Access**: Access your SMS from any device with Telegram
 
-### 📸 **Photo Backup Excellence**
-- 🤖 **Smart Detection**: Automatically finds and backs up new photos
-- 📁 **Organized Storage**: Maintains folder structure and metadata
-- 🔄 **Incremental Sync**: Only uploads new or changed photos
-- 💾 **Database Backup**: Complete backup system for disaster recovery
-- 🎨 **Beautiful Gallery**: Modern Material Design 3 interface
+
 
 ### 🔒 **Privacy & Security First**
 - 🚫 **No Telemetry**: Zero data collection or analytics
@@ -103,7 +90,6 @@
 
 ### 🎉 **Step 3: Start Syncing!**
 - ✅ **SMS Sync**: Messages automatically sync in real-time
-- 📸 **Photo Backup**: New photos are detected and backed up
 - 🔄 **Cross-Device**: Access your data from any device with Telegram
 
 > 💡 **Pro Tip**: Use a private channel instead of a group for better organization and unlimited storage!
@@ -202,12 +188,12 @@ If Suchak has helped you, consider:
 
 ---
 
-## 🙏 Credits & Acknowledgments
+## 🙏 Credits
 
-- 🤖 **[kotlin-telegram-bot](https://github.com/kotlin-telegram-bot)** - Excellent Telegram Bot API library
-- 🎨 **[Material Icons](https://material.io/resources/icons/)** - Beautiful iconography
-- 🚀 **[Jetpack Compose](https://developer.android.com/jetpack/compose)** - Modern Android UI toolkit
-- 💙 **Open Source Community** - For making projects like this possible
+## Credits
+* [Whitehole Project](https://github.com/beradeep/whitehole/) for the base code.
+* [kotlin-telegram-bot](https://github.com/kotlin-telegram-bot) for the Telegram bot library.
+* [Material Icons](https://material.io/resources/icons/) for the icons.
 
 ---
 
@@ -216,7 +202,7 @@ If Suchak has helped you, consider:
 > **📱 Privacy Notice**: This app requires access to a Telegram bot to manage your data, keeping you in complete control of your privacy. Your bot is responsible for all operations with Telegram, and this app serves as a client to interact with your bot. Suchak does not endorse spam or malicious activities. Please use responsibly.
 
 <div align="center">
-  <p><strong>🎉 Ready to take control of your SMS and photos? <a href="https://github.com/AKS-Labs/Suchak/releases">Download Suchak now!</a> 🎉</strong></p>
+  <p><strong>🎉 Ready to take control of your SMS? <a href="https://github.com/AKS-Labs/Suchak/releases">Download Suchak now!</a> 🎉</strong></p>
   <p><em>Made with ❤️ for privacy-conscious users everywhere</em></p>
 </div>
 #   S u c h a k 

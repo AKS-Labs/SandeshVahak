@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.akslabs.Suchak.R
 import com.akslabs.Suchak.ui.components.PermissionDialog
-import com.akslabs.Suchak.ui.components.PhotosPermissionTextProvider
+import com.akslabs.Suchak.ui.components.SmsPermissionTextProvider
 
 @Composable
 fun PermissionDialogScreen(
@@ -82,12 +82,12 @@ fun PermissionDialogScreen(
         .forEach { permission ->
             PermissionDialog(
                 permissionTextProvider = when (permission) {
-                    Manifest.permission.READ_MEDIA_IMAGES -> {
-                        PhotosPermissionTextProvider()
+                    Manifest.permission.READ_SMS -> {
+                        SmsPermissionTextProvider()
                     }
 
-                    Manifest.permission.READ_EXTERNAL_STORAGE -> {
-                        PhotosPermissionTextProvider()
+                    Manifest.permission.RECEIVE_SMS -> {
+                        SmsPermissionTextProvider()
                     }
 
                     else -> return@forEach

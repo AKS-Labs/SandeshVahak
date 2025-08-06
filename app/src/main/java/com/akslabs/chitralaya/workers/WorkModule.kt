@@ -374,15 +374,8 @@ object WorkModule {
         }
     }
 
-    const val PERIODIC_PHOTO_BACKUP_WORK = "PeriodicPhotoBackupWork"
-    const val SYNC_MEDIA_STORE_WORK = "SyncMediaStoreWork"
-    const val RESTORE_ALL_PHOTOS_WORK = "RestoreAllPhotosWork"
     const val PERIODIC_DB_EXPORT_WORK = "PeriodicDbExportWork"
-    const val CLOUD_PHOTO_SYNC_WORK = "CloudPhotoSyncWork"
-    const val CLOUD_PHOTO_SYNC_ONE_TIME_WORK = "CloudPhotoSyncOneTimeWork"
-    const val QUICK_CLOUD_SYNC_WORK = "QuickCloudSyncWork"
     const val DAILY_DATABASE_BACKUP_WORK = "DailyDatabaseBackupWork"
-    const val UPLOADING_ID = "UploadingId"
 
     // SMS Sync Work Constants
     const val SMS_SYNC_WORK = "SmsSyncWork"
