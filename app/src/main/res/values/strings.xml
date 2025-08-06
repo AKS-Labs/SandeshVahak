@@ -62,7 +62,7 @@
     <string name="periodic_database_export_cancelled">Periodic database export cancelled.</string>
     <string name="auto_export_interval">Auto export interval</string>
     <string name="menu_icon">Menu icon</string>
-    <string name="syncing_your_sms">Syncing SMS messages</string>
+
     <string name="onboarding_visibility">onboarding-visibility</string>
     <string name="supporttext">SupportText</string>
     <string name="recommended_to_only_copy_paste_to_avoid_error">Simple copy and paste to avoid error.</string>
@@ -106,4 +106,7 @@
     <string name="your_bot_is_responsible_for_all..">"Your bot is responsible for all operations(sync, backup etc.) to and from Telegram and this app is just a "</string>
     <string name="client_to_interact_with_the_bot..">"client to interact with the bot. This app is not meant to and does not endorse spam or any other malicious activities. "</string>
     <string name="please_use_it_at_your_own_responsibility..">Please use it at your own responsibility. By using this app, you agree to the aforementioned terms and conditions.</string>
+
+    <!-- SMS-specific strings -->
+    <string name="syncing_your_sms">Syncing your SMS messages...</string>
 </resources>

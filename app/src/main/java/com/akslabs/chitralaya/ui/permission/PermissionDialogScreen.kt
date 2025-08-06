@@ -54,7 +54,7 @@ fun PermissionDialogScreen(
             )
             Spacer(modifier = Modifier.size(40.dp))
             Text(
-                text = stringResource(R.string.this_app_requires_permission_to_photos_and_notifications) +
+                text = stringResource(R.string.this_app_requires_permission_to_sms_and_notifications) +
                     stringResource(R.string.to_work_as_intended_please_grant_the_permissions_to_continue)
             )
             Spacer(modifier = Modifier.size(40.dp))

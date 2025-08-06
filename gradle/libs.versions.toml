@@ -5,7 +5,7 @@ converterJackson = "2.11.0"
 androidGradlePlugin = "8.4.2"
 activityCompose = "1.9.0"
 animation = "1.7.0-beta03"
-coilCompose = "2.6.0"
+
 composeBom = "2024.10.00"
 converterGson = "2.9.0"
 coreKtx = "1.13.1"
@@ -59,7 +59,7 @@ androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", v
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "ui" }
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "ui" }
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntime" }
-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 converter-jackson = { module = "com.squareup.retrofit2:converter-jackson", version.ref = "converterJackson" }
 junit = { module = "junit:junit", version.ref = "junit" }

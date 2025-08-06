@@ -34,7 +34,7 @@ import com.akslabs.Suchak.ui.main.nav.AppNavHost
 import com.akslabs.Suchak.ui.main.nav.Screens
 import com.akslabs.Suchak.ui.main.nav.screenScopedViewModel
 import com.akslabs.Suchak.workers.WorkModule
-import com.akslabs.Suchak.workers.WorkModule.SYNC_MEDIA_STORE_WORK
+
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -82,22 +82,8 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
     }
 
     LaunchedEffect(viewModel) {
-        WorkModule.SyncMediaStore.enqueueInstant()
-        scope.launch {
-            WorkModule.observeWorkerByName(SYNC_MEDIA_STORE_WORK)
-                .collectLatest {
-                    it.firstOrNull()?.let { workInfo ->
-                        when (workInfo.state) {
-                            WorkInfo.State.RUNNING -> viewModel.updateSyncState(SyncState.SYNCING)
-                            WorkInfo.State.SUCCEEDED -> {
-                                viewModel.updateSyncState(SyncState.IDLE)
-                                WorkModule.SyncMediaStore.enqueuePeriodic()
-                            }
-                            else -> viewModel.updateSyncState(SyncState.IDLE)
-                        }
-                    }
-                }
-        }
+        // SMS sync is handled by SmsObserverService
+        viewModel.updateSyncState(SyncState.IDLE)
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -185,7 +171,7 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                     )
                     Spacer(Modifier.size(16.dp))
                     Text(
-                        text = stringResource(R.string.syncing_your_photos),
+                        text = stringResource(R.string.syncing_your_sms),
                         color = MaterialTheme.colorScheme.secondaryContainer,
                         fontStyle = FontStyle.Italic
                     )

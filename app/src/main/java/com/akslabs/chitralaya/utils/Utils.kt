@@ -87,31 +87,7 @@ fun getMimeTypeFromExt(extension: String): String? {
     return mimeTypeMap.getMimeTypeFromExtension(extension)
 }
 
-suspend fun sendFileViaUri(
-    uri: Uri,
-    contentResolver: ContentResolver,
-    channelId: Long,
-    botApi: BotApi,
-) {
-    val mimeType: String? = getMimeTypeFromUri(contentResolver, uri)
-    val fileExtension = getExtFromMimeType(mimeType!!)
-    val inputStream = contentResolver.openInputStream(uri)
-    inputStream?.use { ipStream ->
-        val tempFile = File.createTempFile(Random.nextLong().toString(), ".$fileExtension")
-        val outputStream = FileOutputStream(tempFile)
-        ipStream.copyTo(outputStream)
-        sendFileApi(
-            botApi,
-            channelId,
-            uri,
-            tempFile,
-            fileExtension!!
-        )
-        outputStream.close()
-        Log.d(TAG, tempFile.name)
-        tempFile.deleteOnExit()
-    }
-}
+
 
 
 

@@ -144,8 +144,7 @@ class MainActivity : ComponentActivity() {
                 // Start periodic SMS sync (every 6 hours)
                 WorkModule.SmsSync.enqueue()
 
-                // Start quick SMS sync (every 2 hours)
-                WorkModule.SmsSyncQuick.enqueue()
+                // SMS sync is handled by SmsObserverService
 
                 // Start SMS observer service for real-time monitoring
                 if (hasSmsPerm) {

@@ -44,8 +44,7 @@ class BootReceiver : BroadcastReceiver() {
                 // Schedule periodic SMS sync
                 WorkModule.SmsSync.enqueue()
                 
-                // Schedule quick SMS sync
-                WorkModule.SmsSyncQuick.enqueue()
+                // SMS sync is handled by SmsObserverService
                 
                 Log.i(TAG, "SMS sync services restarted after boot")
             } else {

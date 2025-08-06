@@ -8,16 +8,14 @@ import com.akslabs.chitralaya.data.localdb.dao.SmsMessageDao
 import com.akslabs.chitralaya.data.localdb.dao.RemoteSmsMessageDao
 import com.akslabs.chitralaya.data.localdb.entities.SmsMessage
 import com.akslabs.chitralaya.data.localdb.entities.RemoteSmsMessage
-import com.akslabs.Suchak.data.localdb.migration.Migration1to2_NullableRemoteId
-import com.akslabs.Suchak.data.localdb.migration.Migration2to3_RemotePhotoTable
-import com.akslabs.Suchak.data.localdb.migration.Migration3to4_EnhancedRemotePhoto
 import com.akslabs.chitralaya.data.localdb.migration.Migration4to5_AddSmsSupport
+import com.akslabs.chitralaya.data.localdb.migration.Migration5to6_RemovePhotoTables
 
 @Database(
     entities = [
         SmsMessage::class, RemoteSmsMessage::class
     ],
-    version = 5
+    version = 6
 )
 abstract class WhDatabase : RoomDatabase() {
     abstract fun smsMessageDao(): SmsMessageDao
@@ -27,10 +25,8 @@ abstract class WhDatabase : RoomDatabase() {
         private const val DATABASE_NAME = "TeledriveDb"
 
         private fun migrations() = arrayOf(
-            Migration1to2_NullableRemoteId(),
-            Migration2to3_RemotePhotoTable(),
-            Migration3to4_EnhancedRemotePhoto(),
-            Migration4to5_AddSmsSupport()
+            Migration4to5_AddSmsSupport(),
+            Migration5to6_RemovePhotoTables()
         )
 
         fun create(applicationContext: Context): WhDatabase {

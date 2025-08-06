@@ -23,7 +23,7 @@ import com.akslabs.Suchak.R
 import com.akslabs.Suchak.data.localdb.DbHolder
 import com.akslabs.Suchak.data.localdb.Preferences
 import com.akslabs.Suchak.data.localdb.backup.BackupHelper
-import com.akslabs.Suchak.services.CloudPhotoSyncService
+
 import com.akslabs.Suchak.ui.components.SettingsListItem
 import com.akslabs.Suchak.ui.components.SettingsListItemWithSwitch
 import com.akslabs.Suchak.ui.components.SettingsListItemWithDialog
@@ -40,7 +40,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     // State for settings
-    var isAutoPhotoBackupEnabled by remember {
+    var isAutoSmsBackupEnabled by remember {
         mutableStateOf(
             Preferences.getBoolean(Preferences.isAutoBackupEnabledKey, false)
         )
@@ -52,7 +52,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
         )
     }
 
-    val totalCloudPhotosCount by DbHolder.database.remotePhotoDao().getTotalCountFlow()
+    val totalCloudSmsCount by DbHolder.database.remoteSmsMessageDao().getTotalCountFlow()
         .collectAsStateWithLifecycle(initialValue = 0)
 
     // File launchers
@@ -128,21 +128,21 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
 
         SettingsListItemWithSwitch(
             title = stringResource(R.string.auto_periodic_backup),
-            subtitle = "Automatically backup photos to cloud",
+            subtitle = "Automatically backup SMS to cloud",
             icon = Icons.Rounded.CloudSync,
-            isChecked = isAutoPhotoBackupEnabled,
+            isChecked = isAutoSmsBackupEnabled,
             onCheckedChange = { checked ->
-                isAutoPhotoBackupEnabled = checked
+                isAutoSmsBackupEnabled = checked
                 Preferences.edit {
                     putBoolean(Preferences.isAutoBackupEnabledKey, checked)
                 }
                 if (checked) {
-                    WorkModule.PeriodicBackup.enqueue()
+                    // SMS backup is handled automatically by SmsObserverService
                     scope.launch {
                         context.toastFromMainThread(context.getString(R.string.periodic_backup_enabled))
                     }
                 } else {
-                    WorkModule.PeriodicBackup.cancel()
+                    // SMS backup is handled automatically by SmsObserverService
                     scope.launch {
                         context.toastFromMainThread(context.getString(R.string.periodic_backup_cancelled))
                     }
@@ -166,9 +166,9 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                 Preferences.edit {
                     putString(Preferences.autoBackupIntervalKey, value)
                 }
-                WorkModule.PeriodicBackup.enqueue(forceUpdate = true)
+                // SMS backup is handled automatically by SmsObserverService
             },
-            enabled = isAutoPhotoBackupEnabled
+            enabled = isAutoSmsBackupEnabled
         )
 
         SettingsListItemWithDialog(
@@ -187,9 +187,9 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                 Preferences.edit {
                     putString(Preferences.autoBackupNetworkTypeKey, value)
                 }
-                WorkModule.PeriodicBackup.enqueue(forceUpdate = true)
+                // SMS backup is handled automatically by SmsObserverService
             },
-            enabled = isAutoPhotoBackupEnabled
+            enabled = isAutoSmsBackupEnabled
         )
 
         SettingsSectionDivider()
@@ -197,17 +197,17 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
         // Privacy & Security Section - Cloud & Sync
         SettingsSectionHeader(title = "Privacy & Security")
 
-        CloudPhotoSyncItem(totalCloudPhotosCount = totalCloudPhotosCount)
+        CloudSmsItem(totalCloudSmsCount = totalCloudSmsCount)
 
         SettingsListItem(
             title = stringResource(R.string.restore_all_from_cloud),
-            subtitle = stringResource(R.string.photos_not_found_on_this_device, totalCloudPhotosCount),
+            subtitle = stringResource(R.string.sms_not_found_on_this_device, totalCloudSmsCount.toString()),
             icon = Icons.Outlined.CloudDownload,
             onClick = {
-                WorkModule.RestoreMissingFromDevice.enqueue()
+                // SMS restore functionality not implemented yet
                 scope.launch {
                     context.toastFromMainThread(
-                        context.getString(R.string.restoring_task_enqueued_in_the_background)
+                        "SMS restore functionality not implemented yet"
                     )
                 }
             }
@@ -233,7 +233,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
             icon = Icons.Rounded.Outbox,
             onClick = {
                 exportBackupFileLauncher.launch(
-                    context.getString(R.string.Suchak_photos_backup_json)
+                    context.getString(R.string.Suchak_sms_backup_json)
                 )
             }
         )
@@ -250,7 +250,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                 }
                 if (checked) {
                     autoExportBackupFileLauncher.launch(
-                        context.getString(R.string.Suchak_auto_photos_backup_json)
+                        context.getString(R.string.Suchak_auto_sms_backup_json)
                     )
                 } else {
                     WorkModule.PeriodicDbExport.cancel()
@@ -341,80 +341,28 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun CloudPhotoSyncItem(
-    totalCloudPhotosCount: Int,
+private fun CloudSmsItem(
+    totalCloudSmsCount: Int,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var isSyncing by remember { mutableStateOf(false) }
-    var syncProgress by remember { mutableStateOf<com.akslabs.Suchak.api.ScanProgress?>(null) }
-    var syncStats by remember { mutableStateOf<com.akslabs.Suchak.services.SyncStatistics?>(null) }
 
-    // Load sync statistics
-    LaunchedEffect(Unit) {
-        syncStats = CloudPhotoSyncService.getSyncStatistics()
-    }
-
-    val syncSummaryText = when {
-        isSyncing && syncProgress != null -> {
-            val progress = syncProgress!!
-            if (progress.isComplete) {
-                if (progress.errorMessage != null) {
-                    if (progress.errorMessage.contains("No Telegram channel configured")) {
-                        "Setup required: Send /start to your Telegram bot first"
-                    } else {
-                        "Sync failed: ${progress.errorMessage}"
-                    }
-                } else {
-                    "Sync complete! Found ${progress.totalFilesFound} new photos"
-                }
-            } else {
-                "Syncing... Batch ${progress.currentBatch}, Found ${progress.totalFilesFound} photos"
-            }
-        }
-        syncStats != null -> {
-            val stats = syncStats!!
-            val hoursAgo = stats.timeSinceLastSyncMs / (1000 * 60 * 60)
-            when {
-                stats.lastSyncTimestamp == 0L -> "Never synced. Note: Bot API only finds photos from last 24 hours"
-                stats.isSyncOverdue -> "Last synced $hoursAgo hours ago. Sync recommended"
-                else -> "Last synced $hoursAgo hours ago. $totalCloudPhotosCount photos in cloud"
-            }
-        }
-        else -> "Loading sync status..."
+    val syncSummaryText = if (totalCloudSmsCount > 0) {
+        "$totalCloudSmsCount SMS messages synced to cloud"
+    } else {
+        "No SMS messages synced yet"
     }
 
     SettingsListItem(
-        title = "Sync Cloud Photos",
+        title = "Cloud SMS Status",
         subtitle = syncSummaryText,
         icon = Icons.Rounded.CloudSync,
         modifier = modifier,
         onClick = {
-            if (!isSyncing) {
-                scope.launch {
-                    isSyncing = true
-                    try {
-                        CloudPhotoSyncService.forceSync(context).collect { progress ->
-                            syncProgress = progress
-                            if (progress.isComplete) {
-                                isSyncing = false
-                                // Refresh sync stats
-                                syncStats = CloudPhotoSyncService.getSyncStatistics()
-
-                                val message = if (progress.errorMessage != null) {
-                                    "Sync failed: ${progress.errorMessage}"
-                                } else {
-                                    "Sync complete! Found ${progress.totalFilesFound} new photos"
-                                }
-                                context.toastFromMainThread(message)
-                            }
-                        }
-                    } catch (e: Exception) {
-                        isSyncing = false
-                        context.toastFromMainThread("Sync error: ${e.message}")
-                    }
-                }
+            scope.launch {
+                context.toastFromMainThread("SMS sync is handled automatically by the SMS observer service")
             }
         }
     )
@@ -478,8 +426,8 @@ private fun DatabaseStatusItem(modifier: Modifier = Modifier) {
                 val stats = com.akslabs.Suchak.data.localdb.backup.BackupHelper.getBackupStats()
                 val message = buildString {
                     appendLine("📊 Database Status:")
-                    appendLine("• Photos: ${stats.currentPhotos}")
-                    appendLine("• Remote Photos: ${stats.currentRemotePhotos}")
+                    appendLine("• SMS Messages: ${stats.currentSmsMessages}")
+                    appendLine("• Remote SMS Messages: ${stats.currentRemoteSmsMessages}")
                     appendLine()
                     if (stats.lastBackupTime > 0) {
                         appendLine("☁️ Last Backup:")

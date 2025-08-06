@@ -143,8 +143,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
 
-    // Coil
-    implementation(libs.coil.compose)
+
 
     // Material icons
     implementation(libs.androidx.material.icons.extended)

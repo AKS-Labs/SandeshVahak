@@ -105,7 +105,7 @@ class SmsContentObserver(
                     Log.i(TAG, "🚀 Found $newCount new SMS messages in ${processingTime}ms, triggering immediate sync")
 
                     // Trigger immediate SMS sync to Telegram
-                    WorkModule.SmsSyncInstant.enqueue()
+                    WorkModule.SmsSync.enqueueOneTime()
                 } else {
                     val processingTime = System.currentTimeMillis() - startTime
                     Log.d(TAG, "✅ No new SMS messages found (${processingTime}ms)")

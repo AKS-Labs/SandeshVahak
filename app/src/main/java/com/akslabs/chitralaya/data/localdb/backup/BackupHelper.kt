@@ -31,25 +31,21 @@ object BackupHelper {
 
     suspend fun exportDatabase(uri: Uri, context: Context) {
         try {
-            val photos = DbHolder.database.photoDao().getAll()
-            val remotePhotos = DbHolder.database.remotePhotoDao().getAll()
             val smsMessages = DbHolder.database.smsMessageDao().getAll()
             val remoteSmsMessages = DbHolder.database.remoteSmsMessageDao().getAll()
 
             val backupFile = BackupFile(
-                photos = photos,
-                remotePhotos = remotePhotos,
                 smsMessages = smsMessages,
                 remoteSmsMessages = remoteSmsMessages
             )
 
-            Log.i(TAG, "Creating backup: ${photos.size} photos, ${remotePhotos.size} remote photos, ${smsMessages.size} SMS, ${remoteSmsMessages.size} remote SMS")
+            Log.i(TAG, "Creating backup: ${smsMessages.size} SMS, ${remoteSmsMessages.size} remote SMS")
 
             context.contentResolver.openOutputStream(uri)?.use {
                 val backupJson = mapper.writeValueAsBytes(backupFile)
                 it.write(backupJson)
             }
-            context.toastFromMainThread("Export successful: ${photos.size} photos, ${smsMessages.size} SMS messages")
+            context.toastFromMainThread("Export successful: ${smsMessages.size} SMS messages")
         } catch (e: Exception) {
             context.toastFromMainThread(e.localizedMessage)
             Log.e(TAG, "Export failed", e)
@@ -61,12 +57,9 @@ object BackupHelper {
             context.contentResolver.openInputStream(uri)?.use {
                 val backupFile = mapper.readValue(it.readBytes(), BackupFile::class.java)
 
-                Log.i(TAG, "📥 Backup file parsed: ${backupFile.photos.size} photos, ${backupFile.remotePhotos.size} remote photos, ${backupFile.smsMessages.size} SMS, ${backupFile.remoteSmsMessages.size} remote SMS")
+                Log.i(TAG, "📥 Backup file parsed: ${backupFile.smsMessages.size} SMS, ${backupFile.remoteSmsMessages.size} remote SMS")
 
-                // Import all data (suspend functions need to be called sequentially)
-                // Import photos (existing functionality)
-                DbHolder.database.photoDao().updatePhotos(*backupFile.photos.toTypedArray())
-                DbHolder.database.remotePhotoDao().insertAll(*backupFile.remotePhotos.toTypedArray())
+                // Import SMS data
 
                 // Import SMS messages (new functionality)
                 if (backupFile.smsMessages.isNotEmpty()) {
@@ -80,7 +73,7 @@ object BackupHelper {
                 }
 
                 val totalSms = backupFile.smsMessages.size + backupFile.remoteSmsMessages.size
-                context.toastFromMainThread("Import successful: ${backupFile.photos.size} photos, $totalSms SMS messages")
+                context.toastFromMainThread("Import successful: $totalSms SMS messages")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Import failed", e)
@@ -103,19 +96,15 @@ object BackupHelper {
                 }
 
                 // Create database backup
-                val photos = DbHolder.database.photoDao().getAll()
-                val remotePhotos = DbHolder.database.remotePhotoDao().getAll()
                 val smsMessages = DbHolder.database.smsMessageDao().getAll()
                 val remoteSmsMessages = DbHolder.database.remoteSmsMessageDao().getAll()
 
                 val backupFile = BackupFile(
-                    photos = photos,
-                    remotePhotos = remotePhotos,
                     smsMessages = smsMessages,
                     remoteSmsMessages = remoteSmsMessages
                 )
 
-                Log.i(TAG, "Database backup created: ${photos.size} photos, ${remotePhotos.size} remote photos, ${smsMessages.size} SMS, ${remoteSmsMessages.size} remote SMS")
+                Log.i(TAG, "Database backup created: ${smsMessages.size} SMS, ${remoteSmsMessages.size} remote SMS")
 
                 // Convert to JSON
                 val backupJson = mapper.writeValueAsBytes(backupFile)
@@ -150,8 +139,8 @@ object BackupHelper {
                             putString("last_database_backup_file_id", document.fileId)
                             putString("last_database_backup_filename", fileName)
                             putLong("last_database_backup_timestamp", System.currentTimeMillis())
-                            putLong("last_database_backup_photos", photos.size.toLong())
-                            putLong("last_database_backup_remote_photos", remotePhotos.size.toLong())
+                            putLong("last_database_backup_sms", smsMessages.size.toLong())
+                            putLong("last_database_backup_remote_sms", remoteSmsMessages.size.toLong())
                         }
 
                         // Clean up temp file
@@ -189,11 +178,7 @@ object BackupHelper {
                 // Parse JSON
                 val backupFile = mapper.readValue(fileBytes, BackupFile::class.java)
 
-                Log.i(TAG, "Database backup downloaded: ${backupFile.photos.size} photos, ${backupFile.remotePhotos.size} remote photos, ${backupFile.smsMessages.size} SMS, ${backupFile.remoteSmsMessages.size} remote SMS")
-
-                // Import to database (suspend functions need to be called sequentially)
-                DbHolder.database.photoDao().updatePhotos(*backupFile.photos.toTypedArray())
-                DbHolder.database.remotePhotoDao().insertAll(*backupFile.remotePhotos.toTypedArray())
+                Log.i(TAG, "Database backup downloaded: ${backupFile.smsMessages.size} SMS, ${backupFile.remoteSmsMessages.size} remote SMS")
 
                 // Import SMS data
                 if (backupFile.smsMessages.isNotEmpty()) {
@@ -211,14 +196,12 @@ object BackupHelper {
                 // Update preferences
                 Preferences.edit {
                     putLong("last_database_import_timestamp", System.currentTimeMillis())
-                    putLong("last_database_import_photos", backupFile.photos.size.toLong())
-                    putLong("last_database_import_remote_photos", backupFile.remotePhotos.size.toLong())
                     putLong("last_database_import_sms", backupFile.smsMessages.size.toLong())
                     putLong("last_database_import_remote_sms", backupFile.remoteSmsMessages.size.toLong())
                 }
 
                 val totalSms = backupFile.smsMessages.size + backupFile.remoteSmsMessages.size
-                Result.success("Database imported: ${backupFile.photos.size} photos, $totalSms SMS messages")
+                Result.success("Database imported: $totalSms SMS messages")
 
             } catch (e: Exception) {
                 Log.e(TAG, "Exception downloading database from Telegram", e)
@@ -234,19 +217,19 @@ object BackupHelper {
         return withContext(Dispatchers.IO) {
             try {
                 val lastBackupTimestamp = Preferences.getLong("last_database_backup_timestamp", 0L)
-                val lastBackupPhotos = Preferences.getLong("last_database_backup_photos", 0L).toInt()
-                val lastBackupRemotePhotos = Preferences.getLong("last_database_backup_remote_photos", 0L).toInt()
+                val lastBackupSms = Preferences.getLong("last_database_backup_sms", 0L).toInt()
+                val lastBackupRemoteSms = Preferences.getLong("last_database_backup_remote_sms", 0L).toInt()
 
                 // Get current database state
-                val currentPhotos = DbHolder.database.photoDao().getAll().size
-                val currentRemotePhotos = DbHolder.database.remotePhotoDao().getAll().size
+                val currentSms = DbHolder.database.smsMessageDao().getAll().size
+                val currentRemoteSms = DbHolder.database.remoteSmsMessageDao().getAll().size
 
                 // Check if backup exists and data hasn't changed
                 val hasBackup = lastBackupTimestamp > 0
-                val dataUnchanged = (currentPhotos == lastBackupPhotos && currentRemotePhotos == lastBackupRemotePhotos)
+                val dataUnchanged = (currentSms == lastBackupSms && currentRemoteSms == lastBackupRemoteSms)
 
                 Log.d(TAG, "Backup status - Has backup: $hasBackup, Data unchanged: $dataUnchanged")
-                Log.d(TAG, "Current: $currentPhotos photos, $currentRemotePhotos remote | Last backup: $lastBackupPhotos photos, $lastBackupRemotePhotos remote")
+                Log.d(TAG, "Current: $currentSms SMS, $currentRemoteSms remote | Last backup: $lastBackupSms SMS, $lastBackupRemoteSms remote")
 
                 hasBackup && dataUnchanged
 
@@ -274,8 +257,7 @@ object BackupHelper {
             val lastBackupTime = Preferences.getLong("last_database_backup_timestamp", 0L)
             val lastBackupFilename = Preferences.getString("last_database_backup_filename", "")
             val lastImportTime = Preferences.getLong("last_database_import_timestamp", 0L)
-            val currentPhotos = DbHolder.database.photoDao().getAll().size
-            val currentRemotePhotos = DbHolder.database.remotePhotoDao().getAll().size
+
             val currentSmsMessages = DbHolder.database.smsMessageDao().getAll().size
             val currentRemoteSmsMessages = DbHolder.database.remoteSmsMessageDao().getAll().size
             val isUpToDate = isDatabaseBackupUpToDate()
@@ -284,8 +266,6 @@ object BackupHelper {
                 lastBackupTime = lastBackupTime,
                 lastBackupFilename = lastBackupFilename,
                 lastImportTime = lastImportTime,
-                currentPhotos = currentPhotos,
-                currentRemotePhotos = currentRemotePhotos,
                 currentSmsMessages = currentSmsMessages,
                 currentRemoteSmsMessages = currentRemoteSmsMessages,
                 isUpToDate = isUpToDate,
@@ -298,8 +278,6 @@ object BackupHelper {
         val lastBackupTime: Long,
         val lastBackupFilename: String,
         val lastImportTime: Long,
-        val currentPhotos: Int,
-        val currentRemotePhotos: Int,
         val currentSmsMessages: Int,
         val currentRemoteSmsMessages: Int,
         val isUpToDate: Boolean,
