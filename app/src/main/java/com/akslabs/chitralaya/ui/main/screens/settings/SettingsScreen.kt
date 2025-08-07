@@ -29,6 +29,8 @@ import com.akslabs.Suchak.ui.components.SettingsListItemWithSwitch
 import com.akslabs.Suchak.ui.components.SettingsListItemWithDialog
 import com.akslabs.Suchak.ui.components.SettingsSectionHeader
 import com.akslabs.Suchak.ui.components.SettingsSectionDivider
+import com.akslabs.Suchak.utils.connectivity.ConnectivityObserver
+import com.akslabs.Suchak.utils.connectivity.ConnectivityStatus
 import com.akslabs.Suchak.utils.toastFromMainThread
 import com.akslabs.Suchak.workers.WorkModule
 import kotlinx.coroutines.Dispatchers
@@ -390,6 +392,13 @@ private fun DatabaseBackupItem(modifier: Modifier = Modifier) {
         modifier = modifier,
         onClick = {
             scope.launch {
+                // Check connectivity first
+                val connectivityStatus = ConnectivityObserver.status()
+                if (connectivityStatus != ConnectivityStatus.Available) {
+                    context.toastFromMainThread("No internet connection. Please check your connection and try again.")
+                    return@launch
+                }
+
                 try {
                     context.toastFromMainThread("Uploading database to Telegram...")
                     val result = com.akslabs.Suchak.data.localdb.backup.BackupHelper.uploadDatabaseToTelegram(context)

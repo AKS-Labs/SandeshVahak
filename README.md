@@ -2,8 +2,8 @@
 <div align="center">
   <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" width="120" height="120">
   <h1>SandeshVahak</h1>
-  <h4>💬 <em>"SandeshVahak" (सूचक) = "Messenger" in Sanskrit</em></h4>
-  <h3>🚀 Your Smart SMS Sync Companion</h3>
+  <h4>💬 <em>"SandeshVahak" (संदेश वाहक) = "Message Carrier" in Sanskrit</em></h4>
+  <h3>Syncs Your Messages Before They Fade</h3>
   <p><strong>Sync SMS from your secondary device to your primary device via Telegram - stay connected everywhere!</strong></p>
   <p>🔒 <em>100% Private • Zero Tracking • Your Messages, Your Rules</em></p>
 

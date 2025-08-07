@@ -13,9 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.akslabs.Suchak.R
 import com.akslabs.Suchak.api.BotApi
-import com.akslabs.Suchak.ui.components.NoInternetScreen
-import com.akslabs.Suchak.utils.connectivity.ConnectivityObserver
-import com.akslabs.Suchak.utils.connectivity.ConnectivityStatus
+
 import kotlinx.coroutines.delay
 
 @Preview
@@ -23,10 +21,8 @@ import kotlinx.coroutines.delay
 fun OnboardingPage(
     onOnboardingComplete: () -> Unit = {},
     modifier: Modifier = Modifier,
-    connectivityObserver: ConnectivityObserver = ConnectivityObserver,
     botApi: BotApi = BotApi
 ) {
-    val connectivityStatus by connectivityObserver.observe().collectAsState(initial = ConnectivityStatus.Unavailable)
     var showDisclaimer by remember { mutableStateOf(true) }
     var showGettingStarted by remember { mutableStateOf(false) }
 
@@ -36,44 +32,34 @@ fun OnboardingPage(
         botApi.startPolling()
     }
 
-    when (connectivityStatus) {
-        ConnectivityStatus.Available -> {
-            AnimatedContent(
-                targetState = when {
-                    showDisclaimer -> "disclaimer"
-                    showGettingStarted -> "getting_started"
-                    else -> "complete"
-                },
-                label = "onboarding_content"
-            ) { state ->
-                when (state) {
-                    "disclaimer" -> {
-                        DisclaimerScreen(
-                            onAcknowledge = {
-                                showDisclaimer = false
-                                showGettingStarted = true
-                            },
-                            modifier = modifier
-                        )
-                    }
-                    "getting_started" -> {
-                        GettingStartedScreen(
-                            onProceed = {
-                                showGettingStarted = false
-                                onOnboardingComplete()
-                            },
-                            modifier = modifier,
-                            botApi = botApi
-                        )
-                    }
-                }
+    AnimatedContent(
+        targetState = when {
+            showDisclaimer -> "disclaimer"
+            showGettingStarted -> "getting_started"
+            else -> "complete"
+        },
+        label = "onboarding_content"
+    ) { state ->
+        when (state) {
+            "disclaimer" -> {
+                DisclaimerScreen(
+                    onAcknowledge = {
+                        showDisclaimer = false
+                        showGettingStarted = true
+                    },
+                    modifier = modifier
+                )
             }
-        }
-        ConnectivityStatus.Unavailable -> {
-            NoInternetScreen(
-                modifier = modifier,
-                isConnected = false
-            )
+            "getting_started" -> {
+                GettingStartedScreen(
+                    onProceed = {
+                        showGettingStarted = false
+                        onOnboardingComplete()
+                    },
+                    modifier = modifier,
+                    botApi = botApi
+                )
+            }
         }
     }
 }

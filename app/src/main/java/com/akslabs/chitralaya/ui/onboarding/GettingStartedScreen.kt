@@ -32,9 +32,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import com.akslabs.Suchak.R
 import com.akslabs.Suchak.api.BotApi
 import com.akslabs.Suchak.data.localdb.Preferences
+import com.akslabs.Suchak.utils.connectivity.ConnectivityObserver
+import com.akslabs.Suchak.utils.connectivity.ConnectivityStatus
+import com.akslabs.Suchak.utils.toastFromMainThread
 import com.github.kotlintelegrambot.entities.ChatId
 import kotlinx.coroutines.launch
 
@@ -45,6 +49,8 @@ fun GettingStartedScreen(
     modifier: Modifier = Modifier,
     botApi: BotApi = BotApi
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     var isVisible by remember { mutableStateOf(false) }
     var botToken by remember { mutableStateOf("") }
     var chatId by remember { mutableStateOf("") }
@@ -53,9 +59,7 @@ fun GettingStartedScreen(
     var isValidChatId by remember { mutableStateOf(true) }
     var isLoading by remember { mutableStateOf(false) }
     var currentStep by remember { mutableStateOf(1) }
-    
-    val scope = rememberCoroutineScope()
-    
+
     val alpha by animateFloatAsState(
         targetValue = if (isVisible) 1f else 0f,
         animationSpec = tween(durationMillis = 800),
@@ -86,33 +90,40 @@ fun GettingStartedScreen(
                     Button(
                         onClick = {
                             scope.launch {
+                                // Check connectivity first
+                                val connectivityStatus = ConnectivityObserver.status()
+                                if (connectivityStatus != ConnectivityStatus.Available) {
+                                    context.toastFromMainThread("No internet connection. Please check your connection and try again.")
+                                    return@launch
+                                }
+
                                 if (botToken.isBlank()) {
                                     isValidToken = false
                                     return@launch
                                 }
-                                
+
                                 if (chatId.isBlank()) {
                                     isValidChatId = false
                                     return@launch
                                 }
-                                
+
                                 isLoading = true
-                                
+
                                 try {
                                     // Save bot token
                                     Preferences.editEncrypted {
                                         putString(Preferences.botToken, botToken)
                                     }
-                                    
+
                                     // Validate chat ID
                                     val id = chatId.toLongOrNull()
                                     if (id != null) {
                                         Log.i("GettingStartedScreen", "Validating chat ID: $id")
                                         val canAccess = botApi.getChat(ChatId.fromId(id))
-                                        
+
                                         if (canAccess) {
-                                            Preferences.editEncrypted { 
-                                                putLong(Preferences.channelId, id) 
+                                            Preferences.editEncrypted {
+                                                putLong(Preferences.channelId, id)
                                             }
                                             botApi.stopPolling()
                                             onProceed()
