@@ -15,7 +15,7 @@
     <string name="import_successful">Import successful!</string>
     <string name="connectivity_status_background_color">connectivity status background color</string>
     <string name="connectivity_status_content_color">connectivity status content color</string>
-    <string name="no_internet_connection">No Internet Connection!</string>
+
     <string name="back_online">Back Online!</string>
     <string name="connectivity_icon">Connectivity Icon</string>
     <string name="checking_backup_status">Checking Backup Status</string>
@@ -63,13 +63,13 @@
     <string name="auto_export_interval">Auto export interval</string>
     <string name="menu_icon">Menu icon</string>
 
-    <string name="onboarding_visibility">onboarding-visibility</string>
+
     <string name="supporttext">SupportText</string>
     <string name="recommended_to_only_copy_paste_to_avoid_error">Simple copy and paste to avoid error.</string>
     <string name="token_cannot_be_empty">Token cannot be empty.</string>
     <string name="bot_token">Enter bot token</string>
     <string name="proceed">Proceed</string>
-    <string name="app_icon">app_icon</string>
+
     <string name="got_it">Got It</string>
     <string name="getting_started">Getting Started</string>
     <string name="_1_visit_botfather_on_telegram">1. Visit BotFather on Telegram.</string>
@@ -109,4 +109,14 @@
 
     <!-- SMS-specific strings -->
     <string name="syncing_your_sms">Syncing your SMS messages...</string>
+
+    <!-- Onboarding strings -->
+    <string name="app_icon">App Icon</string>
+    <string name="onboarding_visibility">Onboarding Visibility</string>
+    <string name="no_internet_connection">No Internet Connection</string>
+    <string name="please_check_your_internet_connection_and_try_again">Please check your internet connection and try again</string>
+    <string name="connection_unstable">Connection Unstable</string>
+    <string name="your_internet_connection_is_unstable">Your internet connection is unstable</string>
+    <string name="connection_lost">Connection Lost</string>
+    <string name="your_internet_connection_was_lost">Your internet connection was lost</string>
 </resources>

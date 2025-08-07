@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                 val topNavController = rememberNavController()
                 NavHost(navController = topNavController, startDestination = startDestination) {
                     composable(ScreenFlow.Onboarding.route) {
-                        OnboardingPage(onProceed = {
+                        OnboardingPage(onOnboardingComplete = {
                             val navigateToRoute = if (hasSmsPerm) {
                                 ScreenFlow.Main.route
                             } else {
