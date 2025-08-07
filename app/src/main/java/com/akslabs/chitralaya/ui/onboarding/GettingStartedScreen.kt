@@ -33,6 +33,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import com.akslabs.Suchak.R
 import com.akslabs.Suchak.api.BotApi
 import com.akslabs.Suchak.data.localdb.Preferences
@@ -47,6 +50,7 @@ import kotlinx.coroutines.launch
 fun GettingStartedScreen(
     onProceed: () -> Unit,
     modifier: Modifier = Modifier,
+    onBack: (() -> Unit)? = null,
     botApi: BotApi = BotApi
 ) {
     val context = LocalContext.current
@@ -59,6 +63,10 @@ fun GettingStartedScreen(
     var isValidChatId by remember { mutableStateOf(true) }
     var isLoading by remember { mutableStateOf(false) }
     var currentStep by remember { mutableStateOf(1) }
+
+    // Focus state tracking for keyboard handling (Chat ID only)
+    var isChatIdFocused by remember { mutableStateOf(false) }
+    val chatIdFocusRequester = remember { FocusRequester() }
 
     val alpha by animateFloatAsState(
         targetValue = if (isVisible) 1f else 0f,
@@ -74,104 +82,29 @@ fun GettingStartedScreen(
 
     Scaffold(
         modifier = modifier.alpha(alpha),
-
-        bottomBar = {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.surface,
-                shadowElevation = 8.dp
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                // Check connectivity first
-                                val connectivityStatus = ConnectivityObserver.status()
-                                if (connectivityStatus != ConnectivityStatus.Available) {
-                                    context.toastFromMainThread("No internet connection. Please check your connection and try again.")
-                                    return@launch
-                                }
-
-                                if (botToken.isBlank()) {
-                                    isValidToken = false
-                                    return@launch
-                                }
-
-                                if (chatId.isBlank()) {
-                                    isValidChatId = false
-                                    return@launch
-                                }
-
-                                isLoading = true
-
-                                try {
-                                    // Save bot token
-                                    Preferences.editEncrypted {
-                                        putString(Preferences.botToken, botToken)
-                                    }
-
-                                    // Validate chat ID
-                                    val id = chatId.toLongOrNull()
-                                    if (id != null) {
-                                        Log.i("GettingStartedScreen", "Validating chat ID: $id")
-                                        val canAccess = botApi.getChat(ChatId.fromId(id))
-
-                                        if (canAccess) {
-                                            Preferences.editEncrypted {
-                                                putLong(Preferences.channelId, id)
-                                            }
-                                            botApi.stopPolling()
-                                            onProceed()
-                                        } else {
-                                            isValidChatId = false
-                                        }
-                                    } else {
-                                        isValidChatId = false
-                                    }
-                                } catch (e: Exception) {
-                                    Log.e("GettingStartedScreen", "Error validating inputs", e)
-                                    isValidChatId = false
-                                } finally {
-                                    isLoading = false
-                                }
-                            }
-                        },
-                        enabled = !isLoading && botToken.isNotBlank() && chatId.isNotBlank(),
-                        modifier = Modifier
-                            .height(56.dp)
-                            .widthIn(min = 120.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        )
-                    ) {
-                        if (isLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(20.dp),
-                                strokeWidth = 2.dp,
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        } else {
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Getting Started",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                navigationIcon = {
+                    if (onBack != null) {
+                        IconButton(onClick = onBack) {
                             Icon(
-                                imageVector = Icons.Rounded.ArrowForward,
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
+                                imageVector = Icons.Rounded.ArrowBack,
+                                contentDescription = "Back"
                             )
                         }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = if (isLoading) "Validating..." else "Proceed",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold
-                        )
                     }
-                }
-            }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            )
         }
     ) { paddingValues ->
         Column(
@@ -179,7 +112,10 @@ fun GettingStartedScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp),
+                .padding(horizontal = 24.dp)
+                .padding(
+                    bottom = if (isChatIdFocused || chatId.isNotEmpty()) 350.dp else 0.dp
+                ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             
@@ -317,7 +253,12 @@ fun GettingStartedScreen(
                     }
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(chatIdFocusRequester)
+                    .onFocusChanged { focusState ->
+                        isChatIdFocused = focusState.isFocused
+                    },
                 shape = RoundedCornerShape(12.dp)
             )
             
@@ -365,8 +306,100 @@ fun GettingStartedScreen(
                     )
                 }
             }
-            
+
+            // Proceed Button
             Spacer(modifier = Modifier.height(32.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Button(
+                    onClick = {
+                        scope.launch {
+                            // Check connectivity first
+                            val connectivityStatus = ConnectivityObserver.status()
+                            if (connectivityStatus != ConnectivityStatus.Available) {
+                                context.toastFromMainThread("No internet connection. Please check your connection and try again.")
+                                return@launch
+                            }
+
+                            if (botToken.isBlank()) {
+                                isValidToken = false
+                                return@launch
+                            }
+
+                            if (chatId.isBlank()) {
+                                isValidChatId = false
+                                return@launch
+                            }
+
+                            isLoading = true
+
+                            try {
+                                // Save bot token
+                                Preferences.editEncrypted {
+                                    putString(Preferences.botToken, botToken)
+                                }
+
+                                // Validate chat ID
+                                val id = chatId.toLongOrNull()
+                                if (id != null) {
+                                    Log.i("GettingStartedScreen", "Validating chat ID: $id")
+                                    val canAccess = botApi.getChat(ChatId.fromId(id))
+
+                                    if (canAccess) {
+                                        Preferences.editEncrypted {
+                                            putLong(Preferences.channelId, id)
+                                        }
+                                        botApi.stopPolling()
+                                        onProceed()
+                                    } else {
+                                        isValidChatId = false
+                                    }
+                                } else {
+                                    isValidChatId = false
+                                }
+                            } catch (e: Exception) {
+                                Log.e("GettingStartedScreen", "Error validating inputs", e)
+                                isValidChatId = false
+                            } finally {
+                                isLoading = false
+                            }
+                        }
+                    },
+                    enabled = !isLoading && botToken.isNotBlank() && chatId.isNotBlank(),
+                    modifier = Modifier
+                        .height(56.dp)
+                        .widthIn(min = 120.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            strokeWidth = 2.dp,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Rounded.ArrowForward,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = if (isLoading) "Validating..." else "Proceed",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
         }
     }
 }
@@ -485,3 +518,4 @@ private fun SetupStep(
         }
     }
 }
+

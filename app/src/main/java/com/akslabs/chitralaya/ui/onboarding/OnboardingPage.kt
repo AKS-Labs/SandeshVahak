@@ -1,5 +1,6 @@
 package com.akslabs.Suchak.ui.onboarding
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,10 +52,20 @@ fun OnboardingPage(
                 )
             }
             "getting_started" -> {
+                // Handle back navigation from GettingStartedScreen to DisclaimerScreen
+                BackHandler {
+                    showGettingStarted = false
+                    showDisclaimer = true
+                }
+
                 GettingStartedScreen(
                     onProceed = {
                         showGettingStarted = false
                         onOnboardingComplete()
+                    },
+                    onBack = {
+                        showGettingStarted = false
+                        showDisclaimer = true
                     },
                     modifier = modifier,
                     botApi = botApi
