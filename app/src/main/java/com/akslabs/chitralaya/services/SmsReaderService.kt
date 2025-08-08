@@ -6,7 +6,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.Telephony
 import android.util.Log
-import com.akslabs.Suchak.data.localdb.DbHolder
+import com.akslabs.SandeshVahak.data.localdb.DbHolder
 import com.akslabs.chitralaya.data.localdb.entities.SmsMessage
 import com.akslabs.chitralaya.utils.Operations
 import com.akslabs.chitralaya.utils.PerformanceMonitor
@@ -215,10 +215,17 @@ object SmsReaderService {
             try {
                 val dao = DbHolder.database.smsMessageDao()
                 val lastMessageDate = dao.getLatestMessageDate() ?: 0L
-                
-                Log.i(TAG, "Starting incremental SMS sync from timestamp: $lastMessageDate")
-                val newSmsMessages = readSmsMessagesAfter(context, lastMessageDate)
-                
+
+                // Respect baseline when user chose NEW_ONLY mode
+                val baseline = com.akslabs.SandeshVahak.data.localdb.Preferences.getLong(
+                    com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncEnabledSinceKey,
+                    0L
+                )
+                val effectiveStart = maxOf(lastMessageDate, baseline)
+
+                Log.i(TAG, "Starting incremental SMS sync from timestamp: $effectiveStart (db=$lastMessageDate, baseline=$baseline)")
+                val newSmsMessages = readSmsMessagesAfter(context, effectiveStart)
+
                 var insertedCount = 0
                 for (smsMessage in newSmsMessages) {
                     if (!dao.exists(smsMessage.id)) {
@@ -226,7 +233,7 @@ object SmsReaderService {
                         insertedCount++
                     }
                 }
-                
+
                 Log.i(TAG, "Incremental SMS sync complete: $insertedCount new messages")
                 insertedCount
             } catch (e: Exception) {

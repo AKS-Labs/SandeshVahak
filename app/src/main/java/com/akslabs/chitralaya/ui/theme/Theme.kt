@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.ui.theme
+package com.akslabs.SandeshVahak.ui.theme
 
 import android.app.Activity
 import android.os.Build

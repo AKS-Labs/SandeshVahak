@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.ui.onboarding
+package com.akslabs.SandeshVahak.ui.onboarding
 
 import android.util.Log
 import androidx.compose.animation.AnimatedContent
@@ -36,12 +36,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import com.akslabs.Suchak.R
-import com.akslabs.Suchak.api.BotApi
-import com.akslabs.Suchak.data.localdb.Preferences
-import com.akslabs.Suchak.utils.connectivity.ConnectivityObserver
-import com.akslabs.Suchak.utils.connectivity.ConnectivityStatus
-import com.akslabs.Suchak.utils.toastFromMainThread
+import com.akslabs.SandeshVahak.R
+import com.akslabs.SandeshVahak.api.BotApi
+import com.akslabs.SandeshVahak.data.localdb.Preferences
+import com.akslabs.SandeshVahak.utils.connectivity.ConnectivityObserver
+import com.akslabs.SandeshVahak.utils.connectivity.ConnectivityStatus
+import com.akslabs.SandeshVahak.utils.toastFromMainThread
 import com.github.kotlintelegrambot.entities.ChatId
 import kotlinx.coroutines.launch
 
@@ -82,30 +82,6 @@ fun GettingStartedScreen(
 
     Scaffold(
         modifier = modifier.alpha(alpha),
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Getting Started",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                navigationIcon = {
-                    if (onBack != null) {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                imageVector = Icons.Rounded.ArrowBack,
-                                contentDescription = "Back"
-                            )
-                        }
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            )
-        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -343,6 +319,10 @@ fun GettingStartedScreen(
                                 Preferences.editEncrypted {
                                     putString(Preferences.botToken, botToken)
                                 }
+                                // Recreate bot with the newly saved token before validating chat ID
+                                botApi.stopPolling()
+                                botApi.create()
+                                botApi.startPolling()
 
                                 // Validate chat ID
                                 val id = chatId.toLongOrNull()

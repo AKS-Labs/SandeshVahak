@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.ui.main.nav
+package com.akslabs.SandeshVahak.ui.main.nav
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cloud

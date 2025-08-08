@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.workers
+package com.akslabs.SandeshVahak.workers
 
 import android.content.Context
 
@@ -13,7 +13,7 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.akslabs.Suchak.data.localdb.Preferences
+import com.akslabs.SandeshVahak.data.localdb.Preferences
 import com.akslabs.chitralaya.workers.SmsSyncWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
@@ -138,6 +138,10 @@ object WorkModule {
                 ExistingWorkPolicy.REPLACE,
                 oneTimeRequest
             )
+        }
+
+        fun cancelOneTime() {
+            manager.cancelUniqueWork(SMS_SYNC_ONE_TIME_WORK)
         }
     }
 

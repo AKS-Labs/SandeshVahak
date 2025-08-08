@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.ui.permission
+package com.akslabs.SandeshVahak.ui.permission
 
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -20,9 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.akslabs.Suchak.R
-import com.akslabs.Suchak.ui.components.PermissionDialog
-import com.akslabs.Suchak.ui.components.SmsPermissionTextProvider
+import com.akslabs.SandeshVahak.R
+import com.akslabs.SandeshVahak.ui.components.PermissionDialog
+import com.akslabs.SandeshVahak.ui.components.SmsPermissionTextProvider
 
 @Composable
 fun PermissionDialogScreen(

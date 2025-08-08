@@ -2,9 +2,9 @@ package com.akslabs.chitralaya.services
 
 import android.content.Context
 import android.util.Log
-import com.akslabs.Suchak.api.BotApi
-import com.akslabs.Suchak.data.localdb.DbHolder
-import com.akslabs.Suchak.data.localdb.Preferences
+import com.akslabs.SandeshVahak.api.BotApi
+import com.akslabs.SandeshVahak.data.localdb.DbHolder
+import com.akslabs.SandeshVahak.data.localdb.Preferences
 import com.akslabs.chitralaya.data.localdb.entities.RemoteSmsMessage
 import com.akslabs.chitralaya.data.localdb.entities.SmsMessage
 import kotlinx.coroutines.Dispatchers
@@ -29,10 +29,18 @@ object SmsSyncService {
      */
     fun performFullSync(context: Context): Flow<SmsSyncProgress> = flow {
         Log.i(TAG, "=== STARTING FULL SMS SYNC ===")
-        
+
         try {
+            // Respect user preference; if disabled, stop
+            val isEnabled = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
+            if (!isEnabled) {
+                Log.w(TAG, "SMS sync disabled by user; aborting full sync")
+                emit(SmsSyncProgress(0, 0, isComplete = true))
+                return@flow
+            }
+
             emit(SmsSyncProgress(currentBatch = 0, totalMessagesSynced = 0, isComplete = false))
-            
+
             val channelId = getConfiguredChannelId()
             if (channelId == null) {
                 Log.w(TAG, "No channel ID configured for SMS sync")
@@ -44,9 +52,9 @@ object SmsSyncService {
                 ))
                 return@flow
             }
-            
+
             Log.i(TAG, "Syncing SMS messages to channel ID: $channelId")
-            
+
             // Check if we need to perform sync
             if (!shouldPerformSync()) {
                 Log.i(TAG, "Sync not needed (recent sync found)")
@@ -135,36 +143,43 @@ object SmsSyncService {
         return withContext(Dispatchers.IO) {
             try {
                 Log.d(TAG, "Performing quick SMS sync")
-                
+
+                // Respect user preference; if disabled, skip
+                val isEnabled = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
+                if (!isEnabled) {
+                    Log.w(TAG, "SMS sync disabled by user; skipping quick sync")
+                    return@withContext SmsSyncResult.Success(0)
+                }
+
                 val channelId = getConfiguredChannelId()
                 if (channelId == null) {
                     Log.w(TAG, "No channel ID configured for quick sync")
                     return@withContext SmsSyncResult.NoChannelConfigured
                 }
-                
+
                 // Sync new SMS messages to local database
                 val newLocalMessages = SmsReaderService.syncNewSmsToDatabase(context)
-                
+
                 if (newLocalMessages == 0) {
                     Log.d(TAG, "No new SMS messages found")
                     return@withContext SmsSyncResult.Success(0)
                 }
-                
+
                 // Get recently unsynced messages
                 val dao = DbHolder.database.smsMessageDao()
                 val unsyncedMessages = dao.getUnsyncedMessages(limit = MAX_BATCH_SIZE)
-                
+
                 if (unsyncedMessages.isEmpty()) {
                     Log.d(TAG, "No unsynced messages to sync")
                     return@withContext SmsSyncResult.Success(0)
                 }
-                
+
                 // Sync the messages
                 val (syncedCount, _) = syncMessagesBatch(unsyncedMessages, channelId, 0)
 
                 Log.d(TAG, "Quick sync complete: $syncedCount messages synced")
                 SmsSyncResult.Success(syncedCount)
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Exception during quick SMS sync", e)
                 SmsSyncResult.Error(e.message ?: "Unknown error")

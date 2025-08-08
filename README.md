@@ -10,10 +10,10 @@
 <!-- ---------- Badges ---------- -->
   <div align="center">
     <img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square">
-    <img alt="Downloads" src="https://img.shields.io/github/downloads/AKS-Labs/Suchak/total?color=c3e7ff&style=flat-square">
-    <img alt="Last commit" src="https://img.shields.io/github/last-commit/AKS-Labs/Suchak?color=c3e7ff&style=flat-square">
-    <img alt="Repo size" src="https://img.shields.io/github/repo-size/AKS-Labs/Suchak?color=c3e7ff&style=flat-square">
-    <img alt="Stars" src="https://img.shields.io/github/stars/AKS-Labs/Suchak?color=c3e7ff&style=flat-square">
+    <img alt="Downloads" src="https://img.shields.io/github/downloads/AKS-Labs/SandeshVahak/total?color=c3e7ff&style=flat-square">
+    <img alt="Last commit" src="https://img.shields.io/github/last-commit/AKS-Labs/SandeshVahak?color=c3e7ff&style=flat-square">
+    <img alt="Repo size" src="https://img.shields.io/github/repo-size/AKS-Labs/SandeshVahak?color=c3e7ff&style=flat-square">
+    <img alt="Stars" src="https://img.shields.io/github/stars/AKS-Labs/SandeshVahak?color=c3e7ff&style=flat-square">
     <br>
 </div>
 
@@ -28,13 +28,13 @@
 
 ---
 
-## 🌟 **What is Suchak?**
+## 🌟 **What is SandeshVahak?**
 
-**Never miss a message again!** Suchak is a clever SMS sync app that bridges your secondary and primary devices using Telegram as a secure relay, ensuring you stay connected no matter which device you're using.
+**Never miss a message again!** SandeshVahak is a clever SMS sync app that bridges your secondary and primary devices using Telegram as a secure relay, ensuring you stay connected no matter which device you're using.
 
 ### 💡 **How It Works**
 1. **🤖 Create a Telegram Bot** (2 minutes of magic ✨)
-2. **📱 Connect Suchak** to your bot (one-time setup)
+2. **📱 Connect SandeshVahak** to your bot (one-time setup)
 3. **☁️ Enjoy Seamless SMS Sync** - Your messages flow between devices like clockwork! ⏰
 
 ---
@@ -81,10 +81,10 @@
 - 🛠️ **Telegram Bot Power** - Rock-solid reliability with enterprise-grade security
 ---
 
-## 📥 **Get Suchak**
+## 📥 **Get SandeshVahak**
 
 <div align="center">
-  <a href="https://github.com/AKS-Labs/Suchak/releases">
+  <a href="https://github.com/AKS-Labs/SandeshVahak/releases">
     <img alt="Get it on GitHub" src="https://user-images.githubusercontent.com/69304392/148696068-0cfea65d-b18f-4685-82b5-329a330b1c0d.png" height="80px">
   </a>
   <br>
@@ -102,7 +102,7 @@
 4. Create private group → Add your bot → Type `/start` → Grab that chat ID
 
 ### 📱 **Step 2: Connect & Conquer**
-1. Download Suchak from GitHub (it's free! 🎁)
+1. Download SandeshVahak from GitHub (it's free! 🎁)
 2. Enter your bot token and chat ID (copy-paste magic)
 3. Watch the SMS sync magic happen! 🎉✨
 
@@ -116,10 +116,10 @@
 
 ## 🤝 **Community**
 
-- 🐛 **Found a bug?** [Tell us here!](https://github.com/AKS-Labs/Suchak/issues)
-- 💡 **Got a cool idea?** [Share it with us!](https://github.com/AKS-Labs/Suchak/issues)
+- 🐛 **Found a bug?** [Tell us here!](https://github.com/AKS-Labs/SandeshVahak/issues)
+- 💡 **Got a cool idea?** [Share it with us!](https://github.com/AKS-Labs/SandeshVahak/issues)
 - 👨‍💻 **Want to contribute?** Fork it, code it, submit it!
-- ⭐ **Love Suchak?** Star the repo and spread the word!
+- ⭐ **Love SandeshVahak?** Star the repo and spread the word!
 
 ---
 
@@ -136,7 +136,7 @@
   <h3>🔒 **Your Messages. Your Privacy. Your Control.** 🔒</h3>
   <p><strong>Experience seamless SMS sync between devices without compromising your privacy!</strong></p>
 
-  <a href="https://github.com/AKS-Labs/Suchak/releases">
-    <strong>📥 Download Suchak Today!</strong>
+  <a href="https://github.com/AKS-Labs/SandeshVahak/releases">
+    <strong>📥 Download SandeshVahak Today!</strong>
   </a>
 </div>

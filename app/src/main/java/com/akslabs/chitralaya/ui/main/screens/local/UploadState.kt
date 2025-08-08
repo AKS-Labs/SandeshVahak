@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.ui.main.screens.local
+package com.akslabs.SandeshVahak.ui.main.screens.local
 
 enum class UploadState {
     ENQUEUED,

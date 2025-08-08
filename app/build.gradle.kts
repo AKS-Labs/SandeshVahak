@@ -8,11 +8,13 @@ plugins {
 }
 
 android {
-    namespace = "com.akslabs.Suchak"
+    // Keep namespace to match existing R imports
+    namespace = "com.akslabs.SandeshVahak"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.akslabs.Suchak"
+        // Use the new app ID to match your renamed package
+        applicationId = "com.akslabs.SandeshVahak"
         minSdk = 29
         targetSdk = 34
         versionCode = 7

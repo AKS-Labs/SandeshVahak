@@ -1,8 +1,8 @@
-package com.akslabs.Suchak.debug
+package com.akslabs.SandeshVahak.debug
 
 import android.content.Context
 import android.util.Log
-import com.akslabs.Suchak.data.localdb.DbHolder
+import com.akslabs.SandeshVahak.data.localdb.DbHolder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

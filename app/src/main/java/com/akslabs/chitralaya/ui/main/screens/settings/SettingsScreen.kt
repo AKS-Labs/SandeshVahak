@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.ui.main.screens.settings
+package com.akslabs.SandeshVahak.ui.main.screens.settings
 
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -19,20 +19,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.work.NetworkType
-import com.akslabs.Suchak.R
-import com.akslabs.Suchak.data.localdb.DbHolder
-import com.akslabs.Suchak.data.localdb.Preferences
-import com.akslabs.Suchak.data.localdb.backup.BackupHelper
+import com.akslabs.SandeshVahak.R
+import com.akslabs.SandeshVahak.data.localdb.DbHolder
+import com.akslabs.SandeshVahak.data.localdb.Preferences
+import com.akslabs.SandeshVahak.data.localdb.backup.BackupHelper
 
-import com.akslabs.Suchak.ui.components.SettingsListItem
-import com.akslabs.Suchak.ui.components.SettingsListItemWithSwitch
-import com.akslabs.Suchak.ui.components.SettingsListItemWithDialog
-import com.akslabs.Suchak.ui.components.SettingsSectionHeader
-import com.akslabs.Suchak.ui.components.SettingsSectionDivider
-import com.akslabs.Suchak.utils.connectivity.ConnectivityObserver
-import com.akslabs.Suchak.utils.connectivity.ConnectivityStatus
-import com.akslabs.Suchak.utils.toastFromMainThread
-import com.akslabs.Suchak.workers.WorkModule
+import com.akslabs.SandeshVahak.ui.components.SettingsListItem
+import com.akslabs.SandeshVahak.ui.components.SettingsListItemWithSwitch
+import com.akslabs.SandeshVahak.ui.components.SettingsListItemWithDialog
+import com.akslabs.SandeshVahak.ui.components.SettingsSectionHeader
+import com.akslabs.SandeshVahak.ui.components.SettingsSectionDivider
+import com.akslabs.SandeshVahak.utils.connectivity.ConnectivityObserver
+import com.akslabs.SandeshVahak.utils.connectivity.ConnectivityStatus
+import com.akslabs.SandeshVahak.utils.toastFromMainThread
+import com.akslabs.SandeshVahak.workers.WorkModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -235,7 +235,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
             icon = Icons.Rounded.Outbox,
             onClick = {
                 exportBackupFileLauncher.launch(
-                    context.getString(R.string.Suchak_sms_backup_json)
+                    context.getString(R.string.SandeshVahak_sms_backup_json)
                 )
             }
         )
@@ -252,7 +252,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                 }
                 if (checked) {
                     autoExportBackupFileLauncher.launch(
-                        context.getString(R.string.Suchak_auto_sms_backup_json)
+                        context.getString(R.string.SandeshVahak_auto_sms_backup_json)
                     )
                 } else {
                     WorkModule.PeriodicDbExport.cancel()
@@ -374,11 +374,11 @@ private fun CloudSmsItem(
 private fun DatabaseBackupItem(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var backupStats by remember { mutableStateOf<com.akslabs.Suchak.data.localdb.backup.BackupHelper.BackupStats?>(null) }
+    var backupStats by remember { mutableStateOf<com.akslabs.SandeshVahak.data.localdb.backup.BackupHelper.BackupStats?>(null) }
 
     // Load backup stats
     LaunchedEffect(Unit) {
-        backupStats = com.akslabs.Suchak.data.localdb.backup.BackupHelper.getBackupStats()
+        backupStats = com.akslabs.SandeshVahak.data.localdb.backup.BackupHelper.getBackupStats()
     }
 
     SettingsListItem(
@@ -401,12 +401,12 @@ private fun DatabaseBackupItem(modifier: Modifier = Modifier) {
 
                 try {
                     context.toastFromMainThread("Uploading database to Telegram...")
-                    val result = com.akslabs.Suchak.data.localdb.backup.BackupHelper.uploadDatabaseToTelegram(context)
+                    val result = com.akslabs.SandeshVahak.data.localdb.backup.BackupHelper.uploadDatabaseToTelegram(context)
                     result.fold(
                         onSuccess = { message ->
                             context.toastFromMainThread("✅ $message")
                             // Refresh backup stats
-                            backupStats = com.akslabs.Suchak.data.localdb.backup.BackupHelper.getBackupStats()
+                            backupStats = com.akslabs.SandeshVahak.data.localdb.backup.BackupHelper.getBackupStats()
                         },
                         onFailure = { error ->
                             context.toastFromMainThread("❌ Backup failed: ${error.message}")
@@ -432,7 +432,7 @@ private fun DatabaseStatusItem(modifier: Modifier = Modifier) {
         modifier = modifier,
         onClick = {
             scope.launch {
-                val stats = com.akslabs.Suchak.data.localdb.backup.BackupHelper.getBackupStats()
+                val stats = com.akslabs.SandeshVahak.data.localdb.backup.BackupHelper.getBackupStats()
                 val message = buildString {
                     appendLine("📊 Database Status:")
                     appendLine("• SMS Messages: ${stats.currentSmsMessages}")

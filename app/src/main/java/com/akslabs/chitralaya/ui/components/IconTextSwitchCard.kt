@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.ui.components
+package com.akslabs.SandeshVahak.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -25,7 +25,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.akslabs.Suchak.R
+import com.akslabs.SandeshVahak.R
 
 @Composable
 fun IconTextSwitchCard(

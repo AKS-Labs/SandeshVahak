@@ -6,7 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.akslabs.Suchak.data.localdb.DbHolder
+import com.akslabs.SandeshVahak.data.localdb.DbHolder
 import com.akslabs.chitralaya.data.localdb.entities.RemoteSmsMessage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow

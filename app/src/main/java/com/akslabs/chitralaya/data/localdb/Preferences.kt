@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.data.localdb
+package com.akslabs.SandeshVahak.data.localdb
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -22,6 +22,11 @@ object Preferences {
     const val autoExportDatabseLocation: String = "autoExportDatabaseLocation"
     const val defaultAutoExportDatabaseIntervalKey: Long = 7
     const val defaultAutoBackupInterval: Long = 7
+
+    // SMS sync preferences
+    const val isSmsSyncEnabledKey: String = "isSmsSyncEnabled"
+    const val smsSyncModeKey: String = "smsSyncMode" // values: ALL, NEW_ONLY
+    const val smsSyncEnabledSinceKey: String = "smsSyncEnabledSince"
 
     private const val prefFile: String = "preferences"
     private const val encryptedPrefFile: String = "encryptedPreferences"

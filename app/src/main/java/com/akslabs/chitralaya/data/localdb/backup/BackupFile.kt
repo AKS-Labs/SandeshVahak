@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.data.localdb.backup
+package com.akslabs.SandeshVahak.data.localdb.backup
 
 import androidx.annotation.Keep
 import com.akslabs.chitralaya.data.localdb.entities.SmsMessage

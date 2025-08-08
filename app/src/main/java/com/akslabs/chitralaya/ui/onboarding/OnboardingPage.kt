@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.ui.onboarding
+package com.akslabs.SandeshVahak.ui.onboarding
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
@@ -12,8 +12,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.akslabs.Suchak.R
-import com.akslabs.Suchak.api.BotApi
+import com.akslabs.SandeshVahak.R
+import com.akslabs.SandeshVahak.api.BotApi
 
 import kotlinx.coroutines.delay
 

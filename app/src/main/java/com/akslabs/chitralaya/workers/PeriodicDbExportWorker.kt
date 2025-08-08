@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.workers
+package com.akslabs.SandeshVahak.workers
 
 import android.content.Context
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
@@ -7,10 +7,10 @@ import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import com.akslabs.Suchak.R
-import com.akslabs.Suchak.data.localdb.backup.BackupHelper
-import com.akslabs.Suchak.utils.toastFromMainThread
-import com.akslabs.Suchak.workers.WorkModule.NOTIFICATION_ID
+import com.akslabs.SandeshVahak.R
+import com.akslabs.SandeshVahak.data.localdb.backup.BackupHelper
+import com.akslabs.SandeshVahak.utils.toastFromMainThread
+import com.akslabs.SandeshVahak.workers.WorkModule.NOTIFICATION_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

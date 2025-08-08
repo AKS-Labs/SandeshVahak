@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.akslabs.chitralaya.data.localdb.entities.RemoteSmsMessage
-import com.akslabs.Suchak.ui.components.LoadAnimation
+import com.akslabs.SandeshVahak.ui.components.LoadAnimation
 import com.akslabs.chitralaya.ui.components.RemoteSmsListItem
 import com.akslabs.chitralaya.ui.components.itemsPaging
 

@@ -2,12 +2,12 @@ package com.akslabs.chitralaya
 
 import android.app.Application
 
-import com.akslabs.Suchak.api.BotApi
-import com.akslabs.Suchak.data.localdb.DbHolder
-import com.akslabs.Suchak.data.localdb.Preferences
+import com.akslabs.SandeshVahak.api.BotApi
+import com.akslabs.SandeshVahak.data.localdb.DbHolder
+import com.akslabs.SandeshVahak.data.localdb.Preferences
 
-import com.akslabs.Suchak.utils.connectivity.ConnectivityObserver
-import com.akslabs.Suchak.workers.WorkModule
+import com.akslabs.SandeshVahak.utils.connectivity.ConnectivityObserver
+import com.akslabs.SandeshVahak.workers.WorkModule
 import com.akslabs.chitralaya.utils.PerformanceMonitor
 
 

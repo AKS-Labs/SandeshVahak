@@ -1,10 +1,10 @@
-package com.akslabs.Suchak.utils
+package com.akslabs.SandeshVahak.utils
 
 object Constants {
     const val SAMPLE_API_KEY = "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
 
-    const val REPO_GITHUB = "https://github.com/AKS-Labs/Suchak"
+    const val REPO_GITHUB = "https://github.com/AKS-Labs/SandeshVahak"
     const val LICENSE = "https://www.apache.org/licenses/LICENSE-2.0"
 
-    const val CONTRIBUTORS_GITHUB = "https://github.com/AKS-Labs/Suchak/graphs/contributors"
+    const val CONTRIBUTORS_GITHUB = "https://github.com/AKS-Labs/SandeshVahak/graphs/contributors"
 }

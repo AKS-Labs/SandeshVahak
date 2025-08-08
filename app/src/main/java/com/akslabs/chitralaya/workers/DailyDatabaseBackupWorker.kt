@@ -1,10 +1,10 @@
-package com.akslabs.Suchak.workers
+package com.akslabs.SandeshVahak.workers
 
 import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.akslabs.Suchak.data.localdb.backup.BackupHelper
+import com.akslabs.SandeshVahak.data.localdb.backup.BackupHelper
 
 /**
  * Worker that runs daily to backup database to Telegram

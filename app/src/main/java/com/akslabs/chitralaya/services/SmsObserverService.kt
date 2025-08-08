@@ -6,7 +6,7 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import com.akslabs.Suchak.utils.NotificationHelper
+import com.akslabs.SandeshVahak.utils.NotificationHelper
 
 /**
  * Background service to observe SMS changes
@@ -21,9 +21,22 @@ class SmsObserverService : Service() {
     override fun onCreate() {
         super.onCreate()
         Log.i(TAG, "SMS Observer Service created")
-        
-        // Start observing SMS content changes
-        SmsContentObserver.startObserving(this)
+
+        // Ensure preferences are initialized even if service starts before App
+        try { com.akslabs.SandeshVahak.data.localdb.Preferences.init(applicationContext) } catch (_: Exception) {}
+
+        // Only start observing if user enabled sync
+        val isEnabled = com.akslabs.SandeshVahak.data.localdb.Preferences.getBoolean(
+            com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
+            false
+        )
+        if (isEnabled) {
+            SmsContentObserver.startObserving(this)
+        } else {
+            Log.i(TAG, "SMS sync disabled; not starting content observer")
+            stopSelf()
+            return
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

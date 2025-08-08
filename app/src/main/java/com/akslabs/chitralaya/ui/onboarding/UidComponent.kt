@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.ui.onboarding
+package com.akslabs.SandeshVahak.ui.onboarding
 
 import android.util.Log
 import androidx.compose.animation.AnimatedContent
@@ -39,9 +39,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.akslabs.Suchak.R
-import com.akslabs.Suchak.api.BotApi
-import com.akslabs.Suchak.data.localdb.Preferences
+import com.akslabs.SandeshVahak.R
+import com.akslabs.SandeshVahak.api.BotApi
+import com.akslabs.SandeshVahak.data.localdb.Preferences
 import com.github.kotlintelegrambot.entities.ChatId
 
 import kotlinx.coroutines.launch

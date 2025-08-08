@@ -7,7 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.Telephony
 import android.util.Log
-import com.akslabs.Suchak.workers.WorkModule
+import com.akslabs.SandeshVahak.workers.WorkModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -97,15 +97,24 @@ class SmsContentObserver(
                 // Reduced delay for faster response (200ms instead of 1000ms)
                 delay(200)
 
-                // Sync new SMS messages to local database
+                // Always update local DB so Device screen stays current
+                val isEnabled = com.akslabs.SandeshVahak.data.localdb.Preferences.getBoolean(
+                    com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
+                    false
+                )
+
+                // Sync new SMS messages to local database (always)
                 val newCount = SmsReaderService.syncNewSmsToDatabase(context)
 
                 if (newCount > 0) {
                     val processingTime = System.currentTimeMillis() - startTime
-                    Log.i(TAG, "🚀 Found $newCount new SMS messages in ${processingTime}ms, triggering immediate sync")
+                    Log.i(TAG, "🚀 Found $newCount new SMS messages in ${processingTime}ms")
 
-                    // Trigger immediate SMS sync to Telegram
-                    WorkModule.SmsSync.enqueueOneTime()
+                    // Only trigger cloud sync if user enabled it
+                    if (isEnabled) {
+                        Log.i(TAG, "Triggering immediate cloud sync since SMS sync is enabled")
+                        WorkModule.SmsSync.enqueueOneTime()
+                    }
                 } else {
                     val processingTime = System.currentTimeMillis() - startTime
                     Log.d(TAG, "✅ No new SMS messages found (${processingTime}ms)")

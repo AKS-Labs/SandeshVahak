@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.utils
+package com.akslabs.SandeshVahak.utils
 
 import android.content.ContentResolver
 import android.content.ContentValues.TAG
@@ -15,9 +15,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import com.akslabs.Suchak.R
-import com.akslabs.Suchak.api.BotApi
-import com.akslabs.Suchak.data.localdb.DbHolder
+import com.akslabs.SandeshVahak.R
+import com.akslabs.SandeshVahak.api.BotApi
+import com.akslabs.SandeshVahak.data.localdb.DbHolder
 
 import com.github.kotlintelegrambot.entities.files.Document
 import com.github.kotlintelegrambot.network.fold

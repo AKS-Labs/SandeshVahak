@@ -152,7 +152,7 @@
 -keep class org.jetbrains.annotations.** { *; }
 
 # Preserve Entities and DAOs
--keep class com.akslabs.Suchak.database.** { *; }
+-keep class com.akslabs.SandeshVahak.database.** { *; }
 
 # Telegram bot api
 -keep class com.github.kotlintelegrambot.** { *; }

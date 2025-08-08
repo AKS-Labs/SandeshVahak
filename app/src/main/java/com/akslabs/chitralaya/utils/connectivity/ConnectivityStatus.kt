@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.utils.connectivity
+package com.akslabs.SandeshVahak.utils.connectivity
 
 enum class ConnectivityStatus {
     Available,

@@ -20,18 +20,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import com.akslabs.Suchak.data.localdb.Preferences
-import com.akslabs.Suchak.debug.DatabaseDebugHelper
-import com.akslabs.Suchak.ui.main.MainPage
-import com.akslabs.Suchak.ui.main.MainViewModel
-import com.akslabs.Suchak.ui.main.nav.screenScopedViewModel
-import com.akslabs.Suchak.ui.onboarding.OnboardingPage
-import com.akslabs.Suchak.ui.permission.PermissionDialogScreen
-import com.akslabs.Suchak.ui.permission.PermissionViewModel
-import com.akslabs.Suchak.ui.theme.AppTheme
-import com.akslabs.Suchak.utils.NotificationHelper
-import com.akslabs.Suchak.workers.WorkModule
+import com.akslabs.SandeshVahak.data.localdb.Preferences
+import com.akslabs.SandeshVahak.debug.DatabaseDebugHelper
+import com.akslabs.SandeshVahak.ui.main.MainPage
+import com.akslabs.SandeshVahak.ui.main.MainViewModel
+import com.akslabs.SandeshVahak.ui.main.nav.screenScopedViewModel
+import com.akslabs.SandeshVahak.ui.onboarding.OnboardingPage
+import com.akslabs.SandeshVahak.ui.permission.PermissionDialogScreen
+import com.akslabs.SandeshVahak.ui.permission.PermissionViewModel
+import com.akslabs.SandeshVahak.ui.theme.AppTheme
+import com.akslabs.SandeshVahak.utils.NotificationHelper
+import com.akslabs.SandeshVahak.workers.WorkModule
 import com.akslabs.chitralaya.services.SmsObserverService
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -51,8 +52,7 @@ class MainActivity : ComponentActivity() {
             DatabaseDebugHelper.debugDatabaseState(this@MainActivity)
         }
 
-        // Initialize SMS sync on app startup
-        initializeSmsSync()
+        // Do not auto-initialize SMS sync on startup; wait for user to enable via toggle
 
         // Start daily database backup
         WorkModule.DailyDatabaseBackup.enqueuePeriodic()
@@ -101,6 +101,12 @@ class MainActivity : ComponentActivity() {
                                     hasSmsPerm = isGranted
                                     if (isGranted) {
                                         // Trigger initial SMS reading when permission is granted
+                                        // Read existing device SMS into local DB so Device screen shows content even if sync is off
+                                        lifecycleScope.launch {
+                                            try {
+                                                com.akslabs.chitralaya.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
+                                            } catch (_: Exception) {}
+                                        }
                                         triggerInitialSmsReading()
                                     }
                                 }
@@ -133,6 +139,40 @@ class MainActivity : ComponentActivity() {
             !hasSmsPerm -> ScreenFlow.Permission.route
             else -> ScreenFlow.Main.route
         }
+
+        // Keep Device screen populated from device SMS provider regardless of sync toggle
+        if (hasSmsPerm) {
+            lifecycleScope.launch {
+                try {
+                    // If database is empty, do an initial full import
+                    val count = com.akslabs.SandeshVahak.data.localdb.DbHolder.database
+                        .smsMessageDao()
+                        .getAllCountFlow()
+                        .first()
+                    if (count == 0) {
+                        com.akslabs.chitralaya.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
+                    } else {
+                        // Otherwise, pick up any new messages since last run
+                        com.akslabs.chitralaya.services.SmsReaderService.syncNewSmsToDatabase(this@MainActivity)
+                    }
+                } catch (_: Exception) {}
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // While app is visible, observe SMS changes to keep Device tab live, independent of cloud sync
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
+            try { com.akslabs.SandeshVahak.data.localdb.Preferences.init(applicationContext) } catch (_: Exception) {}
+            com.akslabs.chitralaya.services.SmsContentObserver.startObserving(this)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // Stop observing when app goes to background (cloud sync observer is handled by service when enabled)
+        com.akslabs.chitralaya.services.SmsContentObserver.stopObserving(this)
     }
 
     /**
@@ -175,18 +215,10 @@ class MainActivity : ComponentActivity() {
     private fun triggerInitialSmsReading() {
         lifecycleScope.launch {
             try {
-                android.util.Log.i("MainActivity", "Triggering initial SMS reading...")
-
-                // Start SMS observer service for real-time monitoring
-                val serviceIntent = Intent(this@MainActivity, SmsObserverService::class.java)
-                startForegroundService(serviceIntent)
-
-                // Trigger immediate SMS sync to read all existing messages
-                WorkModule.SmsSync.enqueueOneTime()
-
-                android.util.Log.i("MainActivity", "Initial SMS reading triggered successfully")
+                android.util.Log.i("MainActivity", "SMS permission granted; waiting for user to enable sync")
+                // Do not start observer or sync automatically; user will enable via toggle
             } catch (e: Exception) {
-                android.util.Log.e("MainActivity", "Error triggering initial SMS reading", e)
+                android.util.Log.e("MainActivity", "Error after SMS permission grant", e)
             }
         }
     }

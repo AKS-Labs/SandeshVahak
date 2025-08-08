@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.ui.permission
+package com.akslabs.SandeshVahak.ui.permission
 
 import android.Manifest
 import androidx.compose.runtime.mutableStateListOf

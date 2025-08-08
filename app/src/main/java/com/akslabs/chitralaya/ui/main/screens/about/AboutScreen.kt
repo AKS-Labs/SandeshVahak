@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.ui.main.screens.about
+package com.akslabs.SandeshVahak.ui.main.screens.about
 
 import android.content.Intent
 import android.net.Uri
@@ -20,11 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.akslabs.Suchak.BuildConfig
-import com.akslabs.Suchak.R
-import com.akslabs.Suchak.ui.components.IconTextCard
-import com.akslabs.Suchak.ui.components.ListCategoryHeader
-import com.akslabs.Suchak.utils.Constants
+import com.akslabs.SandeshVahak.BuildConfig
+import com.akslabs.SandeshVahak.R
+import com.akslabs.SandeshVahak.ui.components.IconTextCard
+import com.akslabs.SandeshVahak.ui.components.ListCategoryHeader
+import com.akslabs.SandeshVahak.utils.Constants
 
 @Composable
 fun AboutScreen(modifier: Modifier = Modifier) {

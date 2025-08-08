@@ -1,10 +1,10 @@
-package com.akslabs.Suchak.ui.main
+package com.akslabs.SandeshVahak.ui.main
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.akslabs.Suchak.ui.main.nav.Screens
+import com.akslabs.SandeshVahak.ui.main.nav.Screens
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

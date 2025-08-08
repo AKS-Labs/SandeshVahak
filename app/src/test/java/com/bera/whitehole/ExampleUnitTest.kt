@@ -1,4 +1,4 @@
-package com.akslabs.Suchak
+package com.akslabs.SandeshVahak
 
 import org.junit.Assert.*
 import org.junit.Test

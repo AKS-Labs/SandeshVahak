@@ -6,10 +6,10 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import com.akslabs.Suchak.R
+import com.akslabs.SandeshVahak.R
 import com.akslabs.chitralaya.services.SmsSyncService
 import com.akslabs.chitralaya.services.SmsSyncResult
-import com.akslabs.Suchak.utils.NotificationHelper
+import com.akslabs.SandeshVahak.utils.NotificationHelper
 
 /**
  * Background worker for syncing SMS messages to Telegram channel
@@ -22,11 +22,21 @@ class SmsSyncWorker(
 
     override suspend fun doWork(): Result {
         Log.i(TAG, "=== SMS SYNC WORKER STARTED ===")
-        
+
+        // Respect user preference; if disabled, cancel gracefully
+        val isEnabled = com.akslabs.SandeshVahak.data.localdb.Preferences.getBoolean(
+            com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
+            false
+        )
+        if (!isEnabled) {
+            Log.w(TAG, "SMS sync disabled by user; skipping work")
+            return Result.success()
+        }
+
         return try {
             // Set foreground info for long-running operation
             setForeground(createForegroundInfo())
-            
+
             // Perform sync
             var finalSyncResult: SmsSyncResult? = null
             SmsSyncService.performFullSync(applicationContext).collect { progress ->
@@ -120,27 +130,37 @@ class QuickSmsSyncWorker(
 
     override suspend fun doWork(): Result {
         Log.d(TAG, "Quick SMS sync worker started")
-        
+
+        // Respect user preference; if disabled, cancel gracefully
+        val isEnabled = com.akslabs.SandeshVahak.data.localdb.Preferences.getBoolean(
+            com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
+            false
+        )
+        if (!isEnabled) {
+            Log.w(TAG, "SMS sync disabled by user; skipping quick sync")
+            return Result.success()
+        }
+
         return try {
             val syncResult = SmsSyncService.performQuickSync(applicationContext)
-            
+
             when (syncResult) {
                 is SmsSyncResult.Success -> {
                     Log.d(TAG, "Quick sync completed: ${syncResult.messagesSynced} messages synced")
                     Result.success()
                 }
-                
+
                 is SmsSyncResult.Error -> {
                     Log.e(TAG, "Quick sync failed: ${syncResult.message}")
                     Result.retry()
                 }
-                
+
                 is SmsSyncResult.NoChannelConfigured -> {
                     Log.d(TAG, "No channel configured for quick sync")
                     Result.success()
                 }
             }
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Exception in QuickSmsSyncWorker", e)
             Result.retry()
@@ -162,15 +182,25 @@ class InstantSmsSyncWorker(
 
     override suspend fun doWork(): Result {
         Log.d(TAG, "Instant SMS sync worker started")
-        
+
+        // Respect user preference; if disabled, cancel gracefully
+        val isEnabled = com.akslabs.SandeshVahak.data.localdb.Preferences.getBoolean(
+            com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
+            false
+        )
+        if (!isEnabled) {
+            Log.w(TAG, "SMS sync disabled by user; skipping instant sync")
+            return Result.success()
+        }
+
         return try {
             val syncResult = SmsSyncService.performQuickSync(applicationContext)
-            
+
             when (syncResult) {
                 is SmsSyncResult.Success -> {
                     val syncedCount = syncResult.messagesSynced
                     Log.d(TAG, "Instant sync completed: $syncedCount messages synced")
-                    
+
                     if (syncedCount > 0) {
                         // Show notification for instant sync
                         NotificationHelper.showInstantSmsSyncNotification(
@@ -178,21 +208,21 @@ class InstantSmsSyncWorker(
                             syncedCount
                         )
                     }
-                    
+
                     Result.success()
                 }
-                
+
                 is SmsSyncResult.Error -> {
                     Log.e(TAG, "Instant sync failed: ${syncResult.message}")
                     Result.failure()
                 }
-                
+
                 is SmsSyncResult.NoChannelConfigured -> {
                     Log.d(TAG, "No channel configured for instant sync")
                     Result.success()
                 }
             }
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Exception in InstantSmsSyncWorker", e)
             Result.failure()

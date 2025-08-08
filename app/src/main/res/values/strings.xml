@@ -1,6 +1,6 @@
 <resources>
     <!-- Non translatable -->
-    <string name="app_name" translatable="false">Suchak</string>
+    <string name="app_name" translatable="false">SandeshVahak</string>
     <string name="upload_single" translatable="false">upload-single</string>
     <string name="enabled_periodic_backup" translatable="false">enabled-periodic-backup</string>
     <string name="disabled_periodic_backup" translatable="false">disabled-periodic-backup</string>
@@ -56,9 +56,9 @@
     <string name="import_export"><![CDATA[Import & Export]]></string>
     <string name="import_database">Import database</string>
     <string name="export_database">Export database</string>
-    <string name="Suchak_sms_backup_json">Suchak_sms_backup.json</string>
+    <string name="SandeshVahak_sms_backup_json">SandeshVahak_sms_backup.json</string>
     <string name="auto_export_database">Auto export database</string>
-    <string name="Suchak_auto_sms_backup_json">Suchak_auto_sms_backup.json</string>
+    <string name="SandeshVahak_auto_sms_backup_json">SandeshVahak_auto_sms_backup.json</string>
     <string name="periodic_database_export_cancelled">Periodic database export cancelled.</string>
     <string name="auto_export_interval">Auto export interval</string>
     <string name="menu_icon">Menu icon</string>
@@ -85,8 +85,8 @@
     <string name="_4_copy_and_paste_the_unique_id_here">4. Copy and paste the unique id here.</string>
     <string name="invalid_uid_or_token">Invalid UID or token.</string>
     <string name="unique_id_start_in_gc">Enter unique id</string>
-    <string name="download_Suchak">Download/Suchak</string>
-    <string name="Suchak">Suchak_%1$s.%2$s</string>
+    <string name="download_SandeshVahak">Download/SandeshVahak</string>
+    <string name="SandeshVahak">SandeshVahak_%1$s.%2$s</string>
     <string name="sms_sync_successful">SMS sync successful!</string>
     <string name="syncing_sms">Syncing SMS</string>
     <string name="exporting_database">Exporting database</string>

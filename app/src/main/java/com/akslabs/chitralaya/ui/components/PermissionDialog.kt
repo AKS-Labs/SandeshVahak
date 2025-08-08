@@ -1,4 +1,4 @@
-package com.akslabs.Suchak.ui.components
+package com.akslabs.SandeshVahak.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.akslabs.Suchak.R
+import com.akslabs.SandeshVahak.R
 
 @Composable
 fun PermissionDialog(
