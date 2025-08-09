@@ -57,6 +57,8 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
     val totalCloudSmsCount by DbHolder.database.remoteSmsMessageDao().getTotalCountFlow()
         .collectAsStateWithLifecycle(initialValue = 0)
 
+
+
     // File launchers
     val exportBackupFileLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument(BackupHelper.JSON_MIME)
@@ -193,6 +195,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
             },
             enabled = isAutoSmsBackupEnabled
         )
+
 
         SettingsSectionDivider()
 

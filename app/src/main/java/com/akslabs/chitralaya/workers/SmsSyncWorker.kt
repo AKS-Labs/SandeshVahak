@@ -9,7 +9,7 @@ import androidx.work.WorkerParameters
 import com.akslabs.SandeshVahak.R
 import com.akslabs.chitralaya.services.SmsSyncService
 import com.akslabs.chitralaya.services.SmsSyncResult
-import com.akslabs.SandeshVahak.utils.NotificationHelper
+import com.akslabs.Suchak.utils.NotificationHelper
 
 /**
  * Background worker for syncing SMS messages to Telegram channel
@@ -23,14 +23,30 @@ class SmsSyncWorker(
     override suspend fun doWork(): Result {
         Log.i(TAG, "=== SMS SYNC WORKER STARTED ===")
 
+        // Ensure preferences are initialized
+        try {
+            com.akslabs.SandeshVahak.data.localdb.Preferences.init(applicationContext)
+            Log.d(TAG, "Preferences initialized successfully in SmsSyncWorker")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize preferences in SmsSyncWorker", e)
+        }
+
         // Respect user preference; if disabled, cancel gracefully
-        val isEnabled = com.akslabs.SandeshVahak.data.localdb.Preferences.getBoolean(
-            com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
+        val isEnabled = try {
+            com.akslabs.SandeshVahak.data.localdb.Preferences.getBoolean(
+                com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
+                false
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to read SMS sync enabled preference in worker, defaulting to false", e)
             false
-        )
+        }
+
         if (!isEnabled) {
             Log.w(TAG, "SMS sync disabled by user; skipping work")
             return Result.success()
+        } else {
+            Log.d(TAG, "SMS sync enabled; proceeding with work")
         }
 
         return try {
@@ -39,7 +55,9 @@ class SmsSyncWorker(
 
             // Perform sync
             var finalSyncResult: SmsSyncResult? = null
+            Log.d(TAG, "Collecting progress from performFullSync()")
             SmsSyncService.performFullSync(applicationContext).collect { progress ->
+                Log.d(TAG, "Worker progress update: batch=${progress.currentBatch}, total=${progress.totalMessagesSynced}, complete=${progress.isComplete}, error=${progress.errorMessage}")
                 // Update progress in foreground notification
                 if (progress.isComplete) {
                     finalSyncResult = if (progress.errorMessage != null) {
@@ -63,6 +81,7 @@ class SmsSyncWorker(
                     val syncedMessages = result.messagesSynced
                     Log.i(TAG, "SMS sync completed successfully: $syncedMessages messages synced")
                     if (syncedMessages > 0) {
+                        Log.d(TAG, "Attempting to show completion notification for $syncedMessages messages")
                         // Show notification about synced messages
                         NotificationHelper.showSmsSyncCompleteNotification(
                             applicationContext,
@@ -87,7 +106,7 @@ class SmsSyncWorker(
                     Result.failure()
                 }
             }
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Exception in SmsSyncWorker", e)
             Result.failure()
@@ -106,7 +125,7 @@ class SmsSyncWorker(
             "Syncing SMS messages...",
             "Uploading SMS messages to Telegram"
         )
-        
+
         return ForegroundInfo(
             NOTIFICATION_ID,
             notification,
@@ -142,7 +161,9 @@ class QuickSmsSyncWorker(
         }
 
         return try {
+            Log.d(TAG, "Invoking performQuickSync() from QuickSmsSyncWorker")
             val syncResult = SmsSyncService.performQuickSync(applicationContext)
+            Log.d(TAG, "performQuickSync() returned $syncResult")
 
             when (syncResult) {
                 is SmsSyncResult.Success -> {
@@ -194,7 +215,9 @@ class InstantSmsSyncWorker(
         }
 
         return try {
+            Log.d(TAG, "Invoking performQuickSync() from InstantSmsSyncWorker")
             val syncResult = SmsSyncService.performQuickSync(applicationContext)
+            Log.d(TAG, "performQuickSync() returned $syncResult")
 
             when (syncResult) {
                 is SmsSyncResult.Success -> {
@@ -202,6 +225,7 @@ class InstantSmsSyncWorker(
                     Log.d(TAG, "Instant sync completed: $syncedCount messages synced")
 
                     if (syncedCount > 0) {
+                        Log.d(TAG, "Attempting to show instant sync notification for $syncedCount messages")
                         // Show notification for instant sync
                         NotificationHelper.showInstantSmsSyncNotification(
                             applicationContext,
@@ -231,5 +255,6 @@ class InstantSmsSyncWorker(
 
     companion object {
         private const val TAG = "InstantSmsSyncWorker"
+        const val KEY_TARGET_IDS = "target_ids"
     }
 }

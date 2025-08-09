@@ -40,6 +40,10 @@ fun AppNavHost(
             val localSmsMessages = viewModel.localSmsFlow.collectAsLazyPagingItems()
             val localSmsCount by viewModel.localSmsCount.collectAsStateWithLifecycle(initialValue = 0)
 
+            // Debug paging count flow
+            androidx.compose.runtime.SideEffect {
+                android.util.Log.d("AppNavHost", "Local count recomposed: $localSmsCount")
+            }
             // Notify parent about count changes
             LaunchedEffect(localSmsCount) {
                 onLocalSmsCountChanged(localSmsCount)

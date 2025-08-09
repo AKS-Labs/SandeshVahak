@@ -13,6 +13,7 @@ import com.akslabs.chitralaya.utils.PerformanceMonitor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
+import androidx.room.withTransaction
 
 /**
  * Service for reading SMS messages from the device's SMS content provider
@@ -91,13 +92,14 @@ object SmsReaderService {
     suspend fun readSmsMessagesAfter(context: Context, timestamp: Long): List<SmsMessage> {
         return withContext(Dispatchers.IO) {
             try {
-                Log.i(TAG, "Reading SMS messages after timestamp: $timestamp")
+                Log.i(TAG, "Reading SMS messages after timestamp: $timestamp (${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(java.util.Date(timestamp))})")
                 val messages = mutableListOf<SmsMessage>()
-                
+
                 val contentResolver = context.contentResolver
                 val selection = "${Telephony.Sms.DATE} > ?"
                 val selectionArgs = arrayOf(timestamp.toString())
-                
+
+                Log.d(TAG, "Query: uri=${Telephony.Sms.CONTENT_URI}, selection='$selection', args=${selectionArgs.toList()}, sort=${Telephony.Sms.DATE} ASC")
                 val cursor = contentResolver.query(
                     Telephony.Sms.CONTENT_URI,
                     SMS_PROJECTION,
@@ -106,13 +108,20 @@ object SmsReaderService {
                     "${Telephony.Sms.DATE} ASC"
                 )
 
+                Log.d(TAG, "Cursor is null? ${cursor == null}")
                 cursor?.use { c ->
+                    var rowCount = 0
                     while (c.moveToNext()) {
+                        rowCount++
                         val smsMessage = parseSmsFromCursor(c)
                         if (smsMessage != null) {
                             messages.add(smsMessage)
+                            Log.v(TAG, "Row #$rowCount -> id=${smsMessage.id}, date=${smsMessage.date}, addr=${smsMessage.address}")
+                        } else {
+                            Log.w(TAG, "Row #$rowCount could not be parsed, skipping")
                         }
                     }
+                    Log.d(TAG, "Total rows iterated: $rowCount")
                 }
 
                 Log.i(TAG, "Read ${messages.size} new SMS messages after timestamp")
@@ -133,7 +142,7 @@ object SmsReaderService {
                 val contentResolver = context.contentResolver
                 val selection = "${Telephony.Sms._ID} = ?"
                 val selectionArgs = arrayOf(smsId)
-                
+
                 val cursor = contentResolver.query(
                     Telephony.Sms.CONTENT_URI,
                     SMS_PROJECTION,
@@ -157,43 +166,87 @@ object SmsReaderService {
 
     /**
      * Sync all SMS messages to local database with optimized batch processing
+     * Respects NEW_ONLY mode baseline when specified
      */
     suspend fun syncAllSmsToDatabase(context: Context): Int {
         return PerformanceMonitor.trackSuspendOperation(Operations.SMS_SYNC_TO_DB) {
             withContext(Dispatchers.IO) {
                 Log.i(TAG, "🔄 Starting optimized SMS database sync...")
-                val allSmsMessages = readAllSmsMessages(context)
+
+                // Check if we're in NEW_ONLY mode and should respect baseline
+                val syncMode = try {
+                    com.akslabs.SandeshVahak.data.localdb.Preferences.getString(
+                        com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncModeKey,
+                        "ALL"
+                    )
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to read sync mode, defaulting to ALL", e)
+                    "ALL"
+                }
+
+                val baseline = try {
+                    com.akslabs.SandeshVahak.data.localdb.Preferences.getLong(
+                        com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncEnabledSinceKey,
+                        0L
+                    )
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to read baseline timestamp, using 0", e)
+                    0L
+                }
+
+                Log.d(TAG, "Sync mode: $syncMode, baseline: $baseline")
+
+                val allSmsMessages = if (syncMode == "NEW_ONLY" && baseline > 0L) {
+                    Log.i(TAG, "NEW_ONLY mode: filtering messages to only include those after baseline $baseline")
+                    readAllSmsMessages(context).filter { message ->
+                        val includeMessage = message.date >= baseline
+                        if (!includeMessage) {
+                            Log.v(TAG, "Filtering out message ${message.id} (date=${message.date}) as it's before baseline")
+                        }
+                        includeMessage
+                    }
+                } else {
+                    Log.i(TAG, "ALL mode: including all SMS messages")
+                    readAllSmsMessages(context)
+                }
+
+                Log.i(TAG, "Processing ${allSmsMessages.size} SMS messages (filtered for mode: $syncMode)")
                 val dao = DbHolder.database.smsMessageDao()
 
                 var newCount = 0
                 var updatedCount = 0
                 val batchSize = 100
 
-                // Process in batches for better performance
+                // Process in batches for better performance and fewer UI invalidations
                 allSmsMessages.chunked(batchSize).forEachIndexed { batchIndex, batch ->
                     Log.d(TAG, "Processing batch ${batchIndex + 1} with ${batch.size} messages")
 
-                    for (smsMessage in batch) {
-                        val exists = dao.exists(smsMessage.id)
-                        if (exists) {
-                            // Update existing message
-                            val existing = dao.getById(smsMessage.id)
-                            if (existing != null && !existing.isSynced) {
-                                // Only update if not already synced to preserve sync status
-                                dao.update(smsMessage.copy(
-                                    isSynced = existing.isSynced,
-                                    remoteId = existing.remoteId,
-                                    syncedAt = existing.syncedAt,
-                                    syncAttempts = existing.syncAttempts,
-                                    lastSyncAttempt = existing.lastSyncAttempt,
-                                    syncError = existing.syncError
-                                ))
-                                updatedCount++
+                    // Use suspending transaction to allow suspend DAO calls
+                    DbHolder.database.withTransaction {
+                        for (smsMessage in batch) {
+                            val exists = dao.exists(smsMessage.id)
+                            if (exists) {
+                                // Update existing message
+                                val existing = dao.getById(smsMessage.id)
+                                if (existing != null && !existing.isSynced) {
+                                    // Only update if not already synced to preserve sync status
+                                    dao.update(
+                                        smsMessage.copy(
+                                            isSynced = existing.isSynced,
+                                            remoteId = existing.remoteId,
+                                            syncedAt = existing.syncedAt,
+                                            syncAttempts = existing.syncAttempts,
+                                            lastSyncAttempt = existing.lastSyncAttempt,
+                                            syncError = existing.syncError
+                                        )
+                                    )
+                                    updatedCount++
+                                }
+                            } else {
+                                // Insert new message
+                                dao.insert(smsMessage)
+                                newCount++
                             }
-                        } else {
-                            // Insert new message
-                            dao.insert(smsMessage)
-                            newCount++
                         }
                     }
 
@@ -217,24 +270,59 @@ object SmsReaderService {
                 val lastMessageDate = dao.getLatestMessageDate() ?: 0L
 
                 // Respect baseline when user chose NEW_ONLY mode
-                val baseline = com.akslabs.SandeshVahak.data.localdb.Preferences.getLong(
-                    com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncEnabledSinceKey,
+                val baseline = try {
+                    com.akslabs.SandeshVahak.data.localdb.Preferences.getLong(
+                        com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncEnabledSinceKey,
+                        0L
+                    )
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to read baseline timestamp, using 0", e)
                     0L
-                )
-                val effectiveStart = maxOf(lastMessageDate, baseline)
+                }
 
-                Log.i(TAG, "Starting incremental SMS sync from timestamp: $effectiveStart (db=$lastMessageDate, baseline=$baseline)")
+                // For incremental sync, respect the baseline when user chose "sync only new messages"
+                val bufferMs = 5000L // 5 second buffer for clock differences
+                val effectiveStart = if (baseline > 0L) {
+                    // User chose "sync only new messages" - always use baseline as the cutoff
+                    // This ensures we only sync messages received after sync was enabled
+                    Log.d(TAG, "Using baseline timestamp for 'sync only new messages' mode")
+                    maxOf(0L, baseline - bufferMs)
+                } else {
+                    // User chose "sync all messages" or no baseline set - use incremental approach
+                    Log.d(TAG, "Using incremental sync from latest DB message")
+                    lastMessageDate
+                }
+
+                Log.i(TAG, "Starting incremental SMS sync from timestamp: $effectiveStart (db=$lastMessageDate (${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(java.util.Date(lastMessageDate))}), baseline=$baseline (${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(java.util.Date(baseline))}), buffer=$bufferMs)")
                 val newSmsMessages = readSmsMessagesAfter(context, effectiveStart)
 
                 var insertedCount = 0
+                // Batch insert to reduce UI invalidations
+                val toInsert = mutableListOf<SmsMessage>()
                 for (smsMessage in newSmsMessages) {
-                    if (!dao.exists(smsMessage.id)) {
-                        dao.insert(smsMessage)
+                    val exists = dao.exists(smsMessage.id)
+                    Log.v(TAG, "Evaluating message id=${smsMessage.id}, date=${smsMessage.date} (${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(java.util.Date(smsMessage.date))}), exists=$exists")
+                    if (!exists) {
+                        // Additional check: if baseline is set, only include messages after baseline
+                        if (baseline > 0L && smsMessage.date < baseline) {
+                            Log.d(TAG, "Skipping message ${smsMessage.id} (date=${smsMessage.date}) as it's before baseline ($baseline)")
+                            continue
+                        }
+                        toInsert.add(smsMessage)
                         insertedCount++
+                        Log.i(TAG, "✅ New message queued for insert: ${smsMessage.id} from ${smsMessage.address} at ${smsMessage.date}")
+                    } else {
+                        Log.d(TAG, "Message ${smsMessage.id} already exists in DB, skipping")
+                    }
+                }
+                if (toInsert.isNotEmpty()) {
+                    // Use suspending transaction for suspend DAO calls
+                    DbHolder.database.withTransaction {
+                        dao.insertAll(*toInsert.toTypedArray())
                     }
                 }
 
-                Log.i(TAG, "Incremental SMS sync complete: $insertedCount new messages")
+                Log.i(TAG, "Incremental SMS sync complete: $insertedCount new messages (batch)")
                 insertedCount
             } catch (e: Exception) {
                 Log.e(TAG, "Error in incremental SMS sync", e)

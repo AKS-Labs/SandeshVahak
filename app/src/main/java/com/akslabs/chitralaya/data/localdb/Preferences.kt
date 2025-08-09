@@ -20,6 +20,9 @@ object Preferences {
     const val isAutoExportDatabaseEnabledKey: String = "isAutoExportDatabaseEnabled"
     const val autoExportDatabaseIntervalKey: String = "autoExportDatabaseInterval"
     const val autoExportDatabseLocation: String = "autoExportDatabaseLocation"
+
+
+
     const val defaultAutoExportDatabaseIntervalKey: Long = 7
     const val defaultAutoBackupInterval: Long = 7
 
@@ -51,15 +54,86 @@ object Preferences {
         }
     }
 
-    fun getBoolean(key: String, defValue: Boolean) = preferences.getBoolean(key, defValue)
-    fun getString(key: String, defValue: String) = preferences.getString(key, defValue) ?: defValue
-    fun getFloat(key: String, defValue: Float) = preferences.getFloat(key, defValue)
-    fun getLong(key: String, defValue: Long) = preferences.getLong(key, defValue)
-    fun getStringSet(key: String, defValue: Set<String>) =
-        preferences.getStringSet(key, defValue) ?: defValue
+    fun getBoolean(key: String, defValue: Boolean): Boolean {
+        return try {
+            if (::preferences.isInitialized) {
+                preferences.getBoolean(key, defValue)
+            } else {
+                android.util.Log.w("Preferences", "Preferences not initialized, returning default value for key: $key")
+                defValue
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("Preferences", "Error reading boolean preference $key", e)
+            defValue
+        }
+    }
+
+    fun getString(key: String, defValue: String): String {
+        return try {
+            if (::preferences.isInitialized) {
+                preferences.getString(key, defValue) ?: defValue
+            } else {
+                android.util.Log.w("Preferences", "Preferences not initialized, returning default value for key: $key")
+                defValue
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("Preferences", "Error reading string preference $key", e)
+            defValue
+        }
+    }
+
+    fun getFloat(key: String, defValue: Float): Float {
+        return try {
+            if (::preferences.isInitialized) {
+                preferences.getFloat(key, defValue)
+            } else {
+                android.util.Log.w("Preferences", "Preferences not initialized, returning default value for key: $key")
+                defValue
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("Preferences", "Error reading float preference $key", e)
+            defValue
+        }
+    }
+
+    fun getLong(key: String, defValue: Long): Long {
+        return try {
+            if (::preferences.isInitialized) {
+                preferences.getLong(key, defValue)
+            } else {
+                android.util.Log.w("Preferences", "Preferences not initialized, returning default value for key: $key")
+                defValue
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("Preferences", "Error reading long preference $key", e)
+            defValue
+        }
+    }
+
+    fun getStringSet(key: String, defValue: Set<String>): Set<String> {
+        return try {
+            if (::preferences.isInitialized) {
+                preferences.getStringSet(key, defValue) ?: defValue
+            } else {
+                android.util.Log.w("Preferences", "Preferences not initialized, returning default value for key: $key")
+                defValue
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("Preferences", "Error reading string set preference $key", e)
+            defValue
+        }
+    }
 
     fun edit(action: SharedPreferences.Editor.() -> Unit) {
-        preferences.edit().apply(action).apply()
+        try {
+            if (::preferences.isInitialized) {
+                preferences.edit().apply(action).apply()
+            } else {
+                android.util.Log.w("Preferences", "Preferences not initialized, cannot edit")
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("Preferences", "Error editing preferences", e)
+        }
     }
 
     fun getEncryptedBoolean(key: String, defValue: Boolean) = encryptedPreferences.getBoolean(key, defValue)

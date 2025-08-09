@@ -15,6 +15,8 @@ import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.akslabs.SandeshVahak.data.localdb.Preferences
 import com.akslabs.chitralaya.workers.SmsSyncWorker
+import com.akslabs.chitralaya.workers.InstantSmsSyncWorker
+import com.akslabs.chitralaya.workers.QuickSmsSyncWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import java.time.Duration
@@ -116,6 +118,7 @@ object WorkModule {
                 .build()
 
         fun enqueue() {
+            android.util.Log.d("WorkModule.SmsSync", "enqueue() called -> unique periodic work name='${SMS_SYNC_WORK}', policy=KEEP")
             manager.enqueueUniquePeriodicWork(
                 SMS_SYNC_WORK,
                 ExistingPeriodicWorkPolicy.KEEP,
@@ -124,10 +127,12 @@ object WorkModule {
         }
 
         fun cancel() {
+            android.util.Log.d("WorkModule.SmsSync", "cancel() called -> unique work name='${SMS_SYNC_WORK}'")
             manager.cancelUniqueWork(SMS_SYNC_WORK)
         }
 
         fun enqueueOneTime() {
+            android.util.Log.d("WorkModule.SmsSync", "enqueueOneTime() called -> unique work name='${SMS_SYNC_ONE_TIME_WORK}', policy=REPLACE")
             val oneTimeRequest = OneTimeWorkRequestBuilder<SmsSyncWorker>()
                 .setConstraints(constraints)
                 .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofMinutes(5))
@@ -138,6 +143,36 @@ object WorkModule {
                 ExistingWorkPolicy.REPLACE,
                 oneTimeRequest
             )
+        }
+
+        fun enqueueInstant() {
+            android.util.Log.d("WorkModule.SmsSync", "enqueueInstant() called -> InstantSmsSyncWorker expedited")
+            val instantConstraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+            val instantRequest = OneTimeWorkRequestBuilder<InstantSmsSyncWorker>()
+                .setConstraints(instantConstraints)
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofMinutes(2))
+                .build()
+
+            manager.enqueue(instantRequest)
+        }
+
+        fun enqueueQuick() {
+            android.util.Log.d("WorkModule.SmsSync", "enqueueQuick() called -> QuickSmsSyncWorker expedited")
+            val quickConstraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+            val quickRequest = OneTimeWorkRequestBuilder<QuickSmsSyncWorker>()
+                .setConstraints(quickConstraints)
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofMinutes(2))
+                .build()
+
+            manager.enqueue(quickRequest)
         }
 
         fun cancelOneTime() {

@@ -12,6 +12,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import androidx.room.withTransaction
 
 /**
  * Service responsible for synchronizing SMS messages to Telegram channel
@@ -23,7 +24,29 @@ object SmsSyncService {
     private const val MAX_BATCH_SIZE = 10 // Back to normal batch size
     private const val MESSAGES_BEFORE_PAUSE = 20 // Pause after every 20 messages
     private const val TELEGRAM_PAUSE_SECONDS = 25 // Telegram's requested pause time
-    
+
+    /**
+     * Get the current sync mode and baseline timestamp
+     */
+    private fun getSyncModeAndBaseline(): Pair<String, Long> {
+        val mode = try {
+            Preferences.getString(Preferences.smsSyncModeKey, "ALL")
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to read sync mode, defaulting to ALL", e)
+            "ALL"
+        }
+
+        val baseline = try {
+            Preferences.getLong(Preferences.smsSyncEnabledSinceKey, 0L)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to read baseline timestamp, using 0", e)
+            0L
+        }
+
+        Log.d(TAG, "Sync mode: $mode, baseline: $baseline")
+        return Pair(mode, baseline)
+    }
+
     /**
      * Perform a full synchronization of SMS messages
      */
@@ -33,6 +56,7 @@ object SmsSyncService {
         try {
             // Respect user preference; if disabled, stop
             val isEnabled = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
+            Log.d(TAG, "Preference isSmsSyncEnabledKey = $isEnabled")
             if (!isEnabled) {
                 Log.w(TAG, "SMS sync disabled by user; aborting full sync")
                 emit(SmsSyncProgress(0, 0, isComplete = true))
@@ -42,6 +66,7 @@ object SmsSyncService {
             emit(SmsSyncProgress(currentBatch = 0, totalMessagesSynced = 0, isComplete = false))
 
             val channelId = getConfiguredChannelId()
+            Log.d(TAG, "Configured channelId = $channelId")
             if (channelId == null) {
                 Log.w(TAG, "No channel ID configured for SMS sync")
                 emit(SmsSyncProgress(
@@ -56,7 +81,9 @@ object SmsSyncService {
             Log.i(TAG, "Syncing SMS messages to channel ID: $channelId")
 
             // Check if we need to perform sync
-            if (!shouldPerformSync()) {
+            val shouldSync = shouldPerformSync()
+            Log.d(TAG, "shouldPerformSync() -> $shouldSync")
+            if (!shouldSync) {
                 Log.i(TAG, "Sync not needed (recent sync found)")
                 emit(SmsSyncProgress(
                     currentBatch = 0,
@@ -65,15 +92,30 @@ object SmsSyncService {
                 ))
                 return@flow
             }
-            
-            // First, sync all SMS from device to local database
-            val newLocalMessages = SmsReaderService.syncAllSmsToDatabase(context)
+
+            // Get sync mode and baseline
+            val (syncMode, baseline) = getSyncModeAndBaseline()
+
+            // For NEW_ONLY mode, don't sync all existing messages to database
+            val newLocalMessages = if (syncMode == "NEW_ONLY" && baseline > 0L) {
+                Log.i(TAG, "NEW_ONLY mode: skipping full database sync, using incremental sync only")
+                SmsReaderService.syncNewSmsToDatabase(context)
+            } else {
+                Log.i(TAG, "ALL mode: performing full database sync")
+                SmsReaderService.syncAllSmsToDatabase(context)
+            }
             Log.i(TAG, "Synced $newLocalMessages new SMS messages to local database")
-            
-            // Get unsynced messages from database
+
+            // Get unsynced messages from database, respecting baseline for NEW_ONLY mode
             val dao = DbHolder.database.smsMessageDao()
-            val unsyncedMessages = dao.getUnsyncedMessages(limit = 100)
-            
+            val unsyncedMessages = if (syncMode == "NEW_ONLY" && baseline > 0L) {
+                Log.i(TAG, "NEW_ONLY mode: getting unsynced messages after baseline $baseline")
+                dao.getUnsyncedMessagesAfterBaseline(baseline, limit = 100)
+            } else {
+                Log.i(TAG, "ALL mode: getting all unsynced messages")
+                dao.getUnsyncedMessages(limit = 100)
+            }
+
             if (unsyncedMessages.isEmpty()) {
                 Log.i(TAG, "No unsynced SMS messages found")
                 emit(SmsSyncProgress(
@@ -84,14 +126,14 @@ object SmsSyncService {
                 updateLastSyncTimestamp()
                 return@flow
             }
-            
+
             Log.i(TAG, "Found ${unsyncedMessages.size} unsynced SMS messages")
-            
+
             // Sync messages in batches
             var totalSynced = 0
             var currentBatch = 0
             var globalMessageCount = 0 // Track messages across all batches for 20-message pause
-            
+
             unsyncedMessages.chunked(MAX_BATCH_SIZE).forEachIndexed { index, batch ->
                 currentBatch++
                 Log.i(TAG, "📦 Processing batch $currentBatch with ${batch.size} messages (oldest first)")
@@ -100,6 +142,7 @@ object SmsSyncService {
                 val (batchSynced, newGlobalCount) = syncMessagesBatch(batch, channelId, globalMessageCount)
                 totalSynced += batchSynced
                 globalMessageCount = newGlobalCount
+                Log.d(TAG, "Batch $currentBatch synced $batchSynced, globalCount now $globalMessageCount")
 
                 emit(SmsSyncProgress(
                     currentBatch = currentBatch,
@@ -114,17 +157,18 @@ object SmsSyncService {
                     delay(2000) // 2 second delay between batches
                 }
             }
-            
+
             // Update last sync timestamp
             updateLastSyncTimestamp()
-            
+            Log.d(TAG, "Updated last sync timestamp to now")
+
             Log.i(TAG, "=== FULL SMS SYNC COMPLETE: $totalSynced messages synced ===")
             emit(SmsSyncProgress(
                 currentBatch = currentBatch,
                 totalMessagesSynced = totalSynced,
                 isComplete = true
             ))
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Exception during full SMS sync", e)
             emit(SmsSyncProgress(
@@ -135,7 +179,7 @@ object SmsSyncService {
             ))
         }
     }
-    
+
     /**
      * Perform a quick sync to check for recent SMS messages
      */
@@ -146,12 +190,14 @@ object SmsSyncService {
 
                 // Respect user preference; if disabled, skip
                 val isEnabled = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
+                Log.d(TAG, "Preference isSmsSyncEnabledKey = $isEnabled")
                 if (!isEnabled) {
                     Log.w(TAG, "SMS sync disabled by user; skipping quick sync")
                     return@withContext SmsSyncResult.Success(0)
                 }
 
                 val channelId = getConfiguredChannelId()
+                Log.d(TAG, "Configured channelId = $channelId")
                 if (channelId == null) {
                     Log.w(TAG, "No channel ID configured for quick sync")
                     return@withContext SmsSyncResult.NoChannelConfigured
@@ -159,15 +205,22 @@ object SmsSyncService {
 
                 // Sync new SMS messages to local database
                 val newLocalMessages = SmsReaderService.syncNewSmsToDatabase(context)
+                Log.d(TAG, "syncNewSmsToDatabase returned $newLocalMessages new messages")
 
-                if (newLocalMessages == 0) {
-                    Log.d(TAG, "No new SMS messages found")
-                    return@withContext SmsSyncResult.Success(0)
-                }
+                // Even if nothing new was just inserted (race/timing), proceed to check unsynced messages
+                Log.d(TAG, "Proceeding to unsynced fetch; newLocalMessages=$newLocalMessages")
 
-                // Get recently unsynced messages
+                // Get recently unsynced messages, respecting baseline for NEW_ONLY mode
                 val dao = DbHolder.database.smsMessageDao()
-                val unsyncedMessages = dao.getUnsyncedMessages(limit = MAX_BATCH_SIZE)
+                val (syncMode, baseline) = getSyncModeAndBaseline()
+                val unsyncedMessages = if (syncMode == "NEW_ONLY" && baseline > 0L) {
+                    Log.d(TAG, "NEW_ONLY mode: getting unsynced messages after baseline $baseline")
+                    dao.getUnsyncedMessagesAfterBaseline(baseline, limit = MAX_BATCH_SIZE)
+                } else {
+                    Log.d(TAG, "ALL mode: getting all unsynced messages")
+                    dao.getUnsyncedMessages(limit = MAX_BATCH_SIZE)
+                }
+                Log.d(TAG, "Retrieved ${unsyncedMessages.size} unsynced messages (mode: $syncMode, baseline: $baseline)")
 
                 if (unsyncedMessages.isEmpty()) {
                     Log.d(TAG, "No unsynced messages to sync")
@@ -186,7 +239,7 @@ object SmsSyncService {
             }
         }
     }
-    
+
     /**
      * Sync a batch of SMS messages to Telegram with 1-second delays between messages
      * Messages are processed in chronological order (oldest first)
@@ -200,52 +253,46 @@ object SmsSyncService {
         var lastError: String? = null
         var currentGlobalCount = globalMessageCount // Use the passed global count
 
+        // Buffer updates to reduce UI invalidations
+        val toMarkSynced = mutableListOf<Pair<String, String>>() // (id, remoteId)
+        val toInsertRemote = mutableListOf<RemoteSmsMessage>()
+
         for ((index, message) in messages.withIndex()) {
             try {
-                // Check if we need to pause BEFORE sending (after every 20 successful messages)
                 if (currentGlobalCount > 0 && currentGlobalCount % MESSAGES_BEFORE_PAUSE == 0) {
                     Log.w(TAG, "🛑 Sent ${MESSAGES_BEFORE_PAUSE} messages (total: $currentGlobalCount), pausing for ${TELEGRAM_PAUSE_SECONDS} seconds as per Telegram's requirement")
-                    delay(TELEGRAM_PAUSE_SECONDS * 1000L) // 25 second pause
+                    delay(TELEGRAM_PAUSE_SECONDS * 1000L)
                     Log.i(TAG, "▶️ Resuming message sending after pause")
                 }
 
-                // Add 1-second delay between messages
                 if (index > 0) {
                     Log.d(TAG, "⏳ Waiting 1 second before sending next message (${index + 1}/${messages.size})")
-                    delay(1150) // 1.15 second delay as requested
+                    delay(1150)
                 }
 
-                // Format message for Telegram
                 val telegramMessage = message.formatForTelegram()
-
                 Log.d(TAG, "📤 Sending SMS message ${index + 1}/${messages.size}: ${message.id} (${message.date})")
-
-                // Send to Telegram with enhanced error handling
                 val (response, exception) = BotApi.sendSmsMessage(telegramMessage, channelId)
 
                 if (exception == null && response?.isSuccess == true) {
                     val telegramMessageId = response.get()?.messageId?.toString()
-
                     if (telegramMessageId != null) {
-                        // Mark as synced in local database
-                        dao.markAsSynced(message.id, telegramMessageId)
-
-                        // Add to remote SMS database
-                        val remoteSms = RemoteSmsMessage(
-                            remoteId = telegramMessageId,
-                            originalSmsId = message.id,
-                            address = message.address,
-                            body = message.body,
-                            date = message.date,
-                            type = message.type,
-                            syncedAt = System.currentTimeMillis(),
-                            telegramChannelId = channelId,
-                            telegramMessageId = response.get()?.messageId?.toInt()
+                        toMarkSynced.add(message.id to telegramMessageId)
+                        toInsertRemote.add(
+                            RemoteSmsMessage(
+                                remoteId = telegramMessageId,
+                                originalSmsId = message.id,
+                                address = message.address,
+                                body = message.body,
+                                date = message.date,
+                                type = message.type,
+                                syncedAt = System.currentTimeMillis(),
+                                telegramChannelId = channelId,
+                                telegramMessageId = response.get()?.messageId?.toInt()
+                            )
                         )
-                        remoteSmsDao.insert(remoteSms)
-
                         syncedCount++
-                        currentGlobalCount++ // Count successful sends globally
+                        currentGlobalCount++
                         Log.i(TAG, "✅ Successfully synced SMS message: ${message.id} (${currentGlobalCount % MESSAGES_BEFORE_PAUSE}/${MESSAGES_BEFORE_PAUSE} in current burst, total: $currentGlobalCount)")
                     } else {
                         Log.w(TAG, "⚠️ No message ID returned from Telegram for SMS: ${message.id}")
@@ -253,7 +300,6 @@ object SmsSyncService {
                         lastError = "No message ID returned from Telegram"
                     }
                 } else {
-                    // Enhanced error handling with specific error types
                     val errorMsg = when {
                         exception != null -> categorizeError(exception)
                         response?.isSuccess == false -> {
@@ -263,30 +309,21 @@ object SmsSyncService {
                         }
                         else -> "Unknown sync error"
                     }
-
                     Log.e(TAG, "❌ Failed to sync SMS message ${message.id}: $errorMsg")
                     failedMessageIds.add(message.id)
                     lastError = errorMsg
-
-                    // If it's a rate limit error, stop the entire sync to prevent further failures
                     if (errorMsg.contains("rate limit", ignoreCase = true) ||
                         errorMsg.contains("429", ignoreCase = true) ||
                         errorMsg.contains("too many requests", ignoreCase = true)) {
                         Log.w(TAG, "🚫 Telegram rate limit detected, stopping entire sync process")
-
-                        // Batch update all failed messages to reduce UI updates
                         if (failedMessageIds.isNotEmpty()) {
                             dao.batchUpdateSyncAttempts(failedMessageIds, error = lastError)
                             Log.d(TAG, "📊 Batch updated ${failedMessageIds.size} failed messages")
                         }
-
                         Log.w(TAG, "📊 Sync stats: $syncedCount synced, ${failedMessageIds.size} failed")
-
-                        // Return early to stop processing more messages
                         return Pair(syncedCount, currentGlobalCount)
                     }
                 }
-                
             } catch (e: Exception) {
                 Log.e(TAG, "Exception syncing SMS message ${message.id}", e)
                 failedMessageIds.add(message.id)
@@ -294,15 +331,24 @@ object SmsSyncService {
             }
         }
 
-        // Batch update any remaining failed messages to reduce UI flashing
-        if (failedMessageIds.isNotEmpty()) {
-            dao.batchUpdateSyncAttempts(failedMessageIds, error = lastError)
-            Log.d(TAG, "📊 Batch updated ${failedMessageIds.size} failed messages at end of sync")
+        // Apply buffered DB changes in a single transaction to minimize list invalidations
+        // Use suspending transaction; DAO methods are suspend
+        DbHolder.database.withTransaction {
+            toMarkSynced.forEach { (id, remoteId) ->
+                dao.markAsSynced(id, remoteId)
+            }
+            toInsertRemote.forEach { remote ->
+                remoteSmsDao.insert(remote)
+            }
+            if (failedMessageIds.isNotEmpty()) {
+                dao.batchUpdateSyncAttempts(failedMessageIds, error = lastError)
+            }
         }
 
+        Log.d(TAG, "📦 Applied DB updates in batch: synced=${toMarkSynced.size}, remoteInserted=${toInsertRemote.size}, failed=${failedMessageIds.size}")
         return Pair(syncedCount, currentGlobalCount)
     }
-    
+
     /**
      * Check if sync should be performed based on last sync timestamp
      */
@@ -311,10 +357,10 @@ object SmsSyncService {
         val currentTime = System.currentTimeMillis()
         val timeSinceLastSync = currentTime - lastSyncTimestamp
         val syncIntervalMs = SYNC_INTERVAL_HOURS * 60 * 60 * 1000L
-        
+
         return timeSinceLastSync >= syncIntervalMs
     }
-    
+
     /**
      * Update the last sync timestamp
      */
@@ -323,7 +369,7 @@ object SmsSyncService {
             putLong(LAST_SYNC_TIMESTAMP_KEY, System.currentTimeMillis())
         }
     }
-    
+
     /**
      * Get configured channel ID from preferences
      */

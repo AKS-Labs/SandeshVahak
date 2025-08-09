@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.utils
+package com.akslabs.Suchak.utils
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -26,7 +26,7 @@ object NotificationHelper {
     fun createNotificationChannels(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            
+
             // Cloud sync channel
             val cloudSyncChannel = NotificationChannel(
                 CLOUD_SYNC_CHANNEL_ID,
@@ -36,7 +36,7 @@ object NotificationHelper {
                 description = CLOUD_SYNC_CHANNEL_DESCRIPTION
                 setShowBadge(false)
             }
-            
+
             // SMS sync channel
             val smsSyncChannel = NotificationChannel(
                 SMS_SYNC_CHANNEL_ID,
@@ -46,7 +46,7 @@ object NotificationHelper {
                 description = SMS_SYNC_CHANNEL_DESCRIPTION
                 setShowBadge(false)
             }
-            
+
             // SMS observer channel
             val smsObserverChannel = NotificationChannel(
                 SMS_OBSERVER_CHANNEL_ID,
@@ -56,7 +56,7 @@ object NotificationHelper {
                 description = SMS_OBSERVER_CHANNEL_DESCRIPTION
                 setShowBadge(false)
             }
-            
+
             notificationManager.createNotificationChannel(cloudSyncChannel)
             notificationManager.createNotificationChannel(smsSyncChannel)
             notificationManager.createNotificationChannel(smsObserverChannel)
@@ -149,7 +149,7 @@ object NotificationHelper {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_ERROR)
             .build()
-        
+
         notificationManager.notify(CLOUD_SYNC_ERROR_NOTIFICATION_ID, notification)
     }
 
@@ -218,7 +218,7 @@ object NotificationHelper {
      */
     fun showSmsSyncCompleteNotification(context: Context, messageCount: Int) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        
+
         val intent = Intent(context, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
             context, 0, intent,
@@ -259,7 +259,7 @@ object NotificationHelper {
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setCategory(NotificationCompat.CATEGORY_STATUS)
             .build()
-        
+
         notificationManager.notify(SMS_SYNC_INSTANT_NOTIFICATION_ID, notification)
     }
 }

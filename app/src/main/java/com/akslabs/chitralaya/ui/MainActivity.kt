@@ -29,7 +29,7 @@ import com.akslabs.SandeshVahak.ui.onboarding.OnboardingPage
 import com.akslabs.SandeshVahak.ui.permission.PermissionDialogScreen
 import com.akslabs.SandeshVahak.ui.permission.PermissionViewModel
 import com.akslabs.SandeshVahak.ui.theme.AppTheme
-import com.akslabs.SandeshVahak.utils.NotificationHelper
+import com.akslabs.Suchak.utils.NotificationHelper
 import com.akslabs.SandeshVahak.workers.WorkModule
 import com.akslabs.chitralaya.services.SmsObserverService
 import kotlinx.coroutines.flow.first
@@ -144,15 +144,43 @@ class MainActivity : ComponentActivity() {
         if (hasSmsPerm) {
             lifecycleScope.launch {
                 try {
-                    // If database is empty, do an initial full import
+                    // Check sync mode to determine how to populate the database
+                    val syncMode = try {
+                        com.akslabs.SandeshVahak.data.localdb.Preferences.getString(
+                            com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncModeKey,
+                            "ALL"
+                        )
+                    } catch (e: Exception) {
+                        "ALL"
+                    }
+
+                    val baseline = try {
+                        com.akslabs.SandeshVahak.data.localdb.Preferences.getLong(
+                            com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncEnabledSinceKey,
+                            0L
+                        )
+                    } catch (e: Exception) {
+                        0L
+                    }
+
                     val count = com.akslabs.SandeshVahak.data.localdb.DbHolder.database
                         .smsMessageDao()
                         .getAllCountFlow()
                         .first()
+
                     if (count == 0) {
-                        com.akslabs.chitralaya.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
+                        // Database is empty - populate based on sync mode
+                        if (syncMode == "NEW_ONLY" && baseline > 0L) {
+                            // NEW_ONLY mode: only import messages after baseline
+                            android.util.Log.i("MainActivity", "NEW_ONLY mode: importing only messages after baseline $baseline")
+                            com.akslabs.chitralaya.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
+                        } else {
+                            // ALL mode or no baseline: import all messages
+                            android.util.Log.i("MainActivity", "ALL mode: importing all SMS messages")
+                            com.akslabs.chitralaya.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
+                        }
                     } else {
-                        // Otherwise, pick up any new messages since last run
+                        // Database has messages - just sync new ones
                         com.akslabs.chitralaya.services.SmsReaderService.syncNewSmsToDatabase(this@MainActivity)
                     }
                 } catch (_: Exception) {}

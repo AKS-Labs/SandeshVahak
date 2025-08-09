@@ -237,11 +237,16 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                                                             selectedMode = "NEW_ONLY"
                                                             toggleState = true
                                                             val now = System.currentTimeMillis()
+                                                            android.util.Log.i("MainPage", "NEW_ONLY mode selected (row click): setting baseline to $now")
                                                             Preferences.edit {
                                                                 putBoolean(Preferences.isSmsSyncEnabledKey, true)
                                                                 putString(Preferences.smsSyncModeKey, "NEW_ONLY")
                                                                 putLong(Preferences.smsSyncEnabledSinceKey, now)
                                                             }
+                                                            // Verify the baseline was set correctly
+                                                            val verifyBaseline = Preferences.getLong(Preferences.smsSyncEnabledSinceKey, 0L)
+                                                            android.util.Log.i("MainPage", "NEW_ONLY baseline verification (row click): $verifyBaseline")
+
                                                             val intent = Intent(context, com.akslabs.chitralaya.services.SmsObserverService::class.java)
                                                             context.startForegroundService(intent)
                                                             // No full backfill; cancel periodic full sync
@@ -256,11 +261,16 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                                                             selectedMode = "NEW_ONLY"
                                                             toggleState = true
                                                             val now = System.currentTimeMillis()
+                                                            android.util.Log.i("MainPage", "NEW_ONLY mode selected: setting baseline to $now")
                                                             Preferences.edit {
                                                                 putBoolean(Preferences.isSmsSyncEnabledKey, true)
                                                                 putString(Preferences.smsSyncModeKey, "NEW_ONLY")
                                                                 putLong(Preferences.smsSyncEnabledSinceKey, now)
                                                             }
+                                                            // Verify the baseline was set correctly
+                                                            val verifyBaseline = Preferences.getLong(Preferences.smsSyncEnabledSinceKey, 0L)
+                                                            android.util.Log.i("MainPage", "NEW_ONLY baseline verification: $verifyBaseline")
+
                                                             val intent = Intent(context, com.akslabs.chitralaya.services.SmsObserverService::class.java)
                                                             context.startForegroundService(intent)
                                                             // No full backfill; cancel periodic full sync

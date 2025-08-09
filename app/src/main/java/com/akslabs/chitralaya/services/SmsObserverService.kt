@@ -6,7 +6,7 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import com.akslabs.SandeshVahak.utils.NotificationHelper
+import com.akslabs.Suchak.utils.NotificationHelper
 
 /**
  * Background service to observe SMS changes
@@ -22,15 +22,52 @@ class SmsObserverService : Service() {
         super.onCreate()
         Log.i(TAG, "SMS Observer Service created")
 
-        // Ensure preferences are initialized even if service starts before App
-        try { com.akslabs.SandeshVahak.data.localdb.Preferences.init(applicationContext) } catch (_: Exception) {}
+        // Ensure preferences are initialized with robust error handling
+        var preferencesInitialized = false
+        try {
+            com.akslabs.SandeshVahak.data.localdb.Preferences.init(applicationContext)
+            preferencesInitialized = true
+            Log.d(TAG, "Preferences initialized successfully in SmsObserverService")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize preferences in SmsObserverService", e)
+            // Try to continue with fallback to SharedPreferences
+        }
 
-        // Only start observing if user enabled sync
-        val isEnabled = com.akslabs.SandeshVahak.data.localdb.Preferences.getBoolean(
-            com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
-            false
-        )
+        // Check if user enabled sync with fallback logic
+        val isEnabled = if (preferencesInitialized) {
+            try {
+                com.akslabs.SandeshVahak.data.localdb.Preferences.getBoolean(
+                    com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
+                    false
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to read SMS sync enabled preference from Preferences, trying SharedPreferences", e)
+                // Fallback to direct SharedPreferences access
+                try {
+                    val prefs = applicationContext.getSharedPreferences("preferences", MODE_PRIVATE)
+                    prefs.getBoolean("is_sms_sync_enabled", false)
+                } catch (fallbackException: Exception) {
+                    Log.e(TAG, "Complete failure reading sync preference, defaulting to false", fallbackException)
+                    false
+                }
+            }
+        } else {
+            // Fallback to direct SharedPreferences access if Preferences init failed
+            try {
+                val prefs = applicationContext.getSharedPreferences("preferences", MODE_PRIVATE)
+                val enabled = prefs.getBoolean("is_sms_sync_enabled", false)
+                Log.d(TAG, "Read SMS sync preference from fallback SharedPreferences: $enabled")
+                enabled
+            } catch (e: Exception) {
+                Log.e(TAG, "Complete failure reading sync preference from fallback, defaulting to false", e)
+                false
+            }
+        }
+
+        Log.d(TAG, "SMS sync enabled: $isEnabled")
+
         if (isEnabled) {
+            Log.d(TAG, "Starting SmsContentObserver from service onCreate")
             SmsContentObserver.startObserving(this)
         } else {
             Log.i(TAG, "SMS sync disabled; not starting content observer")

@@ -1,5 +1,6 @@
 package com.akslabs.chitralaya.ui.main.screens.local
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +31,8 @@ import com.akslabs.SandeshVahak.ui.components.LoadAnimation
 import com.akslabs.chitralaya.ui.components.SmsListItem
 import com.akslabs.chitralaya.ui.components.itemsPaging
 
+private const val TAG = "LocalSmsScreen"
+
 @Composable
 fun LocalSmsScreen(
     localSmsMessages: LazyPagingItems<SmsMessage>,
@@ -39,6 +44,8 @@ fun LocalSmsScreen(
     Box(
         modifier = modifier.fillMaxSize()
     ) {
+        // Debug recomposition
+        SideEffect { Log.d(TAG, "Recompose LocalSmsScreen: items=${localSmsMessages.itemCount}, loadState=${localSmsMessages.loadState}") }
         when {
             localSmsMessages.loadState.refresh == LoadState.Loading -> {
                 LoadAnimation(modifier = Modifier.align(Alignment.Center))

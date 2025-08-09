@@ -51,6 +51,24 @@ interface SmsMessageDao {
     @Query("SELECT * FROM sms_messages WHERE isSynced = 0 AND syncAttempts < 3 ORDER BY date ASC LIMIT :limit")
     suspend fun getUnsyncedMessages(limit: Int = 50): List<SmsMessage>
 
+    @Query("SELECT * FROM sms_messages WHERE isSynced = 0 AND syncAttempts < 3 ORDER BY date DESC LIMIT :limit")
+    suspend fun getLatestUnsyncedMessages(limit: Int = 5): List<SmsMessage>
+
+    /**
+     * Get unsynced messages that are after the specified baseline timestamp (for NEW_ONLY mode)
+     */
+    @Query("SELECT * FROM sms_messages WHERE isSynced = 0 AND syncAttempts < 3 AND date >= :baselineTimestamp ORDER BY date ASC LIMIT :limit")
+    suspend fun getUnsyncedMessagesAfterBaseline(baselineTimestamp: Long, limit: Int = 50): List<SmsMessage>
+
+    /**
+     * Get latest unsynced messages that are after the specified baseline timestamp (for NEW_ONLY mode)
+     */
+    @Query("SELECT * FROM sms_messages WHERE isSynced = 0 AND syncAttempts < 3 AND date >= :baselineTimestamp ORDER BY date DESC LIMIT :limit")
+    suspend fun getLatestUnsyncedMessagesAfterBaseline(baselineTimestamp: Long, limit: Int = 5): List<SmsMessage>
+
+    @Query("SELECT * FROM sms_messages WHERE isSynced = 0 AND id IN (:ids)")
+    suspend fun getUnsyncedByIds(ids: List<String>): List<SmsMessage>
+
     @Query("SELECT * FROM sms_messages WHERE date > :timestamp ORDER BY date ASC")
     suspend fun getMessagesAfter(timestamp: Long): List<SmsMessage>
 
