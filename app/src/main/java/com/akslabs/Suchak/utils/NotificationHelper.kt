@@ -57,9 +57,20 @@ object NotificationHelper {
                 setShowBadge(false)
             }
 
+            // Post-boot notification channel (higher importance)
+            val postBootChannel = NotificationChannel(
+                POST_BOOT_CHANNEL_ID,
+                POST_BOOT_CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = POST_BOOT_CHANNEL_DESCRIPTION
+                setShowBadge(false)
+            }
+
             notificationManager.createNotificationChannel(cloudSyncChannel)
             notificationManager.createNotificationChannel(smsSyncChannel)
             notificationManager.createNotificationChannel(smsObserverChannel)
+            notificationManager.createNotificationChannel(postBootChannel)
         }
     }
 
@@ -162,6 +173,10 @@ object NotificationHelper {
     private const val SMS_OBSERVER_CHANNEL_DESCRIPTION = "Background SMS monitoring service"
     private const val SMS_SYNC_COMPLETE_NOTIFICATION_ID = 3002
     private const val SMS_SYNC_INSTANT_NOTIFICATION_ID = 3003
+    // Post-boot prompt channel
+    private const val POST_BOOT_CHANNEL_ID = "post_boot_channel"
+    private const val POST_BOOT_CHANNEL_NAME = "Post Boot"
+    private const val POST_BOOT_CHANNEL_DESCRIPTION = "Prompt to resume background operation after reboot"
 
     /**
      * Create notification for ongoing SMS sync operation
@@ -261,5 +276,26 @@ object NotificationHelper {
             .build()
 
         notificationManager.notify(SMS_SYNC_INSTANT_NOTIFICATION_ID, notification)
+    }
+
+    fun showPostBootNotification(context: Context) {
+        val intent = Intent(context, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            context, 0, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(context, POST_BOOT_CHANNEL_ID)
+            .setContentTitle("Open SandeshVahak to resume SMS sync")
+            .setContentText("Android 15 restricts background startup. Tap to reopen the app.")
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .build()
+
+        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        manager.notify(4001, notification)
     }
 }

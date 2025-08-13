@@ -186,7 +186,8 @@ object WorkModule {
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
-            val request = PeriodicWorkRequestBuilder<KeepAliveWorker>(Duration.ofHours(1))
+            // Use 15 minutes (minimum) so it runs shortly after reboot on restrictive OS versions
+            val request = PeriodicWorkRequestBuilder<KeepAliveWorker>(Duration.ofMinutes(15))
                 .setConstraints(constraints)
                 .build()
 

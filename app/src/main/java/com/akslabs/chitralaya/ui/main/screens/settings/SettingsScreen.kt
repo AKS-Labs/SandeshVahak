@@ -611,6 +611,8 @@ private fun BatteryOptimizationItem(modifier: Modifier = Modifier) {
 
 @Composable
 private fun AutoStartOnBootItem(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     var isEnabled by remember {
         mutableStateOf(
             Preferences.getBoolean(Preferences.isAutoStartOnBootEnabledKey, true)
@@ -625,6 +627,12 @@ private fun AutoStartOnBootItem(modifier: Modifier = Modifier) {
         onCheckedChange = { checked ->
             isEnabled = checked
             Preferences.edit { putBoolean(Preferences.isAutoStartOnBootEnabledKey, checked) }
+            // Inform the user device-specific auto-start settings may be required
+            if (checked) {
+                scope.launch {
+                    context.toastFromMainThread("Auto-start enabled. Some devices require enabling auto-start in system settings for background startup.")
+                }
+            }
         },
         modifier = modifier
     )

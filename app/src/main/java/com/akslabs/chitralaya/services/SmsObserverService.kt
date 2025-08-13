@@ -22,10 +22,29 @@ class SmsObserverService : Service() {
         super.onCreate()
         Log.i(TAG, "SMS Observer Service created")
 
+        // Immediately promote to foreground to satisfy OS deadline at boot (Android 15 stricter)
+        try {
+            com.akslabs.Suchak.utils.NotificationHelper.createNotificationChannels(this)
+            val notification = NotificationHelper.createSmsObserverNotification(
+                this,
+                "SMS Sync Active",
+                "Monitoring for new SMS messages"
+            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+            } else {
+                startForeground(NOTIFICATION_ID, notification)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start foreground immediately in onCreate", e)
+        }
+
         // Ensure preferences are initialized with robust error handling
         var preferencesInitialized = false
         try {
-            com.akslabs.SandeshVahak.data.localdb.Preferences.init(applicationContext)
+            // Use device-protected storage context for direct boot compatibility
+            val ctx = applicationContext.createDeviceProtectedStorageContext()
+            com.akslabs.SandeshVahak.data.localdb.Preferences.init(ctx)
             preferencesInitialized = true
             Log.d(TAG, "Preferences initialized successfully in SmsObserverService")
         } catch (e: Exception) {

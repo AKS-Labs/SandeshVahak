@@ -34,6 +34,7 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="dataSync"
+            android:directBootAware="true"
             android:stopWithTask="false" />
 
         <!-- Receiver to restart foreground service after kill/task removal -->
@@ -46,9 +47,12 @@
         <receiver
             android:name="com.akslabs.chitralaya.receivers.BootReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:directBootAware="true">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_UNLOCKED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
                 <data android:scheme="package" />
