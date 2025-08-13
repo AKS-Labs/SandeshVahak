@@ -70,7 +70,7 @@ fun UidComponent(
                 onDismissRequest = {},
                 icon = {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                        painter = painterResource(id = R.drawable.icon),
                         contentDescription = stringResource(id = R.string.app_icon)
                     )
                 },

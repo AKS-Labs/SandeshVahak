@@ -78,7 +78,7 @@ fun NavDrawer(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(painterResource(R.drawable.ic_launcher_foreground), null)
+                    Icon(painterResource(R.drawable.icon), null)
                     Spacer(Modifier.width(0.dp))
                     Text(
                         text = stringResource(R.string.app_name),

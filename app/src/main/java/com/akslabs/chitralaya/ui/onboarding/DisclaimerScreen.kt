@@ -98,7 +98,7 @@ fun DisclaimerScreen(
             
             // App Icon and Welcome
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                painter = painterResource(id = R.drawable.icon),
                 contentDescription = stringResource(R.string.app_icon),
                 modifier = Modifier
                     .size(120.dp)

@@ -488,7 +488,7 @@ private fun AboutSourceCodeItem(modifier: Modifier = Modifier) {
         onClick = {
             try {
                 val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
-                    data = android.net.Uri.parse("https://github.com/your-repo/sms-sync-app")
+                    data = android.net.Uri.parse("https://github.com/AKS-Labs/SandeshVahak")
                 }
                 context.startActivity(intent)
             } catch (e: Exception) {
@@ -513,7 +513,7 @@ private fun AboutLicenseItem(modifier: Modifier = Modifier) {
         onClick = {
             try {
                 val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
-                    data = android.net.Uri.parse("https://github.com/your-repo/sms-sync-app/blob/main/LICENSE")
+                    data = android.net.Uri.parse("https://github.com/AKS-Labs/SandeshVahak#Apache-2.0-1-ov-file")
                 }
                 context.startActivity(intent)
             } catch (e: Exception) {
@@ -538,7 +538,7 @@ private fun AboutContributorsItem(modifier: Modifier = Modifier) {
         onClick = {
             try {
                 val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
-                    data = android.net.Uri.parse("https://github.com/your-repo/sms-sync-app/graphs/contributors")
+                    data = android.net.Uri.parse("https://github.com/AKS-Labs/SandeshVahak")
                 }
                 context.startActivity(intent)
             } catch (e: Exception) {

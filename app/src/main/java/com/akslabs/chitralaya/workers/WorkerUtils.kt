@@ -35,7 +35,7 @@ fun makeStatusNotification(message: String, context: Context): Notification {
     notificationManager?.createNotificationChannel(channel)
 
     val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-        .setSmallIcon(R.drawable.ic_launcher_foreground)
+        .setSmallIcon(R.drawable.icon)
         .setContentTitle(NOTIFICATION_TITLE)
         .setContentText(message)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
