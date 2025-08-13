@@ -43,7 +43,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
-    val scope = rememberCoroutineScope()
     val navController = rememberNavController()
     val syncState by viewModel.syncState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -68,17 +67,26 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
     var remoteSmsCount by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(viewModel) {
-        val initialPage = if (viewModel.currentDestination in Screens.mainScreens) {
-            val lastSelectedTab = Preferences.getString(Preferences.startTabKey, "")
-            Screens.mainScreens.firstOrNull { it.route == lastSelectedTab }
-        } else {
-            viewModel.currentDestination
-        }
-        initialPage?.route?.runCatching { navController.navigate(this) }
+        // Always start at Device screen (LocalSms) regardless of last saved tab
+        navController.navigate(Screens.LocalSms.route)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (Screens.mainScreens.any { it.route == destination.route }) {
                 Preferences.edit { putString(Preferences.startTabKey, destination.route) }
+            }
+        }
+    }
+
+    // Ensure app always opens at Device screen when opened from background
+    // This provides a consistent user experience regardless of where they left off
+    LaunchedEffect(Unit) {
+        // Reset navigation state to Device screen
+        viewModel.resetToDeviceScreen()
+        
+        // Clear any previous navigation state and go to Device screen
+        navController.navigate(Screens.LocalSms.route) {
+            popUpTo(navController.graph.startDestinationId) {
+                inclusive = true
             }
         }
     }

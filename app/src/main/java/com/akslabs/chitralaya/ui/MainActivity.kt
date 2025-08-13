@@ -147,6 +147,14 @@ class MainActivity : ComponentActivity() {
             else -> ScreenFlow.Main.route
         }
 
+        // Always ensure we're on the main screen when app is opened
+        if (startDestination == ScreenFlow.Main.route) {
+            // Reset any saved tab preference to ensure Device screen is shown
+            Preferences.edit { 
+                putString(Preferences.startTabKey, "") 
+            }
+        }
+
         // Keep Device screen populated from device SMS provider regardless of sync toggle
         if (hasSmsPerm) {
             lifecycleScope.launch {

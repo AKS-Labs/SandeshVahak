@@ -10,11 +10,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class MainViewModel : ViewModel() {
-    var currentDestination by mutableStateOf<Screens>(Screens.LocalSms)
+    var currentDestination by mutableStateOf<Screens>(Screens.LocalSms) // Always start at Device screen
         private set
 
     fun updateDestination(destination: Screens) {
         currentDestination = destination
+    }
+
+    fun resetToDeviceScreen() {
+        currentDestination = Screens.LocalSms
     }
 
     private val _syncState = MutableStateFlow(SyncState.IDLE)

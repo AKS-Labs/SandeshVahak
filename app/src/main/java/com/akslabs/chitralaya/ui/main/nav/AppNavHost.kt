@@ -24,7 +24,7 @@ import com.akslabs.SandeshVahak.ui.main.screens.settings.SettingsScreen
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = Screens.LocalSms.route,
+    startDestination: String = Screens.LocalSms.route, // Always start at Device screen
     onLocalSmsCountChanged: (Int) -> Unit = {},
     onRemoteSmsCountChanged: (Int) -> Unit = {},
 ) {
