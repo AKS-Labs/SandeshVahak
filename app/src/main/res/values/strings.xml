@@ -119,4 +119,12 @@
     <string name="your_internet_connection_is_unstable">Your internet connection is unstable</string>
     <string name="connection_lost">Connection Lost</string>
     <string name="your_internet_connection_was_lost">Your internet connection was lost</string>
+
+    <!-- Power & startup settings -->
+    <string name="battery_optimization">Battery optimization</string>
+    <string name="battery_optimization_exemption">Ignore battery optimizations</string>
+    <string name="battery_optimization_exemption_desc">Allow the app to run reliably in the background. Recommended for continuous SMS syncing.</string>
+    <string name="request_exemption">Request exemption</string>
+    <string name="auto_start_on_boot">Auto-start on device boot</string>
+    <string name="auto_start_on_boot_desc">Automatically resume SMS syncing after device restart.</string>
 </resources>

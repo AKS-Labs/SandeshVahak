@@ -10,6 +10,10 @@ import com.akslabs.SandeshVahak.R
 import com.akslabs.chitralaya.services.SmsSyncService
 import com.akslabs.chitralaya.services.SmsSyncResult
 import com.akslabs.Suchak.utils.NotificationHelper
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.Constraints
+import androidx.work.NetworkType
 
 /**
  * Background worker for syncing SMS messages to Telegram channel
@@ -112,6 +116,12 @@ class SmsSyncWorker(
             Result.failure()
         } finally {
             Log.i(TAG, "=== SMS SYNC WORKER FINISHED ===")
+            try {
+                // Ensure keep-alive is scheduled
+                com.akslabs.SandeshVahak.workers.WorkModule.SmsSync.enqueueKeepAlive()
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to enqueue keep-alive worker", e)
+            }
         }
     }
 

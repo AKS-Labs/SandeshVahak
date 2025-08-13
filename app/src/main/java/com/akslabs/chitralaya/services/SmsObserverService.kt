@@ -78,6 +78,18 @@ class SmsObserverService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i(TAG, "SMS Observer Service started")
+
+        // Ensure preferences are initialized and observer is registered even after restarts
+        var isEnabled = false
+        try {
+            com.akslabs.SandeshVahak.data.localdb.Preferences.init(applicationContext)
+            isEnabled = com.akslabs.SandeshVahak.data.localdb.Preferences.getBoolean(
+                com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
+                false
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to init/read Preferences in onStartCommand", e)
+        }
         
         // Create foreground notification to keep service alive
         val notification = NotificationHelper.createSmsObserverNotification(
@@ -93,8 +105,26 @@ class SmsObserverService : Service() {
             startForeground(NOTIFICATION_ID, notification)
         }
         
+        // Start or re-start the content observer if enabled
+        if (isEnabled) {
+            try {
+                Log.d(TAG, "Ensuring SmsContentObserver is registered from onStartCommand")
+                SmsContentObserver.startObserving(this)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start SmsContentObserver from onStartCommand", e)
+            }
+        } else {
+            Log.i(TAG, "SMS sync disabled; observer not started from onStartCommand")
+        }
+
         // Return START_STICKY to restart service if killed
         return START_STICKY
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        Log.w(TAG, "onTaskRemoved called - scheduling restart")
+        scheduleSelfRestart()
     }
 
     override fun onDestroy() {
@@ -103,9 +133,39 @@ class SmsObserverService : Service() {
         
         // Stop observing SMS content changes
         SmsContentObserver.stopObserving(this)
+
+        // Schedule restart if destroyed unexpectedly
+        scheduleSelfRestart()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
+    }
+
+    private fun scheduleSelfRestart() {
+        try {
+            val context = applicationContext
+            val intent = Intent(context, com.akslabs.chitralaya.receivers.ServiceRestarterReceiver::class.java)
+            val pendingIntent = android.app.PendingIntent.getBroadcast(
+                context,
+                0,
+                intent,
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+            )
+
+            val alarmManager = context.getSystemService(android.content.Context.ALARM_SERVICE) as android.app.AlarmManager
+            val triggerAt = System.currentTimeMillis() + 2_000L
+            val clock = android.app.AlarmManager.ELAPSED_REALTIME_WAKEUP
+            val elapsed = android.os.SystemClock.elapsedRealtime() + 2_000L
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(clock, elapsed, pendingIntent)
+            } else {
+                alarmManager.setExact(clock, elapsed, pendingIntent)
+            }
+            Log.i(TAG, "Scheduled service restart in 2s via AlarmManager")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to schedule service restart", e)
+        }
     }
 }

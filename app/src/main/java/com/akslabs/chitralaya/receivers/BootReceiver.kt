@@ -7,6 +7,7 @@ import android.util.Log
 import com.akslabs.SandeshVahak.data.localdb.Preferences
 import com.akslabs.chitralaya.services.SmsObserverService
 import com.akslabs.SandeshVahak.workers.WorkModule
+import com.akslabs.Suchak.utils.NotificationHelper
 
 /**
  * Broadcast receiver to restart SMS syncing after device boot
@@ -34,8 +35,13 @@ class BootReceiver : BroadcastReceiver() {
             val botToken = Preferences.getEncryptedString(Preferences.botToken, "")
             val channelId = Preferences.getEncryptedLong(Preferences.channelId, 0)
 
-            if (isEnabled && botToken.isNotBlank() && channelId != 0L) {
+            val autoStartAllowed = Preferences.getBoolean(Preferences.isAutoStartOnBootEnabledKey, true)
+
+            if (autoStartAllowed && isEnabled && botToken.isNotBlank() && channelId != 0L) {
                 Log.i(TAG, "Initializing SMS sync after boot (enabled by user)")
+
+                // Ensure notification channels exist before starting FGS
+                NotificationHelper.createNotificationChannels(context)
 
                 // Start SMS observer service
                 val serviceIntent = Intent(context, SmsObserverService::class.java)
@@ -51,9 +57,12 @@ class BootReceiver : BroadcastReceiver() {
                     WorkModule.SmsSync.cancel()
                 }
 
+                // Always ensure keep-alive worker is scheduled
+                WorkModule.SmsSync.enqueueKeepAlive()
+
                 Log.i(TAG, "SMS sync services configured after boot")
             } else {
-                Log.w(TAG, "SMS sync disabled or not configured, skipping initialization")
+                Log.w(TAG, "Auto-start disabled or SMS sync not configured; skipping boot initialization")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error initializing SMS sync after boot", e)

@@ -33,6 +33,8 @@ import com.akslabs.SandeshVahak.utils.connectivity.ConnectivityObserver
 import com.akslabs.SandeshVahak.utils.connectivity.ConnectivityStatus
 import com.akslabs.SandeshVahak.utils.toastFromMainThread
 import com.akslabs.SandeshVahak.workers.WorkModule
+import android.os.PowerManager
+import android.provider.Settings as AndroidSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -203,6 +205,12 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
         SettingsSectionHeader(title = "Privacy & Security")
 
         CloudSmsItem(totalCloudSmsCount = totalCloudSmsCount)
+
+        // Battery optimization exemption
+        BatteryOptimizationItem()
+
+        // Auto start on boot
+        AutoStartOnBootItem()
 
         SettingsListItem(
             title = stringResource(R.string.restore_all_from_cloud),
@@ -547,5 +555,77 @@ private fun AboutContributorsItem(modifier: Modifier = Modifier) {
                 }
             }
         }
+    )
+}
+
+@Composable
+private fun BatteryOptimizationItem(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    val pm = context.getSystemService(android.content.Context.POWER_SERVICE) as PowerManager
+    val packageName = context.packageName
+    val isIgnoring = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+        pm.isIgnoringBatteryOptimizations(packageName)
+    } else true
+
+    var isRequested by remember {
+        mutableStateOf(
+            Preferences.getBoolean(Preferences.isBatteryOptimizationExemptionRequestedKey, false)
+        )
+    }
+
+    val currentSubtitle = when {
+        isIgnoring -> "Already exempted from battery optimizations"
+        isRequested -> "Requested; please grant exemption in settings"
+        else -> stringResource(id = R.string.battery_optimization_exemption_desc)
+    }
+
+    SettingsListItem(
+        title = stringResource(id = R.string.battery_optimization_exemption),
+        subtitle = currentSubtitle,
+        icon = Icons.Rounded.BatterySaver,
+        modifier = modifier,
+        onClick = {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M && !isIgnoring) {
+                try {
+                    val intent = Intent(AndroidSettings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                        data = android.net.Uri.parse("package:$packageName")
+                    }
+                    context.startActivity(intent)
+                    Preferences.edit { putBoolean(Preferences.isBatteryOptimizationExemptionRequestedKey, true) }
+                    isRequested = true
+                } catch (e: Exception) {
+                    scope.launch {
+                        context.toastFromMainThread("Unable to open battery optimization settings")
+                    }
+                }
+            } else {
+                scope.launch {
+                    context.toastFromMainThread("Battery optimization already exempted")
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun AutoStartOnBootItem(modifier: Modifier = Modifier) {
+    var isEnabled by remember {
+        mutableStateOf(
+            Preferences.getBoolean(Preferences.isAutoStartOnBootEnabledKey, true)
+        )
+    }
+
+    SettingsListItemWithSwitch(
+        title = stringResource(id = R.string.auto_start_on_boot),
+        subtitle = stringResource(id = R.string.auto_start_on_boot_desc),
+        icon = Icons.Rounded.RestartAlt,
+        isChecked = isEnabled,
+        onCheckedChange = { checked ->
+            isEnabled = checked
+            Preferences.edit { putBoolean(Preferences.isAutoStartOnBootEnabledKey, checked) }
+        },
+        modifier = modifier
     )
 }

@@ -57,6 +57,13 @@ class MainActivity : ComponentActivity() {
         // Start daily database backup
         WorkModule.DailyDatabaseBackup.enqueuePeriodic()
 
+        // Ensure notification channels exist and keep-alive worker is scheduled
+        try {
+            com.akslabs.SandeshVahak.workers.WorkModule.SmsSync.enqueueKeepAlive()
+        } catch (e: Exception) {
+            android.util.Log.w("MainActivity", "Failed to enqueue keep-alive worker", e)
+        }
+
         setContent {
             AppTheme {
                 val topNavController = rememberNavController()

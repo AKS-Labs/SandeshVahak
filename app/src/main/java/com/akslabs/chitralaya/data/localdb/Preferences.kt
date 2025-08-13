@@ -31,6 +31,10 @@ object Preferences {
     const val smsSyncModeKey: String = "smsSyncMode" // values: ALL, NEW_ONLY
     const val smsSyncEnabledSinceKey: String = "smsSyncEnabledSince"
 
+    // Power & startup preferences
+    const val isAutoStartOnBootEnabledKey: String = "isAutoStartOnBootEnabled"
+    const val isBatteryOptimizationExemptionRequestedKey: String = "isBatteryOptimizationExemptionRequested"
+
     private const val prefFile: String = "preferences"
     private const val encryptedPrefFile: String = "encryptedPreferences"
     private lateinit var preferences: SharedPreferences

@@ -17,6 +17,7 @@ import com.akslabs.SandeshVahak.data.localdb.Preferences
 import com.akslabs.chitralaya.workers.SmsSyncWorker
 import com.akslabs.chitralaya.workers.InstantSmsSyncWorker
 import com.akslabs.chitralaya.workers.QuickSmsSyncWorker
+import com.akslabs.chitralaya.workers.KeepAliveWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import java.time.Duration
@@ -178,6 +179,27 @@ object WorkModule {
         fun cancelOneTime() {
             manager.cancelUniqueWork(SMS_SYNC_ONE_TIME_WORK)
         }
+
+        // Lightweight keep-alive periodic ping to ensure scheduling persists across OS constraints
+        fun enqueueKeepAlive() {
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+            val request = PeriodicWorkRequestBuilder<KeepAliveWorker>(Duration.ofHours(1))
+                .setConstraints(constraints)
+                .build()
+
+            manager.enqueueUniquePeriodicWork(
+                SMS_SYNC_KEEP_ALIVE_WORK,
+                ExistingPeriodicWorkPolicy.KEEP,
+                request
+            )
+        }
+
+        fun cancelKeepAlive() {
+            manager.cancelUniqueWork(SMS_SYNC_KEEP_ALIVE_WORK)
+        }
     }
 
 
@@ -190,6 +212,7 @@ object WorkModule {
     // SMS Sync Work Constants
     const val SMS_SYNC_WORK = "SmsSyncWork"
     const val SMS_SYNC_ONE_TIME_WORK = "SmsSyncOneTimeWork"
+    const val SMS_SYNC_KEEP_ALIVE_WORK = "SmsSyncKeepAliveWork"
     val VERBOSE_NOTIFICATION_CHANNEL_NAME: CharSequence = "Verbose WorkManager Notifications"
     const val VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION = "Shows notifications whenever work starts"
     val NOTIFICATION_TITLE: CharSequence = "Whitehole"
