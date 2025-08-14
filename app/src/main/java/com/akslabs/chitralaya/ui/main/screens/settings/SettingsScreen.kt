@@ -130,7 +130,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
         // General Section - Backup & Sync Settings
-        SettingsSectionHeader(title = "General")
+        SettingsSectionHeader(title = "Backup & Sunc")
 
         SettingsListItemWithSwitch(
             title = stringResource(R.string.auto_periodic_backup),
@@ -229,7 +229,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
         SettingsSectionDivider()
 
         // Look & Feel Section - Import/Export
-        SettingsSectionHeader(title = "Look & Feel")
+        SettingsSectionHeader(title = "Local Database Management")
 
         SettingsListItem(
             title = stringResource(R.string.import_database),
@@ -300,28 +300,28 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
         SettingsSectionDivider()
 
         // Memory & Storage Section - Database Management
-        SettingsSectionHeader(title = "Memory & Storage")
+        SettingsSectionHeader(title = "Cloud Database")
 
         DatabaseBackupItem()
 
-        DatabaseStatusItem()
+
 
         SettingsSectionDivider()
 
         // OCR Language Models Section - Placeholder
-        SettingsSectionHeader(title = "OCR Language Models")
-        SettingsListItem(
-            title = "Configure text extraction languages",
-            subtitle = "Manage OCR language models and settings",
-            icon = Icons.Rounded.Translate,
-            onClick = {
-                scope.launch {
-                    context.toastFromMainThread("OCR settings - Coming soon")
-                }
-            }
-        )
+//        SettingsSectionHeader(title = "OCR Language Models")
+//        SettingsListItem(
+//            title = "Configure text extraction languages",
+//            subtitle = "Manage OCR language models and settings",
+//            icon = Icons.Rounded.Translate,
+//            onClick = {
+//                scope.launch {
+//                    context.toastFromMainThread("OCR settings - Coming soon")
+//                }
+//            }
+//        )
 
-        SettingsSectionDivider()
+//        SettingsSectionDivider()
 
         // Debugging Section
         SettingsSectionHeader(title = "Debugging")
@@ -335,7 +335,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                 }
             }
         )
-
+        DatabaseStatusItem()
         SettingsSectionDivider()
 
         // About Section
