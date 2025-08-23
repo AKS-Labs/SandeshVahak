@@ -110,8 +110,17 @@
 
 ## 📱 **Screenshots**
 
-*Beautiful screenshots coming soon! 📸 (We're busy making the app even more awesome)*
+<div align="center">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="30%" alt="Main Screen">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="30%" alt="Photo Gallery">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="30%" alt="Settings">
+</div>
 
+<div align="center">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="30%" alt="Cloud Sync">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="30%" alt="Backup Progress">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" width="30%" alt="Photo Viewer">
+</div>
 ---
 
 ## 🤝 **Community**
