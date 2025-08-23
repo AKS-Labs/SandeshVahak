@@ -1,0 +1,1 @@
+Telegram Bot API ile ikincil cihazdan birincil cihaza güvenli SMS mesaj senkronizasyonu

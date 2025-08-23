@@ -1,0 +1,27 @@
+<p><b>SandeshVahak</b>, SMS mesajlarınızı ikincil cihazdan birincil cihazınıza kendi Telegram hesabınız ve Telegram Bot API'si kullanarak güvenli bir şekilde senkronize etmenizi sağlayan güvenli bir SMS mesaj senkronizasyon uygulamasıdır.</p>
+
+<p><b>Temel Özellikler:</b></p>
+<ul>
+<li><b>Güvenli Mesaj Senkronizasyonu:</b> Tüm mesajlar kişisel Telegram hesabınıza doğrudan senkronize edilir, tam gizlilik ve kontrol sağlar</li>
+<li><b>Üçüncü Taraf Hizmetleri Yok:</b> Sadece resmi Telegram Bot API'si kullanır - harici sunucular veya hizmetler dahil değildir</li>
+<li><b>Otomatik Arka Plan Senkronizasyonu:</b> Yeni SMS mesajlarını sürekli olarak izler ve arka planda senkronize eder</li>
+<li><b>Çapraz Cihaz Erişimi:</b> Telegram erişimi olan herhangi bir cihazdan tüm SMS mesajlarınıza erişin</li>
+<li><b>Gizlilik Odaklı Tasarım:</b> Mesajlar sadece kendi Telegram hesabınızda saklanır, harici sunucularda değil</li>
+<li><b>Pil Optimizasyonu:</b> Minimal pil etkisi ile verimli arka plan işleme</li>
+<li><b>Material Design 3:</b> En son Android tasarım yönergelerini takip eden modern, sezgisel kullanıcı arayüzü</li>
+<li><b>Açık Kaynak:</b> Şeffaflık ve topluluk katkıları için tamamen açık kaynak kod</li>
+</ul>
+
+<p><b>Nasıl Çalışır:</b></p>
+<p>Uygulama, ikincil cihazınız ile birincil cihazınız arasında köprü görevi gören bir Telegram botu oluşturur. İkincil cihazda yeni SMS mesajları geldiğinde, bunlar otomatik olarak bot aracılığıyla Telegram hesabınıza gönderilir. Daha sonra bu mesajlara Telegram'ın yüklü olduğu herhangi bir cihazdan erişebilirsiniz.</p>
+
+<p><b>Gizlilik ve Güvenlik:</b></p>
+<p>• Tüm veriler Telegram hesabınızda kalır<br>
+• Hiçbir mesaj harici sunucularda saklanmaz<br>
+• Sadece resmi Telegram Bot API'si kullanır<br>
+• Telegram'ın güvenliği aracılığıyla uçtan uca şifreleme</p>
+
+<p><b>Mükemmel Olduğu Durumlar:</b></p>
+<p>• Merkezi SMS erişimi isteyen çoklu cihaz kullanıcıları<br>
+• Kendi barındırılan çözümleri tercih eden gizlilik odaklı bireyler<br>
+• SMS mesajlarını kontrol ettikleri güvenli bir bulut hizmetine yedeklemek isteyen herkes</p>

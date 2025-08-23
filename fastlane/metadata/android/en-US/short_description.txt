@@ -1,1 +1,1 @@
-A feature-packed photo manager on top of Telegram.
+Secure SMS message sync from secondary to primary device via Telegram Bot API

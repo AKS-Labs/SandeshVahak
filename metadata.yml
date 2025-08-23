@@ -1,0 +1,68 @@
+---
+Categories:
+  - Internet
+  - Productivity
+  - System
+License: Apache-2.0
+WebSite: https://github.com/akslabs/SandeshVahak
+SourceCode: https://github.com/akslabs/SandeshVahak
+IssueTracker: https://github.com/akslabs/SandeshVahak/issues
+Changelog: https://github.com/akslabs/SandeshVahak/blob/main/CHANGELOG.md
+Donate: https://github.com/akslabs/SandeshVahak
+Bitcoin: 
+Litecoin: 
+Name: SandeshVahak
+AutoName: SandeshVahak
+Summary: Secure SMS message sync via Telegram Bot API
+Description: |
+  SandeshVahak is a secure SMS message synchronization app that allows you to sync all your SMS messages from a secondary device to your primary device using your own Telegram account and the Telegram Bot API.
+
+  Key Features:
+  • Secure Message Sync: All messages are synced directly to your personal Telegram account, ensuring complete privacy and control
+  • No Third-Party Services: Uses only the official Telegram Bot API - no external servers or services involved
+  • Automatic Background Sync: Continuously monitors and syncs new SMS messages in the background
+  • Cross-Device Access: Access all your SMS messages from any device with Telegram access
+  • Privacy-First Design: Messages are only stored on your own Telegram account, not on any external servers
+  • Battery Optimized: Efficient background processing with minimal battery impact
+  • Material Design 3: Modern, intuitive user interface following latest Android design guidelines
+  • Open Source: Completely open source code for transparency and community contributions
+
+  How It Works:
+  The app creates a Telegram bot that acts as a bridge between your secondary device and your primary device. When new SMS messages arrive on the secondary device, they are automatically sent to your Telegram account via the bot. You can then access these messages from any device where you have Telegram installed.
+
+  Privacy & Security:
+  • All data remains within your Telegram account
+  • No messages are stored on external servers
+  • Uses official Telegram Bot API only
+  • End-to-end encryption through Telegram's security
+
+  Perfect For:
+  • Users with multiple devices who want centralized SMS access
+  • Privacy-conscious individuals who prefer self-hosted solutions
+  • Anyone wanting to backup SMS messages to a secure cloud service they control
+
+RepoType: git
+Repo: https://github.com/akslabs/SandeshVahak
+Builds:
+  - versionName: '0.1'
+    versionCode: 1
+    commit: v0.1
+    subdir: app
+    gradle:
+      - yes
+    preassemble:
+      - echo "Building SandeshVahak..."
+    output: build/outputs/apk/release/app-release.apk
+    srclibs:
+      - androidx@2023.08.01
+      - compose@2023.10.01
+      - kotlin@1.9.10
+    rm:
+      - app/src/main/java/com/bera/whitehole
+      - app/src/test/java/com/bera/whitehole
+      - app/src/androidTest/java/com/bera/whitehole
+    forceversion: true
+AutoUpdateMode: None
+UpdateCheckMode: Tags
+CurrentVersion: '0.1'
+CurrentVersionCode: 1

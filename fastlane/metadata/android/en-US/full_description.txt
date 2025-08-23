@@ -1,1 +1,27 @@
-<p><i>Whitehole</i> allows you to use a Telegram group as a space to manage your photos.</p><p><br><b>Features:</b></><ul><li>Create and control backups</li><li>Complete customizability</li><li>Automatic periodic sync</li><li>Material Design 3 (You)</li><li>Entirely Open Source</li></ul>
+<p><b>SandeshVahak</b> is a secure SMS message synchronization app that allows you to sync all your SMS messages from a secondary device to your primary device using your own Telegram account and the Telegram Bot API.</p>
+
+<p><b>Key Features:</b></p>
+<ul>
+<li><b>Secure Message Sync:</b> All messages are synced directly to your personal Telegram account, ensuring complete privacy and control</li>
+<li><b>No Third-Party Services:</b> Uses only the official Telegram Bot API - no external servers or services involved</li>
+<li><b>Automatic Background Sync:</b> Continuously monitors and syncs new SMS messages in the background</li>
+<li><b>Cross-Device Access:</b> Access all your SMS messages from any device with Telegram access</li>
+<li><b>Privacy-First Design:</b> Messages are only stored on your own Telegram account, not on any external servers</li>
+<li><b>Battery Optimized:</b> Efficient background processing with minimal battery impact</li>
+<li><b>Material Design 3:</b> Modern, intuitive user interface following latest Android design guidelines</li>
+<li><b>Open Source:</b> Completely open source code for transparency and community contributions</li>
+</ul>
+
+<p><b>How It Works:</b></p>
+<p>The app creates a Telegram bot that acts as a bridge between your secondary device and your primary device. When new SMS messages arrive on the secondary device, they are automatically sent to your Telegram account via the bot. You can then access these messages from any device where you have Telegram installed.</p>
+
+<p><b>Privacy & Security:</b></p>
+<p>• All data remains within your Telegram account<br>
+• No messages are stored on external servers<br>
+• Uses official Telegram Bot API only<br>
+• End-to-end encryption through Telegram's security</p>
+
+<p><b>Perfect For:</b></p>
+<p>• Users with multiple devices who want centralized SMS access<br>
+• Privacy-conscious individuals who prefer self-hosted solutions<br>
+• Anyone wanting to backup SMS messages to a secure cloud service they control</p>

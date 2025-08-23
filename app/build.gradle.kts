@@ -10,13 +10,13 @@ plugins {
 android {
     // Keep namespace to match existing R imports
     namespace = "com.akslabs.SandeshVahak"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         // Use the new app ID to match your renamed package
         applicationId = "com.akslabs.SandeshVahak"
         minSdk = 29
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "0.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
