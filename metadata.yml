@@ -1,68 +1,112 @@
 ---
 Categories:
+  - Connectivity
   - Internet
-  - Productivity
   - System
 License: Apache-2.0
-WebSite: https://github.com/akslabs/SandeshVahak
-SourceCode: https://github.com/akslabs/SandeshVahak
-IssueTracker: https://github.com/akslabs/SandeshVahak/issues
-Changelog: https://github.com/akslabs/SandeshVahak/blob/main/CHANGELOG.md
-Donate: https://github.com/akslabs/SandeshVahak
-Bitcoin: 
-Litecoin: 
+WebSite: https://github.com/AKS-Labs/SandeshVahak
+SourceCode: https://github.com/AKS-Labs/SandeshVahak
+IssueTracker: https://github.com/AKS-Labs/SandeshVahak/issues
+Changelog: https://github.com/AKS-Labs/SandeshVahak/blob/main/CHANGELOG.md
+Liberapay: 
+OpenCollective: 
 Name: SandeshVahak
 AutoName: SandeshVahak
-Summary: Secure SMS message sync via Telegram Bot API
+Summary: Never miss SMS messages across devices - sync via your own Telegram bot!
 Description: |
-  SandeshVahak is a secure SMS message synchronization app that allows you to sync all your SMS messages from a secondary device to your primary device using your own Telegram account and the Telegram Bot API.
+  Never Miss a Message Again! 📱✨
 
-  Key Features:
-  • Secure Message Sync: All messages are synced directly to your personal Telegram account, ensuring complete privacy and control
-  • No Third-Party Services: Uses only the official Telegram Bot API - no external servers or services involved
-  • Automatic Background Sync: Continuously monitors and syncs new SMS messages in the background
-  • Cross-Device Access: Access all your SMS messages from any device with Telegram access
-  • Privacy-First Design: Messages are only stored on your own Telegram account, not on any external servers
-  • Battery Optimized: Efficient background processing with minimal battery impact
-  • Material Design 3: Modern, intuitive user interface following latest Android design guidelines
-  • Open Source: Completely open source code for transparency and community contributions
+  SandeshVahak (संदेश वाहक - "Message Carrier" in Sanskrit) is your personal SMS bridge that keeps you connected across all your devices! Say goodbye to the frustration of missing important messages on your secondary phone.
 
-  How It Works:
-  The app creates a Telegram bot that acts as a bridge between your secondary device and your primary device. When new SMS messages arrive on the secondary device, they are automatically sent to your Telegram account via the bot. You can then access these messages from any device where you have Telegram installed.
+  🎯 The Problem We Solve:
 
-  Privacy & Security:
-  • All data remains within your Telegram account
-  • No messages are stored on external servers
-  • Uses official Telegram Bot API only
-  • End-to-end encryption through Telegram's security
+  Got a work phone, personal phone, or that old device you use for specific tasks? Tired of constantly checking multiple devices for SMS messages? SandeshVahak has your back! It automatically syncs SMS messages from any device to your main device using the power of Telegram - and the best part? YOU control everything!
 
-  Perfect For:
-  • Users with multiple devices who want centralized SMS access
-  • Privacy-conscious individuals who prefer self-hosted solutions
-  • Anyone wanting to backup SMS messages to a secure cloud service they control
+  ✨ What Makes SandeshVahak Special:
+
+  • 🔒 100% Private: Uses YOUR Telegram bot - no sneaky third parties, no data mining, no corporate surveillance. Your messages stay yours!
+  • ⚡ Lightning Fast: Real-time SMS sync that works faster than you can say "संदेश वाहक"
+  • 🎨 Beautiful & Modern: Gorgeous Material Design 3 interface that's as pretty as it is functional
+  • 🔋 Battery Friendly: Smart background processing that won't drain your battery like other apps
+  • 🛡️ Fort Knox Security: AES-256 encryption keeps your sensitive data locked up tight
+  • 🌍 Universal Access: Access your messages from ANY device with Telegram - phone, tablet, computer, you name it!
+  • 🚫 Zero Bloat: No ads, no trackers, no unnecessary permissions - just pure functionality
+  • 📱 Smart Sync: Only syncs what's new - no duplicate chaos or spam
+
+  🚀 How the Magic Works:
+
+  It's surprisingly simple! You create your own Telegram bot (takes 2 minutes with @BotFather), connect SandeshVahak to it, and boom! Every SMS on your secondary device automatically appears in your personal Telegram channel. It's like having a digital postman that never sleeps! 📮
+
+  🛡️ Privacy That Actually Matters:
+
+  In a world full of apps that spy on you, SandeshVahak is different:
+
+  ✅ Direct communication with YOUR Telegram bot only
+  ✅ Zero external servers or cloud services
+  ✅ No analytics, telemetry, or tracking nonsense
+  ✅ Open source code - peek under the hood anytime!
+  ✅ You own the bot, you control the data
+
+  🎯 Perfect For:
+
+  • Digital Nomads: Keep your work and personal messages in sync wherever you roam
+  • Privacy Enthusiasts: Finally, a messaging solution that respects your data
+  • Multi-Device Users: Stop playing device hopscotch to check your messages
+  • Tech-Savvy Users: Love having control over your digital infrastructure
+  • Security-Conscious Individuals: Want message backup without corporate overlords
+
+  🔧 Quick Setup (Seriously, It's Easy!):
+
+  1. Chat with @BotFather on Telegram to create your bot (2 minutes)
+  2. Install SandeshVahak and grant SMS permission
+  3. Enter your bot token and chat ID
+  4. Watch the magic happen! ✨
+
+  💡 Pro Tips:
+
+  • Create a private Telegram group for organized message management
+  • Use Telegram's powerful search to find old messages instantly
+  • Set up custom notification sounds for different message types
+  • Access your messages from Telegram Web on any computer
+
+  🌟 Why Choose SandeshVahak?
+
+  Because your messages are important, your privacy matters, and you deserve a solution that works for YOU, not against you. Built by developers who actually care about user privacy and digital rights!
+
+  Join the revolution of truly private, user-controlled messaging solutions. Your future self will thank you! 🎉
+
+AntiFeatures:
+  - None
+
+RequiresRoot: false
 
 RepoType: git
-Repo: https://github.com/akslabs/SandeshVahak
+Repo: https://github.com/AKS-Labs/SandeshVahak
 Builds:
   - versionName: '0.1'
     versionCode: 1
     commit: v0.1
     subdir: app
+    sudo:
+      - apt-get update
+      - apt-get install -y openjdk-11-jdk-headless
+      - update-alternatives --auto java
     gradle:
       - yes
-    preassemble:
-      - echo "Building SandeshVahak..."
-    output: build/outputs/apk/release/app-release.apk
-    srclibs:
-      - androidx@2023.08.01
-      - compose@2023.10.01
-      - kotlin@1.9.10
-    rm:
+    prebuild: sed -i -e '/LeakCanary/d' build.gradle*
+    scanignore:
+      - app/build
+    scandelete:
       - app/src/main/java/com/bera/whitehole
       - app/src/test/java/com/bera/whitehole
       - app/src/androidTest/java/com/bera/whitehole
-    forceversion: true
-AutoUpdateMode: None
+
+MaintainerNotes: |
+  The app uses Telegram Bot API for SMS synchronization.
+  No proprietary dependencies or anti-features.
+  Built with standard Android toolchain.
+
+AutoUpdateMode: Version
 UpdateCheckMode: Tags
 CurrentVersion: '0.1'
 CurrentVersionCode: 1

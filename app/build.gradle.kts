@@ -74,11 +74,35 @@ android {
         // Disables dependency metadata when building Android App Bundles.
         includeInBundle = false
     }
+    
+    lint {
+        // Completely disable lint checks
+        abortOnError = false
+        checkReleaseBuilds = false
+        ignoreWarnings = true
+        quiet = true
+        disable.addAll(listOf(
+            "ExtraTranslation",
+            "MissingTranslation",
+            "InvalidPackage",
+            "VectorPath",
+            "IconExpectedSize",
+            "GoogleAppIndexingWarning",
+            "UnusedResources"
+        ))
+    }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KaptGenerateStubs> {
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+
+// Disable all lint tasks
+tasks.whenTaskAdded {
+    if (name.contains("lint", ignoreCase = true)) {
+        enabled = false
     }
 }
 

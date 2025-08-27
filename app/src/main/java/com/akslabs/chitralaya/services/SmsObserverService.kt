@@ -74,7 +74,7 @@ class SmsObserverService : Service() {
             // Fallback to direct SharedPreferences access if Preferences init failed
             try {
                 val prefs = applicationContext.getSharedPreferences("preferences", MODE_PRIVATE)
-                val enabled = prefs.getBoolean("is_sms_sync_enabled", false)
+                val enabled = prefs.getBoolean("isSmsSyncEnabled", false)  // Use consistent key
                 Log.d(TAG, "Read SMS sync preference from fallback SharedPreferences: $enabled")
                 enabled
             } catch (e: Exception) {
@@ -90,8 +90,8 @@ class SmsObserverService : Service() {
             SmsContentObserver.startObserving(this)
         } else {
             Log.i(TAG, "SMS sync disabled; not starting content observer")
-            stopSelf()
-            return
+            // Don't stop service immediately - let it stay ready for when sync is enabled
+            // The service will be restarted when user enables sync
         }
     }
 

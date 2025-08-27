@@ -112,8 +112,8 @@ class SmsContentObserver(
                     Log.w(TAG, "Failed to read SMS sync preference, trying fallback", e)
                     try {
                         val prefs = context.getSharedPreferences("preferences", Context.MODE_PRIVATE)
-                        val value = prefs.getBoolean("is_sms_sync_enabled", false)
-                        Log.d(TAG, "Fallback preference read is_sms_sync_enabled=$value")
+                        val value = prefs.getBoolean("isSmsSyncEnabled", false)  // Use consistent key
+                        Log.d(TAG, "Fallback preference read isSmsSyncEnabled=$value")
                         value
                     } catch (fallbackException: Exception) {
                         Log.e(TAG, "Complete failure reading sync preference, defaulting to false", fallbackException)
@@ -142,7 +142,14 @@ class SmsContentObserver(
                     0L
                 }
 
-                Log.d(TAG, "Content observer triggered - Mode: $syncMode, Baseline: $baseline")
+                Log.d(TAG, "Content observer triggered - Mode: $syncMode, Baseline: $baseline, IsEnabled: $isEnabled")
+
+                // For NEW_ONLY mode, verify baseline is set correctly
+                if (syncMode == "NEW_ONLY" && baseline == 0L) {
+                    Log.w(TAG, "⚠️ NEW_ONLY mode detected but baseline is 0! This will prevent NEW_ONLY sync from working.")
+                } else if (syncMode == "NEW_ONLY" && baseline > 0L) {
+                    Log.i(TAG, "✅ NEW_ONLY mode properly configured with baseline: $baseline (${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date(baseline))})")
+                }
 
                 // Always sync new SMS messages to local database (for Device screen)
                 val newCount = SmsReaderService.syncNewSmsToDatabase(context)
@@ -154,8 +161,11 @@ class SmsContentObserver(
 
                     // Only trigger cloud sync if user enabled it
                     if (isEnabled) {
-                        Log.i(TAG, "☁️ Triggering immediate cloud sync (Instant worker) since SMS sync is enabled")
+                        Log.i(TAG, "☁️ Triggering immediate cloud sync (Instant worker) since SMS sync is enabled (mode: $syncMode)")
+                        // Add a small delay to ensure database operations complete first
+                        kotlinx.coroutines.delay(500L)
                         WorkModule.SmsSync.enqueueInstant()
+                        Log.d(TAG, "✅ Instant sync worker enqueued successfully")
                     } else {
                         Log.d(TAG, "⏸️ SMS sync disabled, skipping cloud sync")
                     }

@@ -208,8 +208,14 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                                                             }
                                                             val intent = Intent(context, com.akslabs.chitralaya.services.SmsObserverService::class.java)
                                                             context.startForegroundService(intent)
+                                                            // For ALL mode, we want to sync all existing messages immediately
+                                                            // Cancel any existing periodic work and enqueue a one-time sync first
+                                                            WorkModule.SmsSync.cancel()
                                                             WorkModule.SmsSync.enqueueOneTime()
+                                                            // Then schedule periodic sync
                                                             WorkModule.SmsSync.enqueue()
+                                                            // Also schedule keep-alive to ensure workers run
+                                                            WorkModule.SmsSync.enqueueKeepAlive()
                                                             showModeDialog = false
                                                         },
                                                     verticalAlignment = Alignment.CenterVertically
@@ -257,8 +263,10 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
 
                                                             val intent = Intent(context, com.akslabs.chitralaya.services.SmsObserverService::class.java)
                                                             context.startForegroundService(intent)
-                                                            // No full backfill; cancel periodic full sync
+                                                            // No full backfill; cancel periodic full sync but ensure keep-alive is scheduled
                                                             WorkModule.SmsSync.cancel()
+                                                            WorkModule.SmsSync.enqueueKeepAlive()
+                                                            android.util.Log.i("MainPage", "NEW_ONLY mode (row click): scheduled keep-alive worker for content observer triggers")
                                                             showModeDialog = false
                                                         },
                                                     verticalAlignment = Alignment.CenterVertically
@@ -281,8 +289,10 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
 
                                                             val intent = Intent(context, com.akslabs.chitralaya.services.SmsObserverService::class.java)
                                                             context.startForegroundService(intent)
-                                                            // No full backfill; cancel periodic full sync
+                                                            // No full backfill; cancel periodic full sync but ensure keep-alive is scheduled
                                                             WorkModule.SmsSync.cancel()
+                                                            WorkModule.SmsSync.enqueueKeepAlive()
+                                                            android.util.Log.i("MainPage", "NEW_ONLY mode (radio): scheduled keep-alive worker for content observer triggers")
                                                             showModeDialog = false
                                                         }
                                                     )

@@ -53,14 +53,37 @@ class SmsSyncWorker(
             Log.d(TAG, "SMS sync enabled; proceeding with work")
         }
 
+        // Check sync mode to determine if we should bypass timestamp check
+        val syncMode = try {
+            com.akslabs.SandeshVahak.data.localdb.Preferences.getString(
+                com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncModeKey,
+                "ALL"
+            )
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to read sync mode, defaulting to ALL", e)
+            "ALL"
+        }
+        
+        Log.d(TAG, "Current sync mode: $syncMode")
+
         return try {
             // Set foreground info for long-running operation
             setForeground(createForegroundInfo())
 
-            // Perform sync
+            // Perform sync - for ALL mode, we want to ensure existing messages are synced
             var finalSyncResult: SmsSyncResult? = null
             Log.d(TAG, "Collecting progress from performFullSync()")
-            SmsSyncService.performFullSync(applicationContext).collect { progress ->
+            
+            // If in ALL mode, force a sync to ensure existing messages are processed
+            val syncFlow = if (syncMode == "ALL") {
+                Log.i(TAG, "ALL mode detected - forcing full sync to process existing messages")
+                com.akslabs.chitralaya.services.SmsSyncService.forceSync(applicationContext)
+            } else {
+                // For NEW_ONLY mode, use normal sync with timestamp check
+                com.akslabs.chitralaya.services.SmsSyncService.performFullSync(applicationContext)
+            }
+            
+            syncFlow.collect { progress ->
                 Log.d(TAG, "Worker progress update: batch=${progress.currentBatch}, total=${progress.totalMessagesSynced}, complete=${progress.isComplete}, error=${progress.errorMessage}")
                 // Update progress in foreground notification
                 if (progress.isComplete) {
@@ -219,6 +242,28 @@ class InstantSmsSyncWorker(
             com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
             false
         )
+        
+        // Get sync mode for debugging
+        val syncMode = try {
+            com.akslabs.SandeshVahak.data.localdb.Preferences.getString(
+                com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncModeKey,
+                "ALL"
+            )
+        } catch (e: Exception) {
+            "ALL"
+        }
+        
+        val baseline = try {
+            com.akslabs.SandeshVahak.data.localdb.Preferences.getLong(
+                com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncEnabledSinceKey,
+                0L
+            )
+        } catch (e: Exception) {
+            0L
+        }
+        
+        Log.d(TAG, "Instant sync worker - Enabled: $isEnabled, Mode: $syncMode, Baseline: $baseline")
+        
         if (!isEnabled) {
             Log.w(TAG, "SMS sync disabled by user; skipping instant sync")
             return Result.success()

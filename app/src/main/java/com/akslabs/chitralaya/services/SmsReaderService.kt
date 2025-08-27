@@ -269,6 +269,17 @@ object SmsReaderService {
                 val dao = DbHolder.database.smsMessageDao()
                 val lastMessageDate = dao.getLatestMessageDate() ?: 0L
 
+                // Get sync mode to determine how to handle baseline
+                val syncMode = try {
+                    com.akslabs.SandeshVahak.data.localdb.Preferences.getString(
+                        com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncModeKey,
+                        "ALL"
+                    )
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to read sync mode, defaulting to ALL", e)
+                    "ALL"
+                }
+
                 // Respect baseline when user chose NEW_ONLY mode
                 val baseline = try {
                     com.akslabs.SandeshVahak.data.localdb.Preferences.getLong(
@@ -280,20 +291,25 @@ object SmsReaderService {
                     0L
                 }
 
-                // For incremental sync, respect the baseline when user chose "sync only new messages"
+                // For incremental sync, determine the start timestamp based on sync mode
                 val bufferMs = 5000L // 5 second buffer for clock differences
-                val effectiveStart = if (baseline > 0L) {
+                val effectiveStart = if (syncMode == "NEW_ONLY" && baseline > 0L) {
                     // User chose "sync only new messages" - always use baseline as the cutoff
                     // This ensures we only sync messages received after sync was enabled
-                    Log.d(TAG, "Using baseline timestamp for 'sync only new messages' mode")
+                    Log.d(TAG, "NEW_ONLY mode: using baseline timestamp for incremental sync")
                     maxOf(0L, baseline - bufferMs)
                 } else {
                     // User chose "sync all messages" or no baseline set - use incremental approach
-                    Log.d(TAG, "Using incremental sync from latest DB message")
+                    Log.d(TAG, "ALL mode: using incremental sync from latest DB message")
                     lastMessageDate
                 }
 
-                Log.i(TAG, "Starting incremental SMS sync from timestamp: $effectiveStart (db=$lastMessageDate (${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(java.util.Date(lastMessageDate))}), baseline=$baseline (${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(java.util.Date(baseline))}), buffer=$bufferMs)")
+                Log.i(TAG, "Starting incremental SMS sync (mode: $syncMode) from timestamp: $effectiveStart (lastDB=$lastMessageDate, baseline=$baseline, buffer=$bufferMs)")
+                Log.d(TAG, "Timestamp details: lastDB=${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(java.util.Date(lastMessageDate))}, baseline=${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(java.util.Date(baseline))}, effective=${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(java.util.Date(effectiveStart))}")
+                
+                // Add a small delay to ensure all database operations from content observer are complete
+                kotlinx.coroutines.delay(100L)
+                
                 val newSmsMessages = readSmsMessagesAfter(context, effectiveStart)
 
                 var insertedCount = 0
@@ -303,11 +319,6 @@ object SmsReaderService {
                     val exists = dao.exists(smsMessage.id)
                     Log.v(TAG, "Evaluating message id=${smsMessage.id}, date=${smsMessage.date} (${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(java.util.Date(smsMessage.date))}), exists=$exists")
                     if (!exists) {
-                        // Additional check: if baseline is set, only include messages after baseline
-                        if (baseline > 0L && smsMessage.date < baseline) {
-                            Log.d(TAG, "Skipping message ${smsMessage.id} (date=${smsMessage.date}) as it's before baseline ($baseline)")
-                            continue
-                        }
                         toInsert.add(smsMessage)
                         insertedCount++
                         Log.i(TAG, "✅ New message queued for insert: ${smsMessage.id} from ${smsMessage.address} at ${smsMessage.date}")

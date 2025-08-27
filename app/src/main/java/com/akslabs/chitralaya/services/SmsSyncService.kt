@@ -44,6 +44,19 @@ object SmsSyncService {
         }
 
         Log.d(TAG, "Sync mode: $mode, baseline: $baseline")
+        
+        // Add detailed logging for NEW_ONLY mode
+        if (mode == "NEW_ONLY") {
+            if (baseline > 0L) {
+                val baselineDate = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date(baseline))
+                Log.i(TAG, "✅ NEW_ONLY mode properly configured - baseline: $baseline ($baselineDate)")
+            } else {
+                Log.w(TAG, "⚠️ NEW_ONLY mode selected but baseline is 0! This will prevent proper filtering.")
+            }
+        } else {
+            Log.d(TAG, "📦 ALL mode - will sync all unsynced messages regardless of baseline")
+        }
+        
         return Pair(mode, baseline)
     }
 
@@ -110,10 +123,19 @@ object SmsSyncService {
             val dao = DbHolder.database.smsMessageDao()
             val unsyncedMessages = if (syncMode == "NEW_ONLY" && baseline > 0L) {
                 Log.i(TAG, "NEW_ONLY mode: getting unsynced messages after baseline $baseline")
-                dao.getUnsyncedMessagesAfterBaseline(baseline, limit = 100)
+                val messages = dao.getUnsyncedMessagesAfterBaseline(baseline, limit = 100)
+                Log.d(TAG, "NEW_ONLY query returned ${messages.size} messages after baseline filter")
+                if (messages.isNotEmpty()) {
+                    val oldestDate = messages.minByOrNull { it.date }?.date ?: 0L
+                    val newestDate = messages.maxByOrNull { it.date }?.date ?: 0L
+                    Log.d(TAG, "Message date range: ${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date(oldestDate))} to ${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date(newestDate))}")
+                }
+                messages
             } else {
                 Log.i(TAG, "ALL mode: getting all unsynced messages")
-                dao.getUnsyncedMessages(limit = 100)
+                val messages = dao.getUnsyncedMessages(limit = 100)
+                Log.d(TAG, "ALL mode query returned ${messages.size} total unsynced messages")
+                messages
             }
 
             if (unsyncedMessages.isEmpty()) {
@@ -215,10 +237,14 @@ object SmsSyncService {
                 val (syncMode, baseline) = getSyncModeAndBaseline()
                 val unsyncedMessages = if (syncMode == "NEW_ONLY" && baseline > 0L) {
                     Log.d(TAG, "NEW_ONLY mode: getting unsynced messages after baseline $baseline")
-                    dao.getUnsyncedMessagesAfterBaseline(baseline, limit = MAX_BATCH_SIZE)
+                    val messages = dao.getUnsyncedMessagesAfterBaseline(baseline, limit = MAX_BATCH_SIZE)
+                    Log.d(TAG, "NEW_ONLY quick sync query returned ${messages.size} messages")
+                    messages
                 } else {
                     Log.d(TAG, "ALL mode: getting all unsynced messages")
-                    dao.getUnsyncedMessages(limit = MAX_BATCH_SIZE)
+                    val messages = dao.getUnsyncedMessages(limit = MAX_BATCH_SIZE)
+                    Log.d(TAG, "ALL mode quick sync query returned ${messages.size} messages")
+                    messages
                 }
                 Log.d(TAG, "Retrieved ${unsyncedMessages.size} unsynced messages (mode: $syncMode, baseline: $baseline)")
 
