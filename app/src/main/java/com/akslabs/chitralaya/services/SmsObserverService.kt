@@ -64,7 +64,7 @@ class SmsObserverService : Service() {
                 // Fallback to direct SharedPreferences access
                 try {
                     val prefs = applicationContext.getSharedPreferences("preferences", MODE_PRIVATE)
-                    prefs.getBoolean("is_sms_sync_enabled", false)
+                    prefs.getBoolean("isSmsSyncEnabled", false)  // Use consistent key
                 } catch (fallbackException: Exception) {
                     Log.e(TAG, "Complete failure reading sync preference, defaulting to false", fallbackException)
                     false
@@ -96,7 +96,7 @@ class SmsObserverService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.i(TAG, "SMS Observer Service started")
+        Log.i(TAG, "SMS Observer Service started with flags=$flags, startId=$startId")
 
         // Ensure preferences are initialized and observer is registered even after restarts
         var isEnabled = false

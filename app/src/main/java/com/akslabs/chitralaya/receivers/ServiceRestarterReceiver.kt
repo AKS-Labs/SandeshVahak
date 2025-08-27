@@ -15,6 +15,13 @@ class ServiceRestarterReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
         try {
+            // Initialize preferences if not already done
+            try {
+                Preferences.init(context.applicationContext)
+            } catch (e: Exception) {
+                Log.w("ServiceRestarter", "Preferences.init failed in ServiceRestarterReceiver", e)
+            }
+            
             val isEnabled = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
             if (!isEnabled) {
                 Log.w("ServiceRestarter", "SMS sync disabled; not restarting service")
@@ -23,11 +30,25 @@ class ServiceRestarterReceiver : BroadcastReceiver() {
 
             Log.i("ServiceRestarter", "Restart signal received; starting SmsObserverService")
             val serviceIntent = Intent(context, SmsObserverService::class.java)
-            context.startForegroundService(serviceIntent)
+            
+            // Use a separate thread to avoid ANR
+            Thread {
+                try {
+                    context.startForegroundService(serviceIntent)
+                    Log.i("ServiceRestarter", "SmsObserverService started successfully")
+                } catch (e: Exception) {
+                    Log.e("ServiceRestarter", "Error starting SmsObserverService", e)
+                    // Try regular start as fallback
+                    try {
+                        context.startService(serviceIntent)
+                        Log.i("ServiceRestarter", "SmsObserverService started with fallback method")
+                    } catch (fallbackException: Exception) {
+                        Log.e("ServiceRestarter", "Error starting SmsObserverService with fallback", fallbackException)
+                    }
+                }
+            }.start()
         } catch (e: Exception) {
             Log.e("ServiceRestarter", "Error restarting service", e)
         }
     }
 }
-
-

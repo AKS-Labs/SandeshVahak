@@ -26,7 +26,10 @@ class BootReceiver : BroadcastReceiver() {
             Intent.ACTION_MY_PACKAGE_REPLACED,
             Intent.ACTION_PACKAGE_REPLACED -> {
                 Log.i(TAG, "Boot/Package event received: ${intent.action}")
-                initializeSmsSync(context)
+                // Use a separate thread to avoid ANR
+                Thread {
+                    initializeSmsSync(context)
+                }.start()
             }
         }
     }
@@ -86,6 +89,9 @@ class BootReceiver : BroadcastReceiver() {
 
                 // Always ensure keep-alive worker is scheduled
                 WorkModule.SmsSync.enqueueKeepAlive()
+
+                // Also schedule an immediate one-time sync to ensure any missed messages are processed
+                WorkModule.SmsSync.enqueueOneTime()
 
                 Log.i(TAG, "SMS sync services configured after boot")
             } else {
