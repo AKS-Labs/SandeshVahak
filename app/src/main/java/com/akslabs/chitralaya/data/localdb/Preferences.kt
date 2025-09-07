@@ -14,22 +14,22 @@ object Preferences {
 
     // non-encrypted preferences
     const val startTabKey: String = "startTab"
-    const val isAutoBackupEnabledKey: String = "isPeriodicPhotoBackupEnabled"
+    const val isAutoBackupEnabledKey: String = "isPeriodicPhotoBackupEnabled" // Legacy key, prefer isSmsSyncEnabledKey for SMS sync
     const val autoBackupIntervalKey: String = "periodicPhotoBackupInterval"
     const val autoBackupNetworkTypeKey: String = "periodicPhotoBackupNetworkType"
     const val isAutoExportDatabaseEnabledKey: String = "isAutoExportDatabaseEnabled"
     const val autoExportDatabaseIntervalKey: String = "autoExportDatabaseInterval"
     const val autoExportDatabseLocation: String = "autoExportDatabaseLocation"
 
-
-
     const val defaultAutoExportDatabaseIntervalKey: Long = 7
     const val defaultAutoBackupInterval: Long = 7
 
     // SMS sync preferences
-    const val isSmsSyncEnabledKey: String = "isSmsSyncEnabled"
-    const val smsSyncModeKey: String = "smsSyncMode" // values: ALL, NEW_ONLY
-    const val smsSyncEnabledSinceKey: String = "smsSyncEnabledSince"
+    const val isSmsSyncEnabledKey: String = "isSmsSyncEnabled" // Master switch for SMS sync
+    const val smsSyncModeKey: String = "smsSyncMode" // values: SMS_SYNC_MODE_ALL, SMS_SYNC_MODE_NEW_ONLY
+    const val SMS_SYNC_MODE_ALL = "ALL"
+    const val SMS_SYNC_MODE_NEW_ONLY = "NEW_ONLY"
+    const val smsSyncEnabledSinceKey: String = "smsSyncEnabledSince" // Timestamp of the last synced SMS or when "NEW_ONLY" was set
 
     // Power & startup preferences
     const val isAutoStartOnBootEnabledKey: String = "isAutoStartOnBootEnabled"

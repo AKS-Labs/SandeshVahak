@@ -18,7 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.work.NetworkType
+import androidx.work.NetworkType // Still used by Auto Export DB
 import com.akslabs.SandeshVahak.R
 import com.akslabs.SandeshVahak.data.localdb.DbHolder
 import com.akslabs.SandeshVahak.data.localdb.Preferences
@@ -43,12 +43,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    // State for settings
-    var isAutoSmsBackupEnabled by remember {
-        mutableStateOf(
-            Preferences.getBoolean(Preferences.isAutoBackupEnabledKey, false)
-        )
-    }
+    // Removed isSmsSyncEnabled and currentSmsSyncMode states as controls are removed
 
     var isAutoExportDatabaseEnabled by remember {
         mutableStateOf(
@@ -59,9 +54,6 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
     val totalCloudSmsCount by DbHolder.database.remoteSmsMessageDao().getTotalCountFlow()
         .collectAsStateWithLifecycle(initialValue = 0)
 
-
-
-    // File launchers
     val exportBackupFileLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument(BackupHelper.JSON_MIME)
     ) { uri ->
@@ -102,7 +94,6 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
         }
     }
 
-    // Interval and network type options
     val intervals = remember {
         listOf(
             "Daily" to 1,
@@ -112,6 +103,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
         )
     }
 
+    // networkTypes is still used for Auto Export DB, so it remains.
     val networkTypes = remember {
         listOf(
             "All networks" to NetworkType.CONNECTED,
@@ -129,87 +121,15 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
-        // General Section - Backup & Sync Settings
-        SettingsSectionHeader(title = "Backup & Sunc")
-
-        SettingsListItemWithSwitch(
-            title = stringResource(R.string.auto_periodic_backup),
-            subtitle = "Automatically backup SMS to cloud",
-            icon = Icons.Rounded.CloudSync,
-            isChecked = isAutoSmsBackupEnabled,
-            onCheckedChange = { checked ->
-                isAutoSmsBackupEnabled = checked
-                Preferences.edit {
-                    putBoolean(Preferences.isAutoBackupEnabledKey, checked)
-                }
-                if (checked) {
-                    // SMS backup is handled automatically by SmsObserverService
-                    scope.launch {
-                        context.toastFromMainThread(context.getString(R.string.periodic_backup_enabled))
-                    }
-                } else {
-                    // SMS backup is handled automatically by SmsObserverService
-                    scope.launch {
-                        context.toastFromMainThread(context.getString(R.string.periodic_backup_cancelled))
-                    }
-                }
-            }
-        )
-
-        SettingsListItemWithDialog(
-            title = stringResource(R.string.backup_interval),
-            subtitle = "How often to backup",
-            icon = Icons.Rounded.AccessTime,
-            currentValue = intervals.find {
-                it.second.toString() == Preferences.getString(
-                    Preferences.autoBackupIntervalKey,
-                    Preferences.defaultAutoBackupInterval.toString()
-                )
-            }?.first ?: "Weekly",
-            entries = intervals.map { it.first },
-            values = intervals.map { it.second.toString() },
-            onValueChange = { value ->
-                Preferences.edit {
-                    putString(Preferences.autoBackupIntervalKey, value)
-                }
-                // SMS backup is handled automatically by SmsObserverService
-            },
-            enabled = isAutoSmsBackupEnabled
-        )
-
-        SettingsListItemWithDialog(
-            title = stringResource(R.string.backup_network_type),
-            subtitle = "Network preference for backup",
-            icon = Icons.Rounded.SignalCellularAlt,
-            currentValue = networkTypes.find {
-                it.second.name == Preferences.getString(
-                    Preferences.autoBackupNetworkTypeKey,
-                    NetworkType.CONNECTED.name
-                )
-            }?.first ?: "All networks",
-            entries = networkTypes.map { it.first },
-            values = networkTypes.map { it.second.name },
-            onValueChange = { value ->
-                Preferences.edit {
-                    putString(Preferences.autoBackupNetworkTypeKey, value)
-                }
-                // SMS backup is handled automatically by SmsObserverService
-            },
-            enabled = isAutoSmsBackupEnabled
-        )
-
-
-        SettingsSectionDivider()
+        // Removed "SMS Sync Settings" section header and its items
 
         // Privacy & Security Section - Cloud & Sync
         SettingsSectionHeader(title = "Privacy & Security")
 
         CloudSmsItem(totalCloudSmsCount = totalCloudSmsCount)
 
-        // Battery optimization exemption
         BatteryOptimizationItem()
 
-        // Auto start on boot
         AutoStartOnBootItem()
 
         SettingsListItem(
@@ -217,10 +137,9 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
             subtitle = stringResource(R.string.sms_not_found_on_this_device, totalCloudSmsCount.toString()),
             icon = Icons.Outlined.CloudDownload,
             onClick = {
-                // SMS restore functionality not implemented yet
                 scope.launch {
                     context.toastFromMainThread(
-                        "SMS restore functionality not implemented yet"
+                        "To restore all SMS, use the 'Sync: ON' button in the Top Bar and select 'Sync all existing and new messages'."
                     )
                 }
             }
@@ -296,6 +215,8 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
             },
             enabled = isAutoExportDatabaseEnabled
         )
+         // Removed NetworkType dialog for SMS sync, but Auto Export DB might need its own if it had one.
+         // Assuming auto-export uses a default or doesn't have a UI for network type for now.
 
         SettingsSectionDivider()
 
@@ -304,24 +225,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
 
         DatabaseBackupItem()
 
-
-
         SettingsSectionDivider()
-
-        // OCR Language Models Section - Placeholder
-//        SettingsSectionHeader(title = "OCR Language Models")
-//        SettingsListItem(
-//            title = "Configure text extraction languages",
-//            subtitle = "Manage OCR language models and settings",
-//            icon = Icons.Rounded.Translate,
-//            onClick = {
-//                scope.launch {
-//                    context.toastFromMainThread("OCR settings - Coming soon")
-//                }
-//            }
-//        )
-
-//        SettingsSectionDivider()
 
         // Debugging Section
         SettingsSectionHeader(title = "Debugging")
@@ -360,12 +264,11 @@ private fun CloudSmsItem(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var isSyncing by remember { mutableStateOf(false) }
 
     val syncSummaryText = if (totalCloudSmsCount > 0) {
         "$totalCloudSmsCount SMS messages synced to cloud"
     } else {
-        "No SMS messages synced yet"
+        "No SMS messages synced yet. Use the Sync button in the Top Bar to start."
     }
 
     SettingsListItem(
@@ -375,7 +278,7 @@ private fun CloudSmsItem(
         modifier = modifier,
         onClick = {
             scope.launch {
-                context.toastFromMainThread("SMS sync is handled automatically by the SMS observer service")
+                context.toastFromMainThread("SMS sync is controlled by the Sync button in the Top Bar.")
             }
         }
     )
@@ -387,7 +290,6 @@ private fun DatabaseBackupItem(modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
     var backupStats by remember { mutableStateOf<com.akslabs.SandeshVahak.data.localdb.backup.BackupHelper.BackupStats?>(null) }
 
-    // Load backup stats
     LaunchedEffect(Unit) {
         backupStats = com.akslabs.SandeshVahak.data.localdb.backup.BackupHelper.getBackupStats()
     }
@@ -403,7 +305,6 @@ private fun DatabaseBackupItem(modifier: Modifier = Modifier) {
         modifier = modifier,
         onClick = {
             scope.launch {
-                // Check connectivity first
                 val connectivityStatus = ConnectivityObserver.status()
                 if (connectivityStatus != ConnectivityStatus.Available) {
                     context.toastFromMainThread("No internet connection. Please check your connection and try again.")
@@ -416,7 +317,6 @@ private fun DatabaseBackupItem(modifier: Modifier = Modifier) {
                     result.fold(
                         onSuccess = { message ->
                             context.toastFromMainThread("✅ $message")
-                            // Refresh backup stats
                             backupStats = com.akslabs.SandeshVahak.data.localdb.backup.BackupHelper.getBackupStats()
                         },
                         onFailure = { error ->
@@ -521,7 +421,7 @@ private fun AboutLicenseItem(modifier: Modifier = Modifier) {
         onClick = {
             try {
                 val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
-                    data = android.net.Uri.parse("https://github.com/AKS-Labs/SandeshVahak#Apache-2.0-1-ov-file")
+                    data = android.net.Uri.parse("https.github.com/AKS-Labs/SandeshVahak#Apache-2.0-1-ov-file")
                 }
                 context.startActivity(intent)
             } catch (e: Exception) {
@@ -627,7 +527,6 @@ private fun AutoStartOnBootItem(modifier: Modifier = Modifier) {
         onCheckedChange = { checked ->
             isEnabled = checked
             Preferences.edit { putBoolean(Preferences.isAutoStartOnBootEnabledKey, checked) }
-            // Inform the user device-specific auto-start settings may be required
             if (checked) {
                 scope.launch {
                     context.toastFromMainThread("Auto-start enabled. Some devices require enabling auto-start in system settings for background startup.")

@@ -8,24 +8,51 @@ plugins {
 }
 
 android {
+    val localProps = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localProps.load(localPropertiesFile.inputStream())
+    } else {
+        println("local.properties file not found. Release signing may fail.")
+    }
+
     // Keep namespace to match existing R imports
     namespace = "com.akslabs.SandeshVahak"
     compileSdk = 35
+
+    signingConfigs {
+        create("release") {
+            val keystoreFileProp = localProps.getProperty("KEYSTORE_FILE")
+            val keystorePasswordProp = localProps.getProperty("KEYSTORE_PASSWORD")
+            val keyAliasProp = localProps.getProperty("KEY_ALIAS")
+            val keyPasswordProp = localProps.getProperty("KEY_PASSWORD")
+
+            if (keystoreFileProp != null && keystorePasswordProp != null && keyAliasProp != null && keyPasswordProp != null) {
+                storeFile = file(keystoreFileProp)
+                storePassword = keystorePasswordProp
+                keyAlias = keyAliasProp
+                keyPassword = keyPasswordProp
+            } else {
+                println("Release signing configuration is incomplete. Check KEYSTORE_FILE, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD in local.properties.")
+            }
+        }
+    }
 
     defaultConfig {
         // Use the new app ID to match your renamed package
         applicationId = "com.akslabs.SandeshVahak"
         minSdk = 29
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1"
+        versionCode = 2
+        versionName = "0.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
 
-        val properties = Properties()
-        properties.load(rootProject.file("local.properties").inputStream())
+        // This properties loading might be redundant now if not used for other purposes in defaultConfig
+        // val properties = Properties()
+        // properties.load(rootProject.file("local.properties").inputStream())
 
 
     }
@@ -38,6 +65,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
         create("debugMini") {
             initWith(getByName("debug"))

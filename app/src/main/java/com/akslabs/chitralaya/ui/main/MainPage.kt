@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.ui.main
+package com.akslabs.SandeshVahak.ui.main // Note: Package doesn't match directory structure (com.akslabs.chitralaya.ui.main)
 
 import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
@@ -6,6 +6,8 @@ import androidx.activity.compose.BackHandler
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -18,6 +20,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -31,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.work.WorkInfo
 import com.akslabs.SandeshVahak.R
 import com.akslabs.SandeshVahak.data.localdb.Preferences
+import com.akslabs.chitralaya.services.SmsObserverService // Corrected import
 import com.akslabs.SandeshVahak.ui.components.ConnectivityStatusPopup
 import com.akslabs.SandeshVahak.ui.main.nav.AppNavHost
 import com.akslabs.SandeshVahak.ui.main.nav.Screens
@@ -47,7 +51,6 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
     val syncState by viewModel.syncState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    // Enable edge-to-edge display
     LaunchedEffect(Unit) {
         val activity = context as? androidx.activity.ComponentActivity
         activity?.let {
@@ -55,21 +58,15 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
         }
     }
 
-    // Track current destination for bottom navigation
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
-
-    // Scrollable TopAppBar behavior - use enterAlways for immediate reappearance
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
-    // Track message counts for TopAppBar title
     var localSmsCount by remember { mutableIntStateOf(0) }
     var remoteSmsCount by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(viewModel) {
-        // Always start at Device screen (LocalSms) regardless of last saved tab
         navController.navigate(Screens.LocalSms.route)
-
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (Screens.mainScreens.any { it.route == destination.route }) {
                 Preferences.edit { putString(Preferences.startTabKey, destination.route) }
@@ -77,23 +74,23 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
         }
     }
 
-    // Ensure app always opens at Device screen when opened from background
-    // This provides a consistent user experience regardless of where they left off
     LaunchedEffect(Unit) {
-        // Reset navigation state to Device screen
         viewModel.resetToDeviceScreen()
-        
-        // Clear any previous navigation state and go to Device screen
         navController.navigate(Screens.LocalSms.route) {
-            popUpTo(navController.graph.startDestinationId) {
-                inclusive = true
-            }
+            popUpTo(navController.graph.startDestinationId) { inclusive = true }
         }
     }
 
     LaunchedEffect(viewModel) {
-        // SMS sync is handled by SmsObserverService
         viewModel.updateSyncState(SyncState.IDLE)
+    }
+
+    var isSyncEnabledForTopAppBar by remember { mutableStateOf(Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)) }
+    var showModeDialog by remember { mutableStateOf(false) }
+    val greenAccentColor = Color(0xFF2E7D32)
+
+    LaunchedEffect(currentDestination, Unit) { // Re-check on navigation or initial load
+        isSyncEnabledForTopAppBar = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -105,241 +102,47 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                 Column {
                     TopAppBar(
                         title = {
-                            // Get count for title display with dynamic counts
                             val titleWithCount = when (currentDestination) {
-                                Screens.LocalSms.route -> {
-                                    if (localSmsCount > 0) "Device ($localSmsCount)" else "Device"
-                                }
-                                Screens.RemoteSms.route -> {
-                                    if (remoteSmsCount > 0) "Cloud ($remoteSmsCount)" else "Cloud"
-                                }
+                                Screens.LocalSms.route -> if (localSmsCount > 0) "Device ($localSmsCount)" else "Device"
+                                Screens.RemoteSms.route -> if (remoteSmsCount > 0) "Cloud ($remoteSmsCount)" else "Cloud"
                                 Screens.Settings.route -> Screens.Settings.displayTitle
                                 else -> "SMS Sync"
                             }
-                            Text(
-                                text = titleWithCount,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
+                            Text(text = titleWithCount, color = MaterialTheme.colorScheme.onSurface)
                         },
                         actions = {
-                            // Sync toggle switch in TopAppBar
-                            var showModeDialog by remember { mutableStateOf(false) }
-                            val isSyncEnabled = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
-                            var toggleState by remember { mutableStateOf(isSyncEnabled) }
-
-                            // Keep UI in sync with stored preference when composition recomposes
-                            LaunchedEffect(Unit) {
-                                toggleState = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
-                            }
-
-                            // Replace ambiguous switch with labeled chip action
-                            // Replaced AssistChip with a clean clickable Row (no border/background)
                             Row(
                                 modifier = Modifier
                                     .clickable {
-                                        if (toggleState) {
-                                            // If ON, tap should immediately turn OFF without dialog
-                                            toggleState = false
+                                        if (isSyncEnabledForTopAppBar) {
                                             Preferences.edit { putBoolean(Preferences.isSmsSyncEnabledKey, false) }
-                                            WorkModule.SmsSync.cancel()
-                                            WorkModule.SmsSync.cancelOneTime()
-                                            try { context.stopService(Intent(context, com.akslabs.chitralaya.services.SmsObserverService::class.java)) } catch (_: Exception) {}
+                                            isSyncEnabledForTopAppBar = false
+                                            SmsObserverService.stop(context) // STOP SERVICE
                                         } else {
-                                            // If OFF, show dialog to choose mode
                                             showModeDialog = true
                                         }
                                     }
                                     .padding(horizontal = 8.dp, vertical = 6.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                val accent = Color(0xFF2E7D32)
-                                val iconTint = if (toggleState) accent else MaterialTheme.colorScheme.onSurface
-                                val textColor = if (toggleState) accent else MaterialTheme.colorScheme.onSurface
+                                val iconTint = if (isSyncEnabledForTopAppBar) greenAccentColor else MaterialTheme.colorScheme.onSurfaceVariant
+                                val textColor = if (isSyncEnabledForTopAppBar) greenAccentColor else MaterialTheme.colorScheme.onSurface
                                 Icon(
-                                    imageVector = if (toggleState) Icons.Default.CloudUpload else Icons.Default.CloudOff,
-                                    contentDescription = null,
+                                    imageVector = if (isSyncEnabledForTopAppBar) Icons.Default.CloudUpload else Icons.Default.CloudOff,
+                                    contentDescription = "SMS Sync Toggle",
                                     tint = iconTint
                                 )
                                 Spacer(Modifier.width(6.dp))
-                                Text(
-                                    text = if (toggleState) "Sync: ON" else "Sync: OFF",
-                                    color = textColor
-                                )
+                                Text(text = if (isSyncEnabledForTopAppBar) "Sync: ON" else "Sync: OFF", color = textColor)
                             }
 
-                            // Settings button remains
                             IconButton(
-                                onClick = {
-                                    navController.navigate(Screens.Settings.route)
-                                }
+                                onClick = { navController.navigate(Screens.Settings.route) }
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Settings,
                                     contentDescription = "Settings",
                                     tint = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-
-                            if (showModeDialog) {
-                                AlertDialog(
-                                    onDismissRequest = { showModeDialog = false },
-                                    title = { Text("SMS Cloud Sync") },
-                                    text = {
-                                        // Description and two radio options
-                                        val lastMode = Preferences.getString(Preferences.smsSyncModeKey, "ALL")
-                                        var selectedMode by remember { mutableStateOf(if (toggleState) lastMode else "OFF") }
-                                        Column(modifier = Modifier.fillMaxWidth()) {
-                                            Text("Choose how to sync to Telegram:")
-                                            Spacer(Modifier.height(8.dp))
-
-                                            // Properly stacked radio list
-                                            Column(modifier = Modifier.fillMaxWidth()) {
-                                                // Option: All existing and new messages
-                                                Row(
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .clickable {
-                                                            selectedMode = "ALL"
-                                                            toggleState = true
-                                                            Preferences.edit {
-                                                                putBoolean(Preferences.isSmsSyncEnabledKey, true)
-                                                                putString(Preferences.smsSyncModeKey, "ALL")
-                                                                putLong(Preferences.smsSyncEnabledSinceKey, 0L)
-                                                            }
-                                                            val intent = Intent(context, com.akslabs.chitralaya.services.SmsObserverService::class.java)
-                                                            context.startForegroundService(intent)
-                                                            // For ALL mode, we want to sync all existing messages immediately
-                                                            // Cancel any existing periodic work and enqueue a one-time sync first
-                                                            WorkModule.SmsSync.cancel()
-                                                            WorkModule.SmsSync.enqueueOneTime()
-                                                            // Then schedule periodic sync
-                                                            WorkModule.SmsSync.enqueue()
-                                                            // Also schedule keep-alive to ensure workers run
-                                                            WorkModule.SmsSync.enqueueKeepAlive()
-                                                            showModeDialog = false
-                                                        },
-                                                    verticalAlignment = Alignment.CenterVertically
-                                                ) {
-                                                    RadioButton(
-                                                        selected = selectedMode == "ALL",
-                                                        onClick = {
-                                                            selectedMode = "ALL"
-                                                            toggleState = true
-                                                            Preferences.edit {
-                                                                putBoolean(Preferences.isSmsSyncEnabledKey, true)
-                                                                putString(Preferences.smsSyncModeKey, "ALL")
-                                                                putLong(Preferences.smsSyncEnabledSinceKey, 0L)
-                                                            }
-                                                            val intent = Intent(context, com.akslabs.chitralaya.services.SmsObserverService::class.java)
-                                                            context.startForegroundService(intent)
-                                                            WorkModule.SmsSync.enqueueOneTime()
-                                                            WorkModule.SmsSync.enqueue()
-                                                            showModeDialog = false
-                                                        }
-                                                    )
-                                                    Spacer(Modifier.width(8.dp))
-                                                    Text("Sync all existing and new messages")
-                                                }
-
-                                                Spacer(Modifier.height(8.dp))
-
-                                                // Option: Only new messages
-                                                Row(
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .clickable {
-                                                            selectedMode = "NEW_ONLY"
-                                                            toggleState = true
-                                                            val now = System.currentTimeMillis()
-                                                            android.util.Log.i("MainPage", "NEW_ONLY mode selected (row click): setting baseline to $now")
-                                                            Preferences.edit {
-                                                                putBoolean(Preferences.isSmsSyncEnabledKey, true)
-                                                                putString(Preferences.smsSyncModeKey, "NEW_ONLY")
-                                                                putLong(Preferences.smsSyncEnabledSinceKey, now)
-                                                            }
-                                                            // Verify the baseline was set correctly
-                                                            val verifyBaseline = Preferences.getLong(Preferences.smsSyncEnabledSinceKey, 0L)
-                                                            android.util.Log.i("MainPage", "NEW_ONLY baseline verification (row click): $verifyBaseline")
-
-                                                            val intent = Intent(context, com.akslabs.chitralaya.services.SmsObserverService::class.java)
-                                                            context.startForegroundService(intent)
-                                                            // No full backfill; cancel periodic full sync but ensure keep-alive is scheduled
-                                                            WorkModule.SmsSync.cancel()
-                                                            WorkModule.SmsSync.enqueueKeepAlive()
-                                                            android.util.Log.i("MainPage", "NEW_ONLY mode (row click): scheduled keep-alive worker for content observer triggers")
-                                                            showModeDialog = false
-                                                        },
-                                                    verticalAlignment = Alignment.CenterVertically
-                                                ) {
-                                                    RadioButton(
-                                                        selected = selectedMode == "NEW_ONLY",
-                                                        onClick = {
-                                                            selectedMode = "NEW_ONLY"
-                                                            toggleState = true
-                                                            val now = System.currentTimeMillis()
-                                                            android.util.Log.i("MainPage", "NEW_ONLY mode selected: setting baseline to $now")
-                                                            Preferences.edit {
-                                                                putBoolean(Preferences.isSmsSyncEnabledKey, true)
-                                                                putString(Preferences.smsSyncModeKey, "NEW_ONLY")
-                                                                putLong(Preferences.smsSyncEnabledSinceKey, now)
-                                                            }
-                                                            // Verify the baseline was set correctly
-                                                            val verifyBaseline = Preferences.getLong(Preferences.smsSyncEnabledSinceKey, 0L)
-                                                            android.util.Log.i("MainPage", "NEW_ONLY baseline verification: $verifyBaseline")
-
-                                                            val intent = Intent(context, com.akslabs.chitralaya.services.SmsObserverService::class.java)
-                                                            context.startForegroundService(intent)
-                                                            // No full backfill; cancel periodic full sync but ensure keep-alive is scheduled
-                                                            WorkModule.SmsSync.cancel()
-                                                            WorkModule.SmsSync.enqueueKeepAlive()
-                                                            android.util.Log.i("MainPage", "NEW_ONLY mode (radio): scheduled keep-alive worker for content observer triggers")
-                                                            showModeDialog = false
-                                                        }
-                                                    )
-                                                    Spacer(Modifier.width(8.dp))
-                                                    Text("Sync only new messages")
-                                                }
-
-                                                Spacer(Modifier.height(8.dp))
-
-                                                // Option: Turn sync off
-                                                Row(
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .clickable {
-                                                            selectedMode = "OFF"
-                                                            toggleState = false
-                                                            Preferences.edit { putBoolean(Preferences.isSmsSyncEnabledKey, false) }
-                                                            WorkModule.SmsSync.cancel()
-                                                            WorkModule.SmsSync.cancelOneTime()
-                                                            try { context.stopService(Intent(context, com.akslabs.chitralaya.services.SmsObserverService::class.java)) } catch (_: Exception) {}
-                                                            showModeDialog = false
-                                                        },
-                                                    verticalAlignment = Alignment.CenterVertically
-                                                ) {
-                                                    RadioButton(
-                                                        selected = selectedMode == "OFF",
-                                                        onClick = {
-                                                            selectedMode = "OFF"
-                                                            toggleState = false
-                                                            Preferences.edit { putBoolean(Preferences.isSmsSyncEnabledKey, false) }
-                                                            WorkModule.SmsSync.cancel()
-                                                            WorkModule.SmsSync.cancelOneTime()
-                                                            try { context.stopService(Intent(context, com.akslabs.chitralaya.services.SmsObserverService::class.java)) } catch (_: Exception) {}
-                                                            showModeDialog = false
-                                                        }
-                                                    )
-                                                    Spacer(Modifier.width(8.dp))
-                                                    Text("Turn sync off")
-                                                }
-                                            }
-                                        }
-                                    },
-                                    // Move Close to the extreme bottom-right: use confirmButton (right side in M3)
-                                    confirmButton = {
-                                        TextButton(onClick = { showModeDialog = false }) { Text("Close") }
-                                    },
-                                    dismissButton = {}
                                 )
                             }
                         },
@@ -353,19 +156,16 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                     ConnectivityStatusPopup()
                 }
             },
-            contentWindowInsets = WindowInsets(0, 0, 0, 0) // Allow content to extend into system bars
+            contentWindowInsets = WindowInsets(0, 0, 0, 0)
         ) { paddingValues ->
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
                 AppNavHost(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     navController = navController,
                     onLocalSmsCountChanged = { count -> localSmsCount = count },
                     onRemoteSmsCountChanged = { count -> remoteSmsCount = count }
                 )
 
-                // Truly floating bottom navigation
                 if (currentDestination in listOf(Screens.LocalSms.route, Screens.RemoteSms.route)) {
                     TrulyFloatingBottomNavigation(
                         navController = navController,
@@ -376,7 +176,64 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
             }
         }
 
-        // Only show syncing animation on cloud photos screen, not device screen
+        if (showModeDialog) {
+            val currentSyncModeFromPrefs = Preferences.getString(Preferences.smsSyncModeKey, Preferences.SMS_SYNC_MODE_NEW_ONLY)
+            val isCurrentlyEnabledInPrefs = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
+            val initialDialogSelection = if (isCurrentlyEnabledInPrefs) currentSyncModeFromPrefs else "OFF"
+
+            AlertDialog(
+                onDismissRequest = { showModeDialog = false },
+                title = { Text("SMS Cloud Sync Options") },
+                text = {
+                    Column(Modifier.selectableGroup()) {
+                        DialogRadioOption(
+                            text = "Sync all existing and new messages",
+                            selected = initialDialogSelection == Preferences.SMS_SYNC_MODE_ALL,
+                            onClick = {
+                                Preferences.edit {
+                                    putBoolean(Preferences.isSmsSyncEnabledKey, true)
+                                    putString(Preferences.smsSyncModeKey, Preferences.SMS_SYNC_MODE_ALL)
+                                    putLong(Preferences.smsSyncEnabledSinceKey, 0L) // Reset baseline for full sync
+                                }
+                                isSyncEnabledForTopAppBar = true
+                                SmsObserverService.start(context) // START SERVICE
+                                showModeDialog = false
+                            }
+                        )
+                        DialogRadioOption(
+                            text = "Sync only new messages",
+                            selected = initialDialogSelection == Preferences.SMS_SYNC_MODE_NEW_ONLY,
+                            onClick = {
+                                val currentSinceKeyValue = Preferences.getLong(Preferences.smsSyncEnabledSinceKey, 0L)
+                                Preferences.edit {
+                                    putBoolean(Preferences.isSmsSyncEnabledKey, true)
+                                    putString(Preferences.smsSyncModeKey, Preferences.SMS_SYNC_MODE_NEW_ONLY)
+                                    if (currentSinceKeyValue == 0L) { // Only set new timestamp if switching from ALL or freshly enabling
+                                        putLong(Preferences.smsSyncEnabledSinceKey, System.currentTimeMillis())
+                                    }
+                                }
+                                isSyncEnabledForTopAppBar = true
+                                SmsObserverService.start(context) // START SERVICE
+                                showModeDialog = false
+                            }
+                        )
+                        DialogRadioOption(
+                            text = "Turn sync off",
+                            selected = initialDialogSelection == "OFF",
+                            onClick = {
+                                Preferences.edit { putBoolean(Preferences.isSmsSyncEnabledKey, false) }
+                                isSyncEnabledForTopAppBar = false
+                                SmsObserverService.stop(context) // STOP SERVICE
+                                showModeDialog = false
+                            }
+                        )
+                    }
+                },
+                confirmButton = { }, 
+                dismissButton = null
+            )
+        }
+
         AnimatedVisibility(visible = syncState == SyncState.SYNCING && currentDestination == Screens.RemoteSms.route) {
             Dialog({}) {
                 Column(
@@ -401,6 +258,29 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
 }
 
 @Composable
+private fun DialogRadioOption(text: String, selected: Boolean, onClick: () -> Unit) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .selectable(
+                selected = selected,
+                onClick = onClick, 
+                role = Role.RadioButton
+            )
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(
+            selected = selected,
+            onClick = null 
+        )
+        Spacer(Modifier.width(16.dp))
+        Text(text)
+    }
+}
+
+
+@Composable
 private fun TrulyFloatingBottomNavigation(
     navController: NavController,
     currentDestination: String?,
@@ -409,9 +289,9 @@ private fun TrulyFloatingBottomNavigation(
     Surface(
         modifier = modifier
             .padding(horizontal = 32.dp, vertical = 16.dp)
-            .wrapContentWidth(), // Only take up needed width
+            .wrapContentWidth(),
         shape = RoundedCornerShape(24.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.9f), // Semi-transparent
+        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.9f),
         tonalElevation = 12.dp,
         shadowElevation = 12.dp
     ) {
@@ -419,7 +299,6 @@ private fun TrulyFloatingBottomNavigation(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Device Tab
             FloatingNavItem(
                 icon = Icons.Default.Smartphone,
                 label = "Device",
@@ -427,17 +306,13 @@ private fun TrulyFloatingBottomNavigation(
                 onClick = {
                     if (currentDestination != Screens.LocalSms.route) {
                         navController.navigate(Screens.LocalSms.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
                             launchSingleTop = true
                             restoreState = true
                         }
                     }
                 }
             )
-
-            // Cloud Tab
             FloatingNavItem(
                 icon = Icons.Default.Cloud,
                 label = "Cloud",
@@ -445,9 +320,7 @@ private fun TrulyFloatingBottomNavigation(
                 onClick = {
                     if (currentDestination != Screens.RemoteSms.route) {
                         navController.navigate(Screens.RemoteSms.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -467,14 +340,9 @@ private fun FloatingNavItem(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier
-            .clickable { onClick() },
+        modifier = modifier.clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
-        color = if (isSelected) {
-            MaterialTheme.colorScheme.secondaryContainer
-        } else {
-            Color.Transparent
-        }
+        color = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
@@ -484,14 +352,9 @@ private fun FloatingNavItem(
             Icon(
                 imageVector = icon,
                 contentDescription = label,
-                tint = if (isSelected) {
-                    MaterialTheme.colorScheme.onSecondaryContainer
-                } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant
-                },
+                tint = if (isSelected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(20.dp)
             )
-
             if (isSelected) {
                 Text(
                     text = label,
