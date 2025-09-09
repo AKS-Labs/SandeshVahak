@@ -6,7 +6,8 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.Telephony
 import android.util.Log
-import com.akslabs.SandeshVahak.data.localdb.DbHolder
+import com.akslabs.chitralaya.data.localdb.DbHolder
+import com.akslabs.chitralaya.data.localdb.Preferences // Corrected import
 import com.akslabs.chitralaya.data.localdb.entities.SmsMessage
 import com.akslabs.chitralaya.utils.Operations
 import com.akslabs.chitralaya.utils.PerformanceMonitor
@@ -175,8 +176,8 @@ object SmsReaderService {
 
                 // Check if we're in NEW_ONLY mode and should respect baseline
                 val syncMode = try {
-                    com.akslabs.SandeshVahak.data.localdb.Preferences.getString(
-                        com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncModeKey,
+                    Preferences.getString(
+                        Preferences.smsSyncModeKey,
                         "ALL"
                     )
                 } catch (e: Exception) {
@@ -185,8 +186,8 @@ object SmsReaderService {
                 }
 
                 val baseline = try {
-                    com.akslabs.SandeshVahak.data.localdb.Preferences.getLong(
-                        com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncEnabledSinceKey,
+                    Preferences.getLong(
+                        Preferences.smsSyncEnabledSinceKey,
                         0L
                     )
                 } catch (e: Exception) {
@@ -271,8 +272,8 @@ object SmsReaderService {
 
                 // Get sync mode to determine how to handle baseline
                 val syncMode = try {
-                    com.akslabs.SandeshVahak.data.localdb.Preferences.getString(
-                        com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncModeKey,
+                    Preferences.getString(
+                        Preferences.smsSyncModeKey,
                         "ALL"
                     )
                 } catch (e: Exception) {
@@ -282,8 +283,8 @@ object SmsReaderService {
 
                 // Respect baseline when user chose NEW_ONLY mode
                 val baseline = try {
-                    com.akslabs.SandeshVahak.data.localdb.Preferences.getLong(
-                        com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncEnabledSinceKey,
+                    Preferences.getLong(
+                        Preferences.smsSyncEnabledSinceKey,
                         0L
                     )
                 } catch (e: Exception) {

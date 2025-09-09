@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.ui.components
+package com.akslabs.chitralaya.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,8 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import com.akslabs.SandeshVahak.R
-import com.akslabs.SandeshVahak.ui.main.screens.local.UploadState
+import com.akslabs.chitralaya.R
+import com.akslabs.chitralaya.ui.main.screens.local.UploadState
 
 @Composable
 fun FloatingBottomBar(

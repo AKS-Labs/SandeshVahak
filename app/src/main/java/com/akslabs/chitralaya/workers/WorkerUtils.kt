@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.workers
+package com.akslabs.chitralaya.workers // Corrected package declaration
 
 import android.Manifest
 import android.app.Notification
@@ -9,11 +9,11 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.akslabs.SandeshVahak.R
-import com.akslabs.SandeshVahak.workers.WorkModule.CHANNEL_ID
-import com.akslabs.SandeshVahak.workers.WorkModule.NOTIFICATION_TITLE
-import com.akslabs.SandeshVahak.workers.WorkModule.VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION
-import com.akslabs.SandeshVahak.workers.WorkModule.VERBOSE_NOTIFICATION_CHANNEL_NAME
+import com.akslabs.chitralaya.R // Corrected R import
+import com.akslabs.chitralaya.workers.WorkModule.CHANNEL_ID // Corrected import
+import com.akslabs.chitralaya.workers.WorkModule.NOTIFICATION_TITLE // Corrected import
+import com.akslabs.chitralaya.workers.WorkModule.VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION // Corrected import
+import com.akslabs.chitralaya.workers.WorkModule.VERBOSE_NOTIFICATION_CHANNEL_NAME // Corrected import
 
 private const val TAG = "WorkerUtils"
 

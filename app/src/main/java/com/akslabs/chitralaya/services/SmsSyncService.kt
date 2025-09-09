@@ -2,9 +2,9 @@ package com.akslabs.chitralaya.services
 
 import android.content.Context
 import android.util.Log
-import com.akslabs.SandeshVahak.api.BotApi
-import com.akslabs.SandeshVahak.data.localdb.DbHolder
-import com.akslabs.SandeshVahak.data.localdb.Preferences
+import com.akslabs.chitralaya.api.BotApi
+import com.akslabs.chitralaya.data.localdb.DbHolder
+import com.akslabs.chitralaya.data.localdb.Preferences // Corrected import
 import com.akslabs.chitralaya.data.localdb.entities.RemoteSmsMessage
 import com.akslabs.chitralaya.data.localdb.entities.SmsMessage
 import kotlinx.coroutines.Dispatchers

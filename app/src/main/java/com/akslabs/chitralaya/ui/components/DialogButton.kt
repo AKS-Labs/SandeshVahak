@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.ui.components
+package com.akslabs.chitralaya.ui.components
 
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton

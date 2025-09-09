@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.ui.components
+package com.akslabs.chitralaya.ui.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider

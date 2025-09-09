@@ -7,7 +7,8 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.Telephony
 import android.util.Log
-import com.akslabs.SandeshVahak.workers.WorkModule
+import com.akslabs.chitralaya.workers.WorkModule // Corrected import
+import com.akslabs.chitralaya.data.localdb.Preferences
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -102,8 +103,8 @@ class SmsContentObserver(
 
                 // Check if SMS sync is enabled with robust error handling
                 val isEnabled = try {
-                    val value = com.akslabs.SandeshVahak.data.localdb.Preferences.getBoolean(
-                        com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
+                    val value = Preferences.getBoolean(
+                        Preferences.isSmsSyncEnabledKey,
                         false
                     )
                     Log.d(TAG, "Preference isSmsSyncEnabledKey read: $value")
@@ -125,8 +126,8 @@ class SmsContentObserver(
 
                 // Check sync mode for debugging
                 val syncMode = try {
-                    com.akslabs.SandeshVahak.data.localdb.Preferences.getString(
-                        com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncModeKey,
+                    Preferences.getString(
+                        Preferences.smsSyncModeKey,
                         "ALL"
                     )
                 } catch (e: Exception) {
@@ -134,8 +135,8 @@ class SmsContentObserver(
                 }
 
                 val baseline = try {
-                    com.akslabs.SandeshVahak.data.localdb.Preferences.getLong(
-                        com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncEnabledSinceKey,
+                    Preferences.getLong(
+                        Preferences.smsSyncEnabledSinceKey,
                         0L
                     )
                 } catch (e: Exception) {

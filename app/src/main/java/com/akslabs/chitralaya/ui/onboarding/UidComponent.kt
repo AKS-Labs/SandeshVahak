@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.ui.onboarding
+package com.akslabs.chitralaya.ui.onboarding // Corrected package name
 
 import android.util.Log
 import androidx.compose.animation.AnimatedContent
@@ -39,9 +39,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.akslabs.SandeshVahak.R
-import com.akslabs.SandeshVahak.api.BotApi
-import com.akslabs.SandeshVahak.data.localdb.Preferences
+import com.akslabs.chitralaya.R // Corrected R import
+import com.akslabs.chitralaya.api.BotApi // Corrected BotApi import
+import com.akslabs.chitralaya.data.localdb.Preferences // Corrected Preferences import
 import com.github.kotlintelegrambot.entities.ChatId
 
 import kotlinx.coroutines.launch

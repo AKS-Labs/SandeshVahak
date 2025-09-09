@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.ui.components
+package com.akslabs.chitralaya.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth

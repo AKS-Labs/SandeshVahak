@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.ui.components
+package com.akslabs.chitralaya.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -30,7 +30,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.akslabs.SandeshVahak.R
+import com.akslabs.chitralaya.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

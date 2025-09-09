@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak
+package com.akslabs.chitralaya
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry

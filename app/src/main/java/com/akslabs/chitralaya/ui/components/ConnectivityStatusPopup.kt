@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.ui.components
+package com.akslabs.chitralaya.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -30,9 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.akslabs.SandeshVahak.R
-import com.akslabs.SandeshVahak.utils.connectivity.ConnectivityObserver
-import com.akslabs.SandeshVahak.utils.connectivity.ConnectivityStatus
+import com.akslabs.chitralaya.R
+import com.akslabs.chitralaya.utils.connectivity.ConnectivityObserver
+import com.akslabs.chitralaya.utils.connectivity.ConnectivityStatus
 import kotlinx.coroutines.delay
 
 @Composable

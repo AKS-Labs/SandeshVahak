@@ -6,14 +6,15 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import com.akslabs.SandeshVahak.R
+import com.akslabs.chitralaya.R
 import com.akslabs.chitralaya.services.SmsSyncService
 import com.akslabs.chitralaya.services.SmsSyncResult
-import com.akslabs.Suchak.utils.NotificationHelper
+import com.akslabs.chitralaya.utils.NotificationHelper
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.Constraints
 import androidx.work.NetworkType
+import com.akslabs.chitralaya.data.localdb.Preferences // Added import for clarity, though FQNs are being replaced
 
 /**
  * Background worker for syncing SMS messages to Telegram channel
@@ -29,7 +30,7 @@ class SmsSyncWorker(
 
         // Ensure preferences are initialized
         try {
-            com.akslabs.SandeshVahak.data.localdb.Preferences.init(applicationContext)
+            Preferences.init(applicationContext)
             Log.d(TAG, "Preferences initialized successfully in SmsSyncWorker")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize preferences in SmsSyncWorker", e)
@@ -37,8 +38,8 @@ class SmsSyncWorker(
 
         // Respect user preference; if disabled, cancel gracefully
         val isEnabled = try {
-            com.akslabs.SandeshVahak.data.localdb.Preferences.getBoolean(
-                com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
+            Preferences.getBoolean(
+                Preferences.isSmsSyncEnabledKey,
                 false
             )
         } catch (e: Exception) {
@@ -55,8 +56,8 @@ class SmsSyncWorker(
 
         // Check sync mode to determine if we should bypass timestamp check
         val syncMode = try {
-            com.akslabs.SandeshVahak.data.localdb.Preferences.getString(
-                com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncModeKey,
+            Preferences.getString(
+                Preferences.smsSyncModeKey,
                 "ALL"
             )
         } catch (e: Exception) {
@@ -77,10 +78,10 @@ class SmsSyncWorker(
             // If in ALL mode, force a sync to ensure existing messages are processed
             val syncFlow = if (syncMode == "ALL") {
                 Log.i(TAG, "ALL mode detected - forcing full sync to process existing messages")
-                com.akslabs.chitralaya.services.SmsSyncService.forceSync(applicationContext)
+                SmsSyncService.forceSync(applicationContext)
             } else {
                 // For NEW_ONLY mode, use normal sync with timestamp check
-                com.akslabs.chitralaya.services.SmsSyncService.performFullSync(applicationContext)
+                SmsSyncService.performFullSync(applicationContext)
             }
             
             syncFlow.collect { progress ->
@@ -141,7 +142,8 @@ class SmsSyncWorker(
             Log.i(TAG, "=== SMS SYNC WORKER FINISHED ===")
             try {
                 // Ensure keep-alive is scheduled
-                com.akslabs.SandeshVahak.workers.WorkModule.SmsSync.enqueueKeepAlive()
+                // Assuming WorkModule's Preferences usage will be handled separately if needed
+                com.akslabs.chitralaya.workers.WorkModule.SmsSync.enqueueKeepAlive()
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to enqueue keep-alive worker", e)
             }
@@ -184,8 +186,8 @@ class QuickSmsSyncWorker(
         Log.d(TAG, "Quick SMS sync worker started")
 
         // Respect user preference; if disabled, cancel gracefully
-        val isEnabled = com.akslabs.SandeshVahak.data.localdb.Preferences.getBoolean(
-            com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
+        val isEnabled = Preferences.getBoolean(
+            Preferences.isSmsSyncEnabledKey,
             false
         )
         if (!isEnabled) {
@@ -238,15 +240,15 @@ class InstantSmsSyncWorker(
         Log.d(TAG, "Instant SMS sync worker started")
 
         // Respect user preference; if disabled, cancel gracefully
-        val isEnabled = com.akslabs.SandeshVahak.data.localdb.Preferences.getBoolean(
-            com.akslabs.SandeshVahak.data.localdb.Preferences.isSmsSyncEnabledKey,
+        val isEnabled = Preferences.getBoolean(
+            Preferences.isSmsSyncEnabledKey,
             false
         )
         
         // Get sync mode for debugging
         val syncMode = try {
-            com.akslabs.SandeshVahak.data.localdb.Preferences.getString(
-                com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncModeKey,
+            Preferences.getString(
+                Preferences.smsSyncModeKey,
                 "ALL"
             )
         } catch (e: Exception) {
@@ -254,8 +256,8 @@ class InstantSmsSyncWorker(
         }
         
         val baseline = try {
-            com.akslabs.SandeshVahak.data.localdb.Preferences.getLong(
-                com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncEnabledSinceKey,
+            Preferences.getLong(
+                Preferences.smsSyncEnabledSinceKey,
                 0L
             )
         } catch (e: Exception) {

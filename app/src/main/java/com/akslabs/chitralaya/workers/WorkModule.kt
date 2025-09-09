@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.workers
+package com.akslabs.chitralaya.workers
 
 import android.content.Context
 
@@ -13,11 +13,12 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.akslabs.SandeshVahak.data.localdb.Preferences
+import com.akslabs.chitralaya.data.localdb.Preferences
 import com.akslabs.chitralaya.workers.SmsSyncWorker
 import com.akslabs.chitralaya.workers.InstantSmsSyncWorker
 import com.akslabs.chitralaya.workers.QuickSmsSyncWorker
 import com.akslabs.chitralaya.workers.KeepAliveWorker
+import com.akslabs.chitralaya.workers.StartupSyncWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import java.time.Duration
@@ -27,14 +28,6 @@ object WorkModule {
     fun create(applicationContext: Context) {
         manager = WorkManager.getInstance(applicationContext)
     }
-
-
-
-
-
-
-
-
 
     object PeriodicDbExport {
 
@@ -71,10 +64,6 @@ object WorkModule {
             manager.cancelUniqueWork(PERIODIC_DB_EXPORT_WORK)
         }
     }
-
-
-
-
 
     object DailyDatabaseBackup {
         private val constraints = Constraints.Builder()
@@ -176,6 +165,25 @@ object WorkModule {
             manager.enqueue(quickRequest)
         }
 
+        fun enqueueStartupSync() {
+            android.util.Log.d("WorkModule.SmsSync", "enqueueStartupSync() called -> StartupSyncWorker")
+            val startupConstraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+            val startupRequest = OneTimeWorkRequestBuilder<StartupSyncWorker>()
+                .setConstraints(startupConstraints)
+                .setInitialDelay(Duration.ofSeconds(30)) // Small delay after boot
+                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofMinutes(5))
+                .build()
+
+            manager.enqueueUniqueWork(
+                SMS_STARTUP_SYNC_WORK, // Added new unique name
+                ExistingWorkPolicy.REPLACE, // Replace if already pending
+                startupRequest
+            )
+        }
+
         fun cancelOneTime() {
             manager.cancelUniqueWork(SMS_SYNC_ONE_TIME_WORK)
         }
@@ -186,8 +194,6 @@ object WorkModule {
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
-            // Use 15 minutes (minimum) so it runs shortly after reboot on restrictive OS versions
-            // For better persistence, we'll use a shorter interval
             val request = PeriodicWorkRequestBuilder<KeepAliveWorker>(Duration.ofMinutes(15))
                 .setConstraints(constraints)
                 .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, Duration.ofMinutes(5))
@@ -205,10 +211,6 @@ object WorkModule {
         }
     }
 
-
-
-
-
     const val PERIODIC_DB_EXPORT_WORK = "PeriodicDbExportWork"
     const val DAILY_DATABASE_BACKUP_WORK = "DailyDatabaseBackupWork"
 
@@ -216,9 +218,11 @@ object WorkModule {
     const val SMS_SYNC_WORK = "SmsSyncWork"
     const val SMS_SYNC_ONE_TIME_WORK = "SmsSyncOneTimeWork"
     const val SMS_SYNC_KEEP_ALIVE_WORK = "SmsSyncKeepAliveWork"
+    const val SMS_STARTUP_SYNC_WORK = "SmsStartupSyncWork"
+    
     val VERBOSE_NOTIFICATION_CHANNEL_NAME: CharSequence = "Verbose WorkManager Notifications"
     const val VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION = "Shows notifications whenever work starts"
-    val NOTIFICATION_TITLE: CharSequence = "Whitehole"
-    const val CHANNEL_ID = "VERBOSE_WHITE_HOLE_APP_NOTIFICATION"
+    val NOTIFICATION_TITLE: CharSequence = "Chitralaya Sync" // Corrected value
+    const val CHANNEL_ID = "VERBOSE_CHITRALAYA_APP_NOTIFICATION" // Corrected value
     const val NOTIFICATION_ID = 1
 }

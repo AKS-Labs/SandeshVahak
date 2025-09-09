@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.ui.main // Note: Package doesn't match directory structure (com.akslabs.chitralaya.ui.main)
+package com.akslabs.chitralaya.ui.main
 
 import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
@@ -32,14 +32,16 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.work.WorkInfo
-import com.akslabs.SandeshVahak.R
-import com.akslabs.SandeshVahak.data.localdb.Preferences
-import com.akslabs.chitralaya.services.SmsObserverService // Corrected import
-import com.akslabs.SandeshVahak.ui.components.ConnectivityStatusPopup
-import com.akslabs.SandeshVahak.ui.main.nav.AppNavHost
-import com.akslabs.SandeshVahak.ui.main.nav.Screens
-import com.akslabs.SandeshVahak.ui.main.nav.screenScopedViewModel
-import com.akslabs.SandeshVahak.workers.WorkModule
+import com.akslabs.chitralaya.R
+import com.akslabs.chitralaya.data.localdb.Preferences
+import com.akslabs.chitralaya.services.SmsObserverService
+import com.akslabs.chitralaya.services.SmsContentObserver
+import com.akslabs.chitralaya.ui.components.ConnectivityStatusPopup // Corrected import
+import com.akslabs.chitralaya.ui.main.nav.AppNavHost // Corrected import
+import com.akslabs.chitralaya.ui.main.nav.Screens // Corrected import
+import com.akslabs.chitralaya.ui.main.nav.screenScopedViewModel // Corrected import
+import com.akslabs.chitralaya.workers.WorkModule // Corrected import
+import com.akslabs.chitralaya.ui.main.SyncState // Assuming SyncState will be in this package or imported correctly later
 
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -118,6 +120,7 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                                             Preferences.edit { putBoolean(Preferences.isSmsSyncEnabledKey, false) }
                                             isSyncEnabledForTopAppBar = false
                                             SmsObserverService.stop(context) // STOP SERVICE
+                                            SmsContentObserver.stopObserving(context) // STOP STATIC OBSERVER
                                         } else {
                                             showModeDialog = true
                                         }
@@ -197,6 +200,7 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                                 }
                                 isSyncEnabledForTopAppBar = true
                                 SmsObserverService.start(context) // START SERVICE
+                                SmsContentObserver.startObserving(context) // START STATIC OBSERVER
                                 showModeDialog = false
                             }
                         )
@@ -214,6 +218,7 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                                 }
                                 isSyncEnabledForTopAppBar = true
                                 SmsObserverService.start(context) // START SERVICE
+                                SmsContentObserver.startObserving(context) // START STATIC OBSERVER
                                 showModeDialog = false
                             }
                         )
@@ -224,6 +229,7 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                                 Preferences.edit { putBoolean(Preferences.isSmsSyncEnabledKey, false) }
                                 isSyncEnabledForTopAppBar = false
                                 SmsObserverService.stop(context) // STOP SERVICE
+                                SmsContentObserver.stopObserving(context) // STOP STATIC OBSERVER
                                 showModeDialog = false
                             }
                         )

@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.api
+package com.akslabs.chitralaya.api
 
 import android.os.Parcelable
 import androidx.annotation.Keep

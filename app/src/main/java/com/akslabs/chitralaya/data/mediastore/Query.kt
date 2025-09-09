@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.data.mediastore
+package com.akslabs.chitralaya.data.mediastore
 
 import android.content.ContentResolver
 import android.os.Bundle

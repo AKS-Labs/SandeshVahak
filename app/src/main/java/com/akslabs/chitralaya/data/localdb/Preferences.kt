@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.data.localdb
+package com.akslabs.chitralaya.data.localdb // Corrected package declaration
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -25,9 +25,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import com.akslabs.SandeshVahak.R
+import com.akslabs.chitralaya.R
 import com.akslabs.chitralaya.data.localdb.entities.SmsMessage
-import com.akslabs.SandeshVahak.ui.components.LoadAnimation
+import com.akslabs.chitralaya.ui.components.LoadAnimation
 import com.akslabs.chitralaya.ui.components.SmsListItem
 import com.akslabs.chitralaya.ui.components.itemsPaging
 

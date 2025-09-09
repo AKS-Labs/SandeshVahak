@@ -17,7 +17,7 @@ android {
     }
 
     // Keep namespace to match existing R imports
-    namespace = "com.akslabs.SandeshVahak"
+    namespace = "com.akslabs.chitralaya"
     compileSdk = 35
 
     signingConfigs {
@@ -40,7 +40,7 @@ android {
 
     defaultConfig {
         // Use the new app ID to match your renamed package
-        applicationId = "com.akslabs.SandeshVahak"
+        applicationId = "com.akslabs.chitralaya"
         minSdk = 29
         targetSdk = 35
         versionCode = 2

@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.ui.main.nav
+package com.akslabs.chitralaya.ui.main.nav // Corrected package declaration
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cloud

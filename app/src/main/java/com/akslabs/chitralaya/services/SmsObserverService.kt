@@ -8,21 +8,17 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.database.ContentObserver
-import android.net.Uri
 import android.os.Build
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
-import android.provider.Telephony
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.akslabs.SandeshVahak.data.localdb.Preferences
+import com.akslabs.chitralaya.R
+import com.akslabs.chitralaya.data.localdb.Preferences
 import com.akslabs.chitralaya.ui.MainActivity
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlin.coroutines.coroutineContext
+import kotlinx.coroutines.isActive
 
 class SmsObserverService : Service() {
 
@@ -53,7 +49,7 @@ class SmsObserverService : Service() {
             val intent = Intent(context, SmsObserverService::class.java).apply {
                 action = ACTION_STOP_SERVICE
             }
-            context.stopService(intent) // Changed this line
+            context.stopService(intent)
         }
     }
 
@@ -69,16 +65,13 @@ class SmsObserverService : Service() {
         }
     }
 
-    private var smsContentObserver: ContentObserver? = null
-
     override fun onCreate() {
         super.onCreate()
         Log.i(TAG, "onCreate: Service creating.")
-        preferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
+        preferences = getSharedPreferences("preferences", Context.MODE_PRIVATE) 
         preferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
         createNotificationChannel()
         Log.i(TAG, "onCreate: Preference change listener registered.")
-        updateSyncStateBasedOnPreferences(isInitialCall = true)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -86,7 +79,7 @@ class SmsObserverService : Service() {
         when (intent?.action) {
             ACTION_START_SERVICE -> {
                 isServiceManuallyStopped = false
-                Log.i(TAG, "onStartCommand: ACTION_START_SERVICE. Updating sync state.")
+                Log.i(TAG, "onStartCommand: ACTION_START_SERVICE. Starting foreground and updating sync state.")
                 startForeground(NOTIFICATION_ID, createNotification("Initializing SMS Sync..."))
                 updateSyncStateBasedOnPreferences()
             }
@@ -95,13 +88,20 @@ class SmsObserverService : Service() {
                 isServiceManuallyStopped = true
                 stopSmsSyncOperations()
                 stopForeground(STOP_FOREGROUND_REMOVE)
-                stopSelf()
+                stopSelfResult(startId)
                 return START_NOT_STICKY
             }
             else -> {
-                 Log.w(TAG, "onStartCommand: Received unknown or null action. Starting service and checking prefs.")
-                 startForeground(NOTIFICATION_ID, createNotification("Initializing SMS Sync..."))
-                 updateSyncStateBasedOnPreferences()
+                 Log.w(TAG, "onStartCommand: Received unknown or null action ($flags, $startId). Starting service and checking prefs if not manually stopped.")
+                 if (!isServiceManuallyStopped) {
+                    startForeground(NOTIFICATION_ID, createNotification("Initializing SMS Sync..."))
+                    updateSyncStateBasedOnPreferences()
+                 } else {
+                    Log.i(TAG, "Service was manually stopped, not restarting via null action.")
+                    stopForeground(STOP_FOREGROUND_REMOVE)
+                    stopSelfResult(startId)
+                    return START_NOT_STICKY
+                 }
             }
         }
         return START_STICKY
@@ -114,11 +114,11 @@ class SmsObserverService : Service() {
 
         Log.i(TAG, "updateSyncStateBasedOnPreferences: isEnabled=$isSyncEnabled, mode=$currentSyncMode, since=$syncEnabledSince, manuallyStopped=$isServiceManuallyStopped, isInitialCall=$isInitialCall")
 
-        currentSyncJob?.cancel()
+        currentSyncJob?.cancel("New sync state requested")
 
         if (isServiceManuallyStopped) {
             Log.i(TAG, "updateSyncStateBasedOnPreferences: Service was manually stopped. Not starting operations.")
-            stopSmsSyncOperations()
+            stopSmsSyncOperations() 
             return
         }
 
@@ -126,16 +126,15 @@ class SmsObserverService : Service() {
             when (currentSyncMode) {
                 Preferences.SMS_SYNC_MODE_ALL -> {
                     Log.i(TAG, "updateSyncStateBasedOnPreferences: Sync ALL mode detected. Starting full sync.")
-                    // Notification will be updated within performFullSmsSync
                     currentSyncJob = serviceScope.launch {
                         performFullSmsSync()
                     }
                 }
                 Preferences.SMS_SYNC_MODE_NEW_ONLY -> {
-                    Log.i(TAG, "updateSyncStateBasedOnPreferences: Sync NEW_ONLY mode detected. Starting catch-up and monitoring.")
-                    startForeground(NOTIFICATION_ID, createNotification("Monitoring new SMS messages..."))
+                    Log.i(TAG, "updateSyncStateBasedOnPreferences: Sync NEW_ONLY mode detected. Starting catch-up.")
+                    startForeground(NOTIFICATION_ID, createNotification("Processing recent SMS..."))
                     currentSyncJob = serviceScope.launch {
-                        performCatchUpSyncAndMonitorNewSms(syncEnabledSince)
+                        performCatchUpSync()
                     }
                 }
                 else -> {
@@ -146,23 +145,19 @@ class SmsObserverService : Service() {
         } else {
             Log.i(TAG, "updateSyncStateBasedOnPreferences: Sync is DISABLED. Stopping sync operations.")
             stopSmsSyncOperations()
-             if (!isInitialCall) {
-                Log.i(TAG, "Stopping service as sync is disabled and not an initial call.")
-                stopForeground(STOP_FOREGROUND_REMOVE)
-                stopSelf()
-            }
         }
     }
 
     private suspend fun performFullSmsSync() {
         Log.i(TAG, "performFullSmsSync: User selected 'Sync ALL'. Initiating force sync.")
-        updateNotification("Starting full SMS sync...")
+        startForeground(NOTIFICATION_ID, createNotification("Starting full SMS sync..."))
 
         var syncError: String? = null
         var totalMessagesProcessed = 0
 
         try {
             SmsSyncService.forceSync(applicationContext).collect { progress ->
+                if (!serviceScope.isActive) throw CancellationException("Coroutine cancelled during fullSmsSync") // Use serviceScope.isActive
                 totalMessagesProcessed = progress.totalMessagesSynced
                 Log.i(TAG, "Full Sync Progress: Batch ${progress.currentBatch}, Synced $totalMessagesProcessed, Complete: ${progress.isComplete}, Error: ${progress.errorMessage}")
                 if (progress.isComplete) {
@@ -176,100 +171,61 @@ class SmsObserverService : Service() {
                     updateNotification("Syncing all: $totalMessagesProcessed messages so far...")
                 }
             }
+        } catch (e: CancellationException) {
+            Log.i(TAG, "performFullSmsSync: Coroutine was cancelled.")
+            updateNotification("Full sync cancelled.")
+            throw e
         } catch (e: Exception) {
             Log.e(TAG, "Exception during forceSync collection", e)
             syncError = e.message ?: "Unknown error during sync"
             updateNotification("Full sync critically failed: ${syncError?.take(50)}")
         }
 
-        if (syncError == null) {
+        if (syncError == null && serviceScope.isActive) {  // Use serviceScope.isActive
             Log.i(TAG, "performFullSmsSync: Full sync process completed successfully ($totalMessagesProcessed messages). Switching to NEW_ONLY mode.")
             val newSyncEnabledSince = System.currentTimeMillis()
             Preferences.edit {
                 putString(Preferences.smsSyncModeKey, Preferences.SMS_SYNC_MODE_NEW_ONLY)
                 putLong(Preferences.smsSyncEnabledSinceKey, newSyncEnabledSince)
-                // isSmsSyncEnabledKey should already be true, set when user selected "Sync All"
             }
-            // Notification will be updated by the subsequent call to updateSyncStateBasedOnPreferences 
-            // when the preference change listener fires and triggers NEW_ONLY mode.
-            // Or, we can directly update it here to "Monitoring new messages."
-            // Let's rely on the preference change listener for now to keep logic clean.
-        } else {
+        } else if (syncError != null){
             Log.e(TAG, "performFullSmsSync: Full sync encountered an error: $syncError. Not switching to NEW_ONLY mode automatically.")
-            // The notification already reflects the error.
-            // We might want to set isSmsSyncEnabledKey to false here to stop further attempts until user intervention,
-            // or leave it in ALL mode for the user to retry.
-            // For now, leaving prefs as they are, allowing user to retry or change mode.
         }
         Log.i(TAG, "performFullSmsSync: END")
     }
 
-    private suspend fun performCatchUpSyncAndMonitorNewSms(syncEnabledSinceMillis: Long) {
-        Log.i(TAG, "performCatchUpSyncAndMonitorNewSms: Starting with syncEnabledSince=$syncEnabledSinceMillis.")
-        updateNotification("Monitoring new SMS messages...") // Initial notification for this mode
-
-        // Perform an initial catch-up for any messages missed since syncEnabledSinceMillis
-        // This is important if the service was stopped and restarted.
+    private suspend fun performCatchUpSync() {
+        Log.i(TAG, "performCatchUpSync: Starting.")
+ 
         Log.d(TAG, "Performing initial catch-up for NEW_ONLY mode.")
         try {
             val quickSyncResult = SmsSyncService.performQuickSync(applicationContext)
+             if (!serviceScope.isActive) throw CancellationException("Coroutine cancelled during quickSyncResult") // Use serviceScope.isActive
             when (quickSyncResult) {
                 is SmsSyncResult.Success -> Log.i(TAG, "Initial catch-up sync: ${quickSyncResult.messagesSynced} messages.")
                 is SmsSyncResult.Error -> Log.e(TAG, "Initial catch-up sync error: ${quickSyncResult.message}")
                 is SmsSyncResult.NoChannelConfigured -> Log.w(TAG, "Initial catch-up: No channel configured.")
             }
+        } catch (e: CancellationException) {
+            Log.i(TAG, "performCatchUpSync: Coroutine was cancelled during catch-up.")
+            updateNotification("SMS catch-up cancelled.")
+            throw e
         } catch (e: Exception) {
             Log.e(TAG, "Exception during initial catch-up sync", e)
+             updateNotification("SMS catch-up failed: ${e.message?.take(50)}")
         }
 
-        Log.i(TAG, "performCatchUpSyncAndMonitorNewSms: Initial catch-up complete. Starting ContentObserver.")
-        updateNotification("Monitoring new SMS messages.") // Re-affirm after catch-up
-
-        if (smsContentObserver == null) {
-            smsContentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
-                override fun onChange(selfChange: Boolean, uri: Uri?) {
-                    super.onChange(selfChange, uri)
-                    Log.i(TAG, "SmsContentObserver onChange: Uri: $uri. New SMS detected (or other change).")
-                    // The actual sync of new SMS is handled by InstantSmsSyncWorker triggered from SmsContentObserver (your existing one)
-                    // This service (SmsObserverService) mainly manages the long-running state and full/catch-up syncs.
-                    // However, we can also trigger a quick check here if needed, though it might be redundant
-                    // with what your other SmsContentObserver is doing.
-                    // For now, this log is sufficient for this observer.
-                    // A better approach might be to have this service *be* the primary place that launches quick syncs
-                    // based on its own observer, rather than relying on another one.
-                    // But let's stick to the current architecture for now and ensure full sync works.
-                }
-            }
-            try {
-                contentResolver.registerContentObserver(Telephony.Sms.CONTENT_URI, true, smsContentObserver!!)
-                Log.i(TAG, "SmsContentObserver registered successfully for service lifetime monitoring.")
-            } catch (e: SecurityException) {
-                Log.e(TAG, "Failed to register SmsContentObserver due to SecurityException. Ensure READ_SMS permission.", e)
-                updateNotification("Error: SMS permission missing for monitoring.")
-            }
-        } else {
-            Log.d(TAG, "SmsContentObserver already registered.")
+        if (serviceScope.isActive) {  // Use serviceScope.isActive
+            Log.i(TAG, "performCatchUpSync: Initial catch-up complete. Static SmsContentObserver is responsible for new messages.")
+            updateNotification("SMS sync active. Monitoring new messages.")
         }
-
-        // The primary role of this coroutine in NEW_ONLY mode is to keep the service alive
-        // and potentially perform periodic checks if the ContentObserver is missed.
-        // The actual new SMS detection and immediate sync is handled by your other SmsContentObserver + InstantSmsSyncWorker.
-        while (coroutineContext.isActive) {
-            delay(3_600_000) // Keep-alive, e.g., check every hour or so for sanity, though not strictly for new SMS.
-            Log.d(TAG, "performCatchUpSyncAndMonitorNewSms: Still active (monitoring loop); periodic check (not for new SMS).")
-        }
-        Log.i(TAG, "performCatchUpSyncAndMonitorNewSms: END (coroutine ended/cancelled)")
+        Log.i(TAG, "performCatchUpSync: END")
     }
 
     private fun stopSmsSyncOperations() {
-        Log.i(TAG, "stopSmsSyncOperations: Stopping all sync activities and unregistering observer.")
-        currentSyncJob?.cancel()
+        Log.i(TAG, "stopSmsSyncOperations: Stopping all sync activities and cancelling job.")
+        currentSyncJob?.cancel("Sync operations stopped explicitly")
         currentSyncJob = null
-        smsContentObserver?.let {
-            contentResolver.unregisterContentObserver(it)
-            smsContentObserver = null
-            Log.i(TAG, "SmsContentObserver unregistered.")
-        }
         updateNotification("SMS sync is disabled.")
     }
 
@@ -278,13 +234,8 @@ class SmsObserverService : Service() {
     override fun onDestroy() {
         Log.i(TAG, "onDestroy: Service destroying.")
         preferences.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
-        currentSyncJob?.cancel()
-        serviceJob.cancel()
-        smsContentObserver?.let {
-            contentResolver.unregisterContentObserver(it)
-            smsContentObserver = null
-            Log.i(TAG, "SmsContentObserver unregistered in onDestroy.")
-        }
+        currentSyncJob?.cancel("Service is being destroyed")
+        serviceJob.cancel("Service is being destroyed")
         Log.i(TAG, "onDestroy: Preference change listener unregistered, jobs cancelled.")
         super.onDestroy()
     }
@@ -295,7 +246,7 @@ class SmsObserverService : Service() {
                 CHANNEL_ID,
                 "SMS Sync Service Channel",
                 NotificationManager.IMPORTANCE_LOW
-            )
+            ).apply { description = "Channel for SMS Sync background operations" }
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(serviceChannel)
             Log.d(TAG, "Notification channel created.")
@@ -304,24 +255,32 @@ class SmsObserverService : Service() {
 
     private fun createNotification(contentText: String): Notification {
         val notificationIntent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, pendingIntentFlags)
+        
         Log.d(TAG, "Creating notification with text: $contentText")
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("SandeshVahak SMS Sync")
             .setContentText(contentText)
-            .setSmallIcon(android.R.drawable.ic_popup_sync) 
+            .setSmallIcon(R.drawable.cloud_arrow_up_solid) // Changed to existing icon
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setSilent(true)
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .build()
     }
 
     private fun updateNotification(contentText: String) {
-        val notification = createNotification(contentText)
+        if (isServiceManuallyStopped && !Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)){
+            Log.d(TAG, "Not updating notification as service is manually stopped and sync disabled: $contentText")
+            return
+        }
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(NOTIFICATION_ID, notification)
+        notificationManager.notify(NOTIFICATION_ID, createNotification(contentText))
         Log.d(TAG, "Notification updated with text: $contentText")
     }
 }

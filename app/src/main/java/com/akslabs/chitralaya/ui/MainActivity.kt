@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
@@ -20,18 +21,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import com.akslabs.SandeshVahak.data.localdb.Preferences
-import com.akslabs.SandeshVahak.debug.DatabaseDebugHelper
-import com.akslabs.SandeshVahak.ui.main.MainPage
-import com.akslabs.SandeshVahak.ui.main.MainViewModel
-import com.akslabs.SandeshVahak.ui.main.nav.screenScopedViewModel
-import com.akslabs.SandeshVahak.ui.onboarding.OnboardingPage
-import com.akslabs.SandeshVahak.ui.permission.PermissionDialogScreen
-import com.akslabs.SandeshVahak.ui.permission.PermissionViewModel
-import com.akslabs.SandeshVahak.ui.theme.AppTheme
-import com.akslabs.Suchak.utils.NotificationHelper
-import com.akslabs.SandeshVahak.workers.WorkModule
+import com.akslabs.chitralaya.data.localdb.Preferences
+import com.akslabs.chitralaya.debug.DatabaseDebugHelper // Corrected import
+import com.akslabs.chitralaya.ui.main.MainPage // Corrected import
+import com.akslabs.chitralaya.ui.main.MainViewModel // Corrected import
+import com.akslabs.chitralaya.ui.main.nav.screenScopedViewModel // Corrected import
+import com.akslabs.chitralaya.ui.onboarding.OnboardingPage // Corrected import
+import com.akslabs.chitralaya.ui.permission.PermissionDialogScreen // Corrected import
+import com.akslabs.chitralaya.ui.permission.PermissionViewModel // Corrected import
+import com.akslabs.chitralaya.ui.theme.AppTheme // Corrected import
+import com.akslabs.chitralaya.utils.NotificationHelper // Assuming this is correct, or will be flagged by build
+import com.akslabs.chitralaya.workers.WorkModule // Corrected import
+import com.akslabs.chitralaya.services.SmsContentObserver
 import com.akslabs.chitralaya.services.SmsObserverService
+import com.akslabs.chitralaya.data.localdb.DbHolder // Added import
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -43,6 +46,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Initialize Preferences first
+        Preferences.init(applicationContext)
 
         // Initialize notification channels
         NotificationHelper.createNotificationChannels(this)
@@ -59,7 +65,7 @@ class MainActivity : ComponentActivity() {
 
         // Ensure notification channels exist and keep-alive worker is scheduled
         try {
-            com.akslabs.SandeshVahak.workers.WorkModule.SmsSync.enqueueKeepAlive()
+            WorkModule.SmsSync.enqueueKeepAlive() // Rely on corrected import
         } catch (e: Exception) {
             android.util.Log.w("MainActivity", "Failed to enqueue keep-alive worker", e)
         }
@@ -149,7 +155,6 @@ class MainActivity : ComponentActivity() {
 
         // Always ensure we're on the main screen when app is opened
         if (startDestination == ScreenFlow.Main.route) {
-            // Reset any saved tab preference to ensure Device screen is shown
             Preferences.edit { 
                 putString(Preferences.startTabKey, "") 
             }
@@ -161,8 +166,8 @@ class MainActivity : ComponentActivity() {
                 try {
                     // Check sync mode to determine how to populate the database
                     val syncMode = try {
-                        com.akslabs.SandeshVahak.data.localdb.Preferences.getString(
-                            com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncModeKey,
+                        Preferences.getString(
+                            Preferences.smsSyncModeKey,
                             "ALL"
                         )
                     } catch (e: Exception) {
@@ -170,15 +175,15 @@ class MainActivity : ComponentActivity() {
                     }
 
                     val baseline = try {
-                        com.akslabs.SandeshVahak.data.localdb.Preferences.getLong(
-                            com.akslabs.SandeshVahak.data.localdb.Preferences.smsSyncEnabledSinceKey,
+                        Preferences.getLong(
+                            Preferences.smsSyncEnabledSinceKey,
                             0L
                         )
                     } catch (e: Exception) {
                         0L
                     }
 
-                    val count = com.akslabs.SandeshVahak.data.localdb.DbHolder.database
+                    val count = DbHolder.database // Rely on new import
                         .smsMessageDao()
                         .getAllCountFlow()
                         .first()
@@ -187,7 +192,7 @@ class MainActivity : ComponentActivity() {
                         // Database is empty - populate based on sync mode
                         if (syncMode == "NEW_ONLY" && baseline > 0L) {
                             // NEW_ONLY mode: only import messages after baseline
-                            android.util.Log.i("MainActivity", "NEW_ONLY mode: importing only messages after baseline $baseline")
+                            android.util.Log.i("MainActivity", "NEW_ONLY mode: importing only messages after baseline ${'$'}baseline")
                             com.akslabs.chitralaya.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
                         } else {
                             // ALL mode or no baseline: import all messages
@@ -207,15 +212,22 @@ class MainActivity : ComponentActivity() {
         super.onStart()
         // While app is visible, observe SMS changes to keep Device tab live, independent of cloud sync
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
-            try { com.akslabs.SandeshVahak.data.localdb.Preferences.init(applicationContext) } catch (_: Exception) {}
-            com.akslabs.chitralaya.services.SmsContentObserver.startObserving(this)
+            // Preferences already initialized in onCreate
+            SmsContentObserver.startObserving(this)
         }
     }
 
     override fun onStop() {
         super.onStop()
-        // Stop observing when app goes to background (cloud sync observer is handled by service when enabled)
-        com.akslabs.chitralaya.services.SmsContentObserver.stopObserving(this)
+        // Only stop the observer if SMS sync is NOT enabled.
+        // If sync is enabled, the observer (and service) should continue running for background sync.
+        val smsSyncEnabled = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
+        if (!smsSyncEnabled) {
+            Log.i("MainActivity", "onStop: SMS Sync is disabled, stopping SmsContentObserver.")
+            SmsContentObserver.stopObserving(this)
+        } else {
+            Log.i("MainActivity", "onStop: SMS Sync is enabled, SmsContentObserver will continue running.")
+        }
     }
 
     /**

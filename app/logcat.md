@@ -1,676 +1,511 @@
 --------- beginning of crash
+2025-09-07 20:49:52.217 25427-25427 AndroidRuntime          pid-25427                            E  FATAL EXCEPTION: main (Ask Gemini)
+Process: com.akslabs.chitralaya, PID: 25427
+android.app.RemoteServiceException$ForegroundServiceDidNotStartInTimeException: Context.startForegroundService() did not then call Service.startForeground(): ServiceRecord{bfad56 u0 com.akslabs.chitralaya/com.akslabs.chitralaya.services.SmsObserverService c:com.akslabs.chitralaya}
+at android.app.ActivityThread.generateForegroundServiceDidNotStartInTimeException(ActivityThread.java:2298)
+at android.app.ActivityThread.throwRemoteServiceException(ActivityThread.java:2266)
+at android.app.ActivityThread.-$$Nest$mthrowRemoteServiceException(Unknown Source:0)
+at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2640)
+at android.os.Handler.dispatchMessage(Handler.java:109)
+at android.os.Looper.loopOnce(Looper.java:232)
+at android.os.Looper.loop(Looper.java:317)
+at android.app.ActivityThread.main(ActivityThread.java:8782)
+at java.lang.reflect.Method.invoke(Native Method)
+at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:595)
+at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:871)
+Caused by: android.app.StackTrace: Last startServiceCommon() call for this service was made here
+at android.app.ContextImpl.startServiceCommon(ContextImpl.java:2033)
+at android.app.ContextImpl.startForegroundService(ContextImpl.java:1987)
+at android.content.ContextWrapper.startForegroundService(ContextWrapper.java:853)
+at androidx.core.content.ContextCompat$Api26Impl.startForegroundService(ContextCompat.java:1128)
+at androidx.core.content.ContextCompat.startForegroundService(ContextCompat.java:700)
+at com.akslabs.chitralaya.services.SmsObserverService$Companion.stop(SmsObserverService.kt:56)
+at com.akslabs.chitralaya.ui.main.MainPageKt$MainPage$6$1$1$2$1.invoke(MainPage.kt:120)
+at com.akslabs.chitralaya.ui.main.MainPageKt$MainPage$6$1$1$2$1.invoke(MainPage.kt:116)
+at androidx.compose.foundation.ClickableNode$clickPointerInput$3.invoke-k-4lQ0M(Clickable.kt:639)
+at androidx.compose.foundation.ClickableNode$clickPointerInput$3.invoke(Clickable.kt:633)
+at androidx.compose.foundation.gestures.TapGestureDetectorKt$detectTapAndPress$2$1.invokeSuspend(TapGestureDetector.kt:255)
+at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+at kotlinx.coroutines.DispatchedTaskKt.resume(DispatchedTask.kt:175)
+at kotlinx.coroutines.DispatchedTaskKt.dispatch(DispatchedTask.kt:164)
+at kotlinx.coroutines.CancellableContinuationImpl.dispatchResume(CancellableContinuationImpl.kt:470)
+at kotlinx.coroutines.CancellableContinuationImpl.resumeImpl(CancellableContinuationImpl.kt:504)
+at kotlinx.coroutines.CancellableContinuationImpl.resumeImpl$default(CancellableContinuationImpl.kt:493)
+at kotlinx.coroutines.CancellableContinuationImpl.resumeWith(CancellableContinuationImpl.kt:364)
+at androidx.compose.ui.input.pointer.SuspendingPointerInputModifierNodeImpl$PointerEventHandlerCoroutine.offerPointerEvent(SuspendingPointerInputFilter.kt:719)
+at androidx.compose.ui.input.pointer.SuspendingPointerInputModifierNodeImpl.dispatchPointerEvent(SuspendingPointerInputFilter.kt:598)
+at androidx.compose.ui.input.pointer.SuspendingPointerInputModifierNodeImpl.onPointerEvent-H0pRuoY(SuspendingPointerInputFilter.kt:620)
+at androidx.compose.foundation.AbstractClickableNode.onPointerEvent-H0pRuoY(Clickable.kt:1044)
+at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:387)
+at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:373)
+at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:373)
+at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:373)
+at androidx.compose.ui.input.pointer.NodeParent.dispatchMainEventPass(HitPathTracker.kt:229)
+at androidx.compose.ui.input.pointer.HitPathTracker.dispatchChanges(HitPathTracker.kt:144)
+2025-09-07 20:50:56.335 25429-25429 AndroidRuntime          android.process.acore                E  FATAL EXCEPTION: main (Ask Gemini)
+Process: com.akslabs.chitralaya, PID: 25429
+android.app.RemoteServiceException$ForegroundServiceDidNotStartInTimeException: Context.startForegroundService() did not then call Service.startForeground(): ServiceRecord{89faa26 u0 com.akslabs.chitralaya/com.akslabs.chitralaya.services.SmsObserverService c:com.akslabs.chitralaya}
+at android.app.ActivityThread.generateForegroundServiceDidNotStartInTimeException(ActivityThread.java:2298)
+at android.app.ActivityThread.throwRemoteServiceException(ActivityThread.java:2266)
+at android.app.ActivityThread.-$$Nest$mthrowRemoteServiceException(Unknown Source:0)
+at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2640)
+at android.os.Handler.dispatchMessage(Handler.java:109)
+at android.os.Looper.loopOnce(Looper.java:232)
+at android.os.Looper.loop(Looper.java:317)
+at android.app.ActivityThread.main(ActivityThread.java:8782)
+at java.lang.reflect.Method.invoke(Native Method)
+at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:595)
+at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:871)
+Caused by: android.app.StackTrace: Last startServiceCommon() call for this service was made here
+at android.app.ContextImpl.startServiceCommon(ContextImpl.java:2033)
+at android.app.ContextImpl.startForegroundService(ContextImpl.java:1987)
+at android.content.ContextWrapper.startForegroundService(ContextWrapper.java:853)
+at androidx.core.content.ContextCompat$Api26Impl.startForegroundService(ContextCompat.java:1128)
+at androidx.core.content.ContextCompat.startForegroundService(ContextCompat.java:700)
+at com.akslabs.chitralaya.services.SmsObserverService$Companion.stop(SmsObserverService.kt:56)
+at com.akslabs.chitralaya.ui.main.MainPageKt$MainPage$6$1$1$2$1.invoke(MainPage.kt:120)
+at com.akslabs.chitralaya.ui.main.MainPageKt$MainPage$6$1$1$2$1.invoke(MainPage.kt:116)
+at androidx.compose.foundation.ClickableNode$clickPointerInput$3.invoke-k-4lQ0M(Clickable.kt:639)
+at androidx.compose.foundation.ClickableNode$clickPointerInput$3.invoke(Clickable.kt:633)
+at androidx.compose.foundation.gestures.TapGestureDetectorKt$detectTapAndPress$2$1.invokeSuspend(TapGestureDetector.kt:255)
+at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+at kotlinx.coroutines.DispatchedTaskKt.resume(DispatchedTask.kt:175)
+at kotlinx.coroutines.DispatchedTaskKt.dispatch(DispatchedTask.kt:164)
+at kotlinx.coroutines.CancellableContinuationImpl.dispatchResume(CancellableContinuationImpl.kt:470)
+at kotlinx.coroutines.CancellableContinuationImpl.resumeImpl(CancellableContinuationImpl.kt:504)
+at kotlinx.coroutines.CancellableContinuationImpl.resumeImpl$default(CancellableContinuationImpl.kt:493)
+at kotlinx.coroutines.CancellableContinuationImpl.resumeWith(CancellableContinuationImpl.kt:364)
+at androidx.compose.ui.input.pointer.SuspendingPointerInputModifierNodeImpl$PointerEventHandlerCoroutine.offerPointerEvent(SuspendingPointerInputFilter.kt:719)
+at androidx.compose.ui.input.pointer.SuspendingPointerInputModifierNodeImpl.dispatchPointerEvent(SuspendingPointerInputFilter.kt:598)
+at androidx.compose.ui.input.pointer.SuspendingPointerInputModifierNodeImpl.onPointerEvent-H0pRuoY(SuspendingPointerInputFilter.kt:620)
+at androidx.compose.foundation.AbstractClickableNode.onPointerEvent-H0pRuoY(Clickable.kt:1044)
+at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:387)
+at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:373)
+at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:373)
+at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:373)
+at androidx.compose.ui.input.pointer.NodeParent.dispatchMainEventPass(HitPathTracker.kt:229)
+at androidx.compose.ui.input.pointer.HitPathTracker.dispatchChanges(HitPathTracker.kt:144)
 --------- beginning of system
-2025-09-07 20:39:06.459  1813-1965  VerityUtils             system_server                        E  Failed to check whether fs-verity is enabled, errno 38: /data/app/~~mzOHmVit3iZXQJvzm4o_pQ==/com.akslabs.SandeshVahak-EEch31V4cdyQr38hBcVFPg==/base.apk
+2025-09-07 22:16:50.389  1813-1965  VerityUtils             system_server                        E  Failed to check whether fs-verity is enabled, errno 38: /data/app/~~eX9q9n9wrn2f_Hner-7KcA==/com.akslabs.chitralaya-0qlo1gmt-vIYJrnkgSbU4g==/base.apk
 --------- beginning of main
-2025-09-07 20:45:46.974 14611-14611 VRI[MainActivity]       com.akslabs.SandeshVahak             D  visibilityChanged oldVisibility=true newVisibility=false
-2025-09-07 20:45:46.999 14611-14611 WindowOnBackDispatcher  com.akslabs.SandeshVahak             W  sendCancelIfRunning: isInProgress=false callback=androidx.activity.OnBackPressedDispatcher$Api34Impl$createOnBackAnimationCallback$1@6fcbfea
-2025-09-07 20:45:53.027 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9581KB AllocSpace bytes, 4(80KB) LOS objects, 49% free, 9594KB/18MB, paused 92us,43us total 103.430ms
-2025-09-07 20:46:04.001 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 10MB AllocSpace bytes, 12(240KB) LOS objects, 49% free, 9417KB/18MB, paused 109us,45us total 104.051ms
-2025-09-07 20:46:26.383 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9866KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9321KB/18MB, paused 103us,490us total 109.811ms
-2025-09-07 20:46:46.307 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 10MB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9262KB/18MB, paused 117us,47us total 129.286ms
-2025-09-07 20:46:55.059 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 10092KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9309KB/18MB, paused 411us,43us total 120.398ms
-2025-09-07 20:47:08.034 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9474KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9256KB/18MB, paused 554us,40us total 117.143ms
-2025-09-07 20:47:11.799 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9835KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9291KB/18MB, paused 95us,79us total 115.053ms
-2025-09-07 20:47:37.386 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 10078KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9307KB/18MB, paused 59us,40us total 110.932ms
-2025-09-07 20:47:41.284 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9778KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9179KB/17MB, paused 333us,46us total 100.660ms
-2025-09-07 20:47:45.068 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9688KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9240KB/18MB, paused 106us,69us total 103.628ms
-2025-09-07 20:47:49.926 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9325KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9273KB/18MB, paused 106us,41us total 111.341ms
-2025-09-07 20:47:56.025 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9855KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9306KB/18MB, paused 55us,51us total 102.852ms
-2025-09-07 20:47:59.307 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9814KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9245KB/18MB, paused 172us,66us total 111.701ms
-2025-09-07 20:48:10.181 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9992KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9291KB/18MB, paused 119us,42us total 107.020ms
-2025-09-07 20:48:27.124 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 10144KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9307KB/18MB, paused 61us,41us total 103.918ms
-2025-09-07 20:48:34.371 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9665KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9271KB/18MB, paused 107us,41us total 115.663ms
-2025-09-07 20:48:46.422 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9707KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9256KB/18MB, paused 60us,42us total 103.893ms
-2025-09-07 20:48:55.435 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 10MB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9261KB/18MB, paused 494us,373us total 131.017ms
-2025-09-07 20:48:59.955 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9756KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9128KB/17MB, paused 102us,161us total 111.041ms
-2025-09-07 20:49:03.182 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9643KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9305KB/18MB, paused 115us,73us total 105.939ms
-2025-09-07 20:49:05.267 14611-27227 PerformanceMonitor      com.akslabs.SandeshVahak             I  📊 === PERFORMANCE SUMMARY ===
-2025-09-07 20:49:05.268 14611-27227 PerformanceMonitor      com.akslabs.SandeshVahak             I  📈 sms_read_all:
-2025-09-07 20:49:05.268 14611-27227 PerformanceMonitor      com.akslabs.SandeshVahak             I     Count: 2, Errors: 0
-2025-09-07 20:49:05.268 14611-27227 PerformanceMonitor      com.akslabs.SandeshVahak             I     Avg: 120ms, P50: 165ms, P95: 165ms
-2025-09-07 20:49:05.268 14611-27227 PerformanceMonitor      com.akslabs.SandeshVahak             I     Min: 75ms, Max: 165ms
-2025-09-07 20:49:05.268 14611-27227 PerformanceMonitor      com.akslabs.SandeshVahak             I  📈 sms_sync_to_db:
-2025-09-07 20:49:05.269 14611-27227 PerformanceMonitor      com.akslabs.SandeshVahak             I     Count: 2, Errors: 0
-2025-09-07 20:49:05.269 14611-27227 PerformanceMonitor      com.akslabs.SandeshVahak             I     Avg: 713ms, P50: 763ms, P95: 763ms
-2025-09-07 20:49:05.269 14611-27227 PerformanceMonitor      com.akslabs.SandeshVahak             I     Min: 663ms, Max: 763ms
-2025-09-07 20:49:05.269 14611-27227 PerformanceMonitor      com.akslabs.SandeshVahak             I  📊 === END PERFORMANCE SUMMARY ===
-2025-09-07 20:49:07.707 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 9966KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9307KB/18MB, paused 56us,74us total 101.423ms
-2025-09-07 20:49:12.488 14611-27158 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Background concurrent copying GC freed 10022KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 9322KB/18MB, paused 53us,44us total 108.487ms
-2025-09-07 20:49:25.707 25427-25427 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Late-enabling -Xcheck:jni
-2025-09-07 20:49:25.781 25427-25427 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Using CollectorTypeCC GC.
-2025-09-07 20:49:25.811 25427-25427 nativeloader            com.akslabs.SandeshVahak             D  Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
-2025-09-07 20:49:25.863 25427-25427 nativeloader            com.akslabs.SandeshVahak             D  Load /data/user/0/com.akslabs.SandeshVahak/code_cache/startup_agents/297fa85a-agent.so using system ns (caller=<unknown>): ok
-2025-09-07 20:49:25.878 25427-25427 bs.SandeshVahak         com.akslabs.SandeshVahak             W  DexFile /data/data/com.akslabs.SandeshVahak/code_cache/.studio/instruments-9bcd9200.jar is in boot class path but is not in a known location
-2025-09-07 20:49:26.064 25427-25427 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Redefining intrinsic method java.lang.Thread java.lang.Thread.currentThread(). This may cause the unexpected use of the original definition of java.lang.Thread java.lang.Thread.currentThread()in methods that have already been compiled.
-2025-09-07 20:49:26.064 25427-25427 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Redefining intrinsic method boolean java.lang.Thread.interrupted(). This may cause the unexpected use of the original definition of boolean java.lang.Thread.interrupted()in methods that have already been compiled.
-2025-09-07 20:49:26.151 25427-25427 ApplicationLoaders      com.akslabs.SandeshVahak             D  Returning zygote-cached class loader: /system_ext/framework/androidx.window.extensions.jar
-2025-09-07 20:49:26.152 25427-25427 ApplicationLoaders      com.akslabs.SandeshVahak             D  Returning zygote-cached class loader: /system_ext/framework/androidx.window.sidecar.jar
-2025-09-07 20:49:26.163 25427-25427 ziparchive              com.akslabs.SandeshVahak             W  Unable to open '/data/data/com.akslabs.SandeshVahak/code_cache/.overlay/base.apk/classes15.dm': No such file or directory
-2025-09-07 20:49:26.170 25427-25427 ziparchive              com.akslabs.SandeshVahak             W  Unable to open '/data/app/~~mzOHmVit3iZXQJvzm4o_pQ==/com.akslabs.SandeshVahak-EEch31V4cdyQr38hBcVFPg==/base.dm': No such file or directory
-2025-09-07 20:49:26.170 25427-25427 ziparchive              com.akslabs.SandeshVahak             W  Unable to open '/data/app/~~mzOHmVit3iZXQJvzm4o_pQ==/com.akslabs.SandeshVahak-EEch31V4cdyQr38hBcVFPg==/base.dm': No such file or directory
-2025-09-07 20:49:27.087 25427-25427 nativeloader            com.akslabs.SandeshVahak             D  Configuring clns-7 for other apk /data/app/~~mzOHmVit3iZXQJvzm4o_pQ==/com.akslabs.SandeshVahak-EEch31V4cdyQr38hBcVFPg==/base.apk. target_sdk_version=35, uses_libraries=, library_path=/data/app/~~mzOHmVit3iZXQJvzm4o_pQ==/com.akslabs.SandeshVahak-EEch31V4cdyQr38hBcVFPg==/lib/arm64:/data/app/~~mzOHmVit3iZXQJvzm4o_pQ==/com.akslabs.SandeshVahak-EEch31V4cdyQr38hBcVFPg==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.akslabs.SandeshVahak
-2025-09-07 20:49:27.108 25427-25427 GraphicsEnvironment     com.akslabs.SandeshVahak             V  Currently set values for:
-2025-09-07 20:49:27.108 25427-25427 GraphicsEnvironment     com.akslabs.SandeshVahak             V    angle_gl_driver_selection_pkgs=[com.android.angle, com.linecorp.b612.android, com.campmobile.snow, com.google.android.apps.tachyon]
-2025-09-07 20:49:27.108 25427-25427 GraphicsEnvironment     com.akslabs.SandeshVahak             V    angle_gl_driver_selection_values=[angle, native, native, native]
-2025-09-07 20:49:27.108 25427-25427 GraphicsEnvironment     com.akslabs.SandeshVahak             V  com.akslabs.SandeshVahak is not listed in per-application setting
-2025-09-07 20:49:27.108 25427-25427 GraphicsEnvironment     com.akslabs.SandeshVahak             V  Neither updatable production driver nor prerelease driver is supported.
-2025-09-07 20:49:27.134 25427-25427 WM-WrkMgrInitializer    com.akslabs.SandeshVahak             D  Initializing WorkManager with default configuration.
-2025-09-07 20:49:27.227 25427-25427 WM-PackageManagerHelper com.akslabs.SandeshVahak             D  Skipping component enablement for androidx.work.impl.background.systemjob.SystemJobService
-2025-09-07 20:49:27.227 25427-25427 WM-Schedulers           com.akslabs.SandeshVahak             D  Created SystemJobScheduler and enabled SystemJobService
-2025-09-07 20:49:27.270 25427-25427 SandeshVahakApp         com.akslabs.SandeshVahak             I  Application onCreate called
-2025-09-07 20:49:27.595 25427-25427 EngineFactory           com.akslabs.SandeshVahak             I  Provider GmsCore_OpenSSL not available
-2025-09-07 20:49:27.606 25427-25427 SandeshVahakApp         com.akslabs.SandeshVahak             D  Preferences initialized successfully
-2025-09-07 20:49:27.616 25427-25427 SandeshVahakApp         com.akslabs.SandeshVahak             D  Database initialized successfully
-2025-09-07 20:49:27.616 25427-25427 SandeshVahakApp         com.akslabs.SandeshVahak             D  WorkManager initialized successfully
-2025-09-07 20:49:27.654 25427-25427 SandeshVahakApp         com.akslabs.SandeshVahak             D  Keep-alive worker scheduled
-2025-09-07 20:49:27.654 25427-25427 SandeshVahakApp         com.akslabs.SandeshVahak             D  ConnectivityObserver initialized successfully
-2025-09-07 20:49:27.838 25427-25427 SandeshVahakApp         com.akslabs.SandeshVahak             D  BotApi initialized successfully
-2025-09-07 20:49:27.854 25427-25427 SandeshVahakApp         com.akslabs.SandeshVahak             D  Performance monitoring started
-2025-09-07 20:49:27.854 25427-25427 SandeshVahakApp         com.akslabs.SandeshVahak             I  Application initialization completed
-2025-09-07 20:49:27.870 25427-25427 Choreographer           com.akslabs.SandeshVahak             I  Skipped 36 frames!  The application may be doing too much work on its main thread.
-2025-09-07 20:49:27.991 25427-28936 DatabaseDebugHelper     com.akslabs.SandeshVahak             I  === DATABASE DEBUG REPORT ===
-2025-09-07 20:49:28.022 25427-28936 DatabaseDebugHelper     com.akslabs.SandeshVahak             I  Database version: 7
-2025-09-07 20:49:28.028 25427-25427 DesktopModeFlagsUtil    com.akslabs.SandeshVahak             D  Toggle override initialized to: OVERRIDE_UNSET
-2025-09-07 20:49:28.091 25427-28936 DatabaseDebugHelper     com.akslabs.SandeshVahak             I  Record counts:
-2025-09-07 20:49:28.091 25427-28936 DatabaseDebugHelper     com.akslabs.SandeshVahak             I    Total SMS messages: 500
-2025-09-07 20:49:28.091 25427-28936 DatabaseDebugHelper     com.akslabs.SandeshVahak             I    Synced SMS messages: 0
-2025-09-07 20:49:28.091 25427-28936 DatabaseDebugHelper     com.akslabs.SandeshVahak             I    Total remote SMS messages: 0
-2025-09-07 20:49:28.091 25427-28936 DatabaseDebugHelper     com.akslabs.SandeshVahak             I  === END DATABASE DEBUG REPORT ===
-2025-09-07 20:49:28.206 25427-25427 SmsContentObserver      com.akslabs.SandeshVahak             D  Registering content observer on URI=content://sms, notifyForDescendants=true, thread=main
-2025-09-07 20:49:28.210 25427-25427 SmsContentObserver      com.akslabs.SandeshVahak             I  ✅ SMS content observer started and registered
-2025-09-07 20:49:28.442 25427-28914 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Compiler allocated 4431KB to compile void android.view.ViewRootImpl.performTraversals()
-2025-09-07 20:49:28.816 25427-25427 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Method boolean androidx.compose.runtime.snapshots.SnapshotStateList.conditionalUpdate(boolean, kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+2025-09-07 22:29:26.025 10283-24277 bs.SandeshVahak         com.akslabs.chitralaya             I  Background concurrent copying GC freed 8253KB AllocSpace bytes, 4(80KB) LOS objects, 49% free, 6657KB/13MB, paused 76us,49us total 114.471ms
+2025-09-07 22:31:52.092 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I  📊 === PERFORMANCE SUMMARY ===
+2025-09-07 22:31:52.093 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I  📈 sms_read_all:
+2025-09-07 22:31:52.094 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I     Count: 2, Errors: 0
+2025-09-07 22:31:52.094 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I     Avg: 182ms, P50: 251ms, P95: 251ms
+2025-09-07 22:31:52.094 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I     Min: 113ms, Max: 251ms
+2025-09-07 22:31:52.094 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I  📈 telegram_send_message:
+2025-09-07 22:31:52.094 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I     Count: 3, Errors: 0
+2025-09-07 22:31:52.094 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I     Avg: 820ms, P50: 847ms, P95: 880ms
+2025-09-07 22:31:52.094 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I     Min: 734ms, Max: 880ms
+2025-09-07 22:31:52.094 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I  📈 sms_sync_to_db:
+2025-09-07 22:31:52.094 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I     Count: 2, Errors: 0
+2025-09-07 22:31:52.094 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I     Avg: 958ms, P50: 1035ms, P95: 1035ms
+2025-09-07 22:31:52.094 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I     Min: 882ms, Max: 1035ms
+2025-09-07 22:31:52.094 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I  📊 === END PERFORMANCE SUMMARY ===
+2025-09-07 22:31:53.074 10283-24405 KeepAliveWorker         com.akslabs.chitralaya             D  KeepAlive: ensuring SmsObserverService is running
+2025-09-07 22:31:53.079 10283-24405 KeepAliveWorker         com.akslabs.chitralaya             D  KeepAlive: SmsObserverService started successfully
+2025-09-07 22:31:53.081 10283-10283 SmsObserverService      com.akslabs.chitralaya             I  onStartCommand: Received action: null, startId: 2
+2025-09-07 22:31:53.082 10283-10283 SmsObserverService      com.akslabs.chitralaya             W  onStartCommand: Received unknown or null action. Starting service and checking prefs.
+2025-09-07 22:31:53.082 10283-24298 WM-WorkerWrapper        com.akslabs.chitralaya             I  Worker result SUCCESS for Work [ id=0030ff36-259a-4250-a7ba-e21d8434f7a5, tags={ com.akslabs.chitralaya.workers.KeepAliveWorker } ]
+2025-09-07 22:31:53.083 10283-10283 SmsObserverService      com.akslabs.chitralaya             D  Creating notification with text: Initializing SMS Sync...
+2025-09-07 22:31:53.090 10283-10283 SmsObserverService      com.akslabs.chitralaya             I  updateSyncStateBasedOnPreferences: isEnabled=true, mode=NEW_ONLY, since=1757263655064, manuallyStopped=false, isInitialCall=false
+2025-09-07 22:31:53.091 10283-10283 SmsObserverService      com.akslabs.chitralaya             I  updateSyncStateBasedOnPreferences: Sync NEW_ONLY mode detected. Starting catch-up and monitoring.
+2025-09-07 22:31:53.092 10283-10283 SmsObserverService      com.akslabs.chitralaya             D  Creating notification with text: Monitoring new SMS messages...
+2025-09-07 22:31:53.098 10283-24405 SmsObserverService      com.akslabs.chitralaya             I  performCatchUpSyncAndMonitorNewSms: Starting with syncEnabledSince=1757263655064.
+2025-09-07 22:31:53.099 10283-24405 SmsObserverService      com.akslabs.chitralaya             D  Creating notification with text: Monitoring new SMS messages...
+2025-09-07 22:31:53.104 10283-24405 SmsObserverService      com.akslabs.chitralaya             D  Notification updated with text: Monitoring new SMS messages...
+2025-09-07 22:31:53.104 10283-24405 SmsObserverService      com.akslabs.chitralaya             D  Performing initial catch-up for NEW_ONLY mode.
+2025-09-07 22:31:53.105 10283-24405 SmsSyncService          com.akslabs.chitralaya             D  Performing quick SMS sync
+2025-09-07 22:31:53.105 10283-24405 SmsSyncService          com.akslabs.chitralaya             D  Preference isSmsSyncEnabledKey = true
+2025-09-07 22:31:53.108 10283-24405 SmsSyncService          com.akslabs.chitralaya             D  Configured channelId = -1002651869724
+2025-09-07 22:31:53.120 10283-24405 SmsReaderService        com.akslabs.chitralaya             D  NEW_ONLY mode: using baseline timestamp for incremental sync
+2025-09-07 22:31:53.120 10283-24405 SmsReaderService        com.akslabs.chitralaya             I  Starting incremental SMS sync (mode: NEW_ONLY) from timestamp: 1757263650064 (lastDB=1757263767342, baseline=1757263655064, buffer=5000)
+2025-09-07 22:31:53.123 10283-24405 SmsReaderService        com.akslabs.chitralaya             D  Timestamp details: lastDB=2025-09-07 22:19:27.342, baseline=2025-09-07 22:17:35.064, effective=2025-09-07 22:17:30.064
+2025-09-07 22:31:53.228 10283-24405 SmsReaderService        com.akslabs.chitralaya             I  Reading SMS messages after timestamp: 1757263650064 (2025-09-07 22:17:30.064)
+2025-09-07 22:31:53.228 10283-24405 SmsReaderService        com.akslabs.chitralaya             D  Query: uri=content://sms, selection='date > ?', args=[1757263650064], sort=date ASC
+2025-09-07 22:31:53.327 10283-24405 SmsReaderService        com.akslabs.chitralaya             D  Cursor is null? false
+2025-09-07 22:31:53.329 10283-24405 SmsReaderService        com.akslabs.chitralaya             V  Row #1 -> id=739, date=1757263678038, addr=+919545154067
+2025-09-07 22:31:53.330 10283-24405 SmsReaderService        com.akslabs.chitralaya             V  Row #2 -> id=740, date=1757263728874, addr=+919545154067
+2025-09-07 22:31:53.330 10283-24405 SmsReaderService        com.akslabs.chitralaya             V  Row #3 -> id=741, date=1757263767342, addr=+919545154067
+2025-09-07 22:31:53.330 10283-24405 SmsReaderService        com.akslabs.chitralaya             V  Row #4 -> id=742, date=1757263798564, addr=+919545154067
+2025-09-07 22:31:53.330 10283-24405 SmsReaderService        com.akslabs.chitralaya             D  Total rows iterated: 4
+2025-09-07 22:31:53.343 10283-24405 SmsReaderService        com.akslabs.chitralaya             I  Read 4 new SMS messages after timestamp
+2025-09-07 22:31:53.350 10283-24405 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=739, date=1757263678038 (2025-09-07 22:17:58.038), exists=true
+2025-09-07 22:31:53.350 10283-24405 SmsReaderService        com.akslabs.chitralaya             D  Message 739 already exists in DB, skipping
+2025-09-07 22:31:53.354 10283-24405 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=740, date=1757263728874 (2025-09-07 22:18:48.874), exists=true
+2025-09-07 22:31:53.354 10283-24405 SmsReaderService        com.akslabs.chitralaya             D  Message 740 already exists in DB, skipping
+2025-09-07 22:31:53.358 10283-24405 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=741, date=1757263767342 (2025-09-07 22:19:27.342), exists=true
+2025-09-07 22:31:53.358 10283-24405 SmsReaderService        com.akslabs.chitralaya             D  Message 741 already exists in DB, skipping
+2025-09-07 22:31:53.362 10283-24405 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=742, date=1757263798564 (2025-09-07 22:19:58.564), exists=false
+2025-09-07 22:31:53.362 10283-24405 SmsReaderService        com.akslabs.chitralaya             I  ✅ New message queued for insert: 742 from +919545154067 at 1757263798564
+2025-09-07 22:31:53.371 10283-24405 SmsReaderService        com.akslabs.chitralaya             I  Incremental SMS sync complete: 1 new messages (batch)
+2025-09-07 22:31:53.372 10283-24405 SmsSyncService          com.akslabs.chitralaya             D  syncNewSmsToDatabase returned 1 new messages
+2025-09-07 22:31:53.372 10283-24405 SmsSyncService          com.akslabs.chitralaya             D  Proceeding to unsynced fetch; newLocalMessages=1
+2025-09-07 22:31:53.372 10283-24405 SmsSyncService          com.akslabs.chitralaya             D  Sync mode: NEW_ONLY, baseline: 1757263655064
+2025-09-07 22:31:53.373 10283-24405 SmsSyncService          com.akslabs.chitralaya             I  ✅ NEW_ONLY mode properly configured - baseline: 1757263655064 (2025-09-07 22:17:35)
+2025-09-07 22:31:53.373 10283-24405 SmsSyncService          com.akslabs.chitralaya             D  NEW_ONLY mode: getting unsynced messages after baseline 1757263655064
+2025-09-07 22:31:53.380 10283-24405 SmsSyncService          com.akslabs.chitralaya             D  NEW_ONLY quick sync query returned 1 messages
+2025-09-07 22:31:53.380 10283-24405 SmsSyncService          com.akslabs.chitralaya             D  Retrieved 1 unsynced messages (mode: NEW_ONLY, baseline: 1757263655064)
+2025-09-07 22:31:53.386 10283-24405 SmsSyncService          com.akslabs.chitralaya             D  📤 Sending SMS message 1/1: 742 (1757263798564)
+2025-09-07 22:31:53.387 10283-24405 BotApi                  com.akslabs.chitralaya             D  📤 Sending SMS message to channel: -1002651869724
+2025-09-07 22:31:56.008 10283-24405 TelegramRateLimiter     com.akslabs.chitralaya             D  ✅ Request successful, rate limiter reset
+2025-09-07 22:31:56.009 10283-24405 PerformanceMonitor      com.akslabs.chitralaya             I  ⚠️ MODERATE: telegram_send_message took 2622ms
+2025-09-07 22:31:56.010 10283-24405 SmsSyncService          com.akslabs.chitralaya             I  ✅ Successfully synced SMS message: 742 (1/20 in current burst, total: 1)
+2025-09-07 22:31:56.018 10283-24405 SmsSyncService          com.akslabs.chitralaya             D  📦 Applied DB updates in batch: synced=1, remoteInserted=1, failed=0
+2025-09-07 22:31:56.018 10283-24405 SmsSyncService          com.akslabs.chitralaya             D  Quick sync complete: 1 messages synced
+2025-09-07 22:31:56.019 10283-24405 SmsObserverService      com.akslabs.chitralaya             I  Initial catch-up sync: 1 messages.
+2025-09-07 22:31:56.019 10283-24405 SmsObserverService      com.akslabs.chitralaya             I  performCatchUpSyncAndMonitorNewSms: Initial catch-up complete. Starting ContentObserver.
+2025-09-07 22:31:56.020 10283-24405 SmsObserverService      com.akslabs.chitralaya             D  Creating notification with text: Monitoring new SMS messages.
+2025-09-07 22:31:56.026 10283-24405 SmsObserverService      com.akslabs.chitralaya             D  Notification updated with text: Monitoring new SMS messages.
+2025-09-07 22:31:56.026 10283-24405 SmsObserverService      com.akslabs.chitralaya             D  SmsContentObserver already registered.
+2025-09-07 22:32:59.334 10283-24277 bs.SandeshVahak         com.akslabs.chitralaya             I  Background concurrent copying GC freed 5922KB AllocSpace bytes, 20(592KB) LOS objects, 49% free, 6688KB/13MB, paused 75us,50us total 102.120ms
+2025-09-07 22:33:24.975 21017-21017 bs.SandeshVahak         com.akslabs.chitralaya             I  Late-enabling -Xcheck:jni
+2025-09-07 22:33:25.046 21017-21017 bs.SandeshVahak         com.akslabs.chitralaya             I  Using CollectorTypeCC GC.
+2025-09-07 22:33:25.094 21017-21017 nativeloader            com.akslabs.chitralaya             D  Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+2025-09-07 22:33:25.213 21017-21017 re-initialized>         com.akslabs.chitralaya             W  type=1400 audit(0.0:14246): avc:  granted  { execute } for  path="/data/data/com.akslabs.chitralaya/code_cache/startup_agents/297fa85a-agent.so" dev="mmcblk0p61" ino=358676 scontext=u:r:untrusted_app:s0:c34,c259,c512,c768 tcontext=u:object_r:app_data_file:s0:c34,c259,c512,c768 tclass=file app=com.akslabs.chitralaya
+2025-09-07 22:33:25.218 21017-21017 nativeloader            com.akslabs.chitralaya             D  Load /data/user/0/com.akslabs.chitralaya/code_cache/startup_agents/297fa85a-agent.so using system ns (caller=<unknown>): ok
+2025-09-07 22:33:25.232 21017-21017 bs.SandeshVahak         com.akslabs.chitralaya             W  DexFile /data/data/com.akslabs.chitralaya/code_cache/.studio/instruments-9bcd9200.jar is in boot class path but is not in a known location
+2025-09-07 22:33:25.485 21017-21017 bs.SandeshVahak         com.akslabs.chitralaya             W  Redefining intrinsic method java.lang.Thread java.lang.Thread.currentThread(). This may cause the unexpected use of the original definition of java.lang.Thread java.lang.Thread.currentThread()in methods that have already been compiled.
+2025-09-07 22:33:25.485 21017-21017 bs.SandeshVahak         com.akslabs.chitralaya             W  Redefining intrinsic method boolean java.lang.Thread.interrupted(). This may cause the unexpected use of the original definition of boolean java.lang.Thread.interrupted()in methods that have already been compiled.
+2025-09-07 22:33:25.595 21017-21017 ApplicationLoaders      com.akslabs.chitralaya             D  Returning zygote-cached class loader: /system_ext/framework/androidx.window.extensions.jar
+2025-09-07 22:33:25.595 21017-21017 ApplicationLoaders      com.akslabs.chitralaya             D  Returning zygote-cached class loader: /system_ext/framework/androidx.window.sidecar.jar
+2025-09-07 22:33:25.607 21017-21017 ziparchive              com.akslabs.chitralaya             W  Unable to open '/data/data/com.akslabs.chitralaya/code_cache/.overlay/base.apk/classes12.dm': No such file or directory
+2025-09-07 22:33:25.611 21017-21017 ziparchive              com.akslabs.chitralaya             W  Unable to open '/data/data/com.akslabs.chitralaya/code_cache/.overlay/base.apk/classes13.dm': No such file or directory
+2025-09-07 22:33:25.615 21017-21017 ziparchive              com.akslabs.chitralaya             W  Unable to open '/data/data/com.akslabs.chitralaya/code_cache/.overlay/base.apk/classes15.dm': No such file or directory
+2025-09-07 22:33:25.618 21017-21017 ziparchive              com.akslabs.chitralaya             W  Unable to open '/data/data/com.akslabs.chitralaya/code_cache/.overlay/base.apk/classes8.dm': No such file or directory
+2025-09-07 22:33:25.622 21017-21017 ziparchive              com.akslabs.chitralaya             W  Unable to open '/data/app/~~eX9q9n9wrn2f_Hner-7KcA==/com.akslabs.chitralaya-0qlo1gmt-vIYJrnkgSbU4g==/base.dm': No such file or directory
+2025-09-07 22:33:25.622 21017-21017 ziparchive              com.akslabs.chitralaya             W  Unable to open '/data/app/~~eX9q9n9wrn2f_Hner-7KcA==/com.akslabs.chitralaya-0qlo1gmt-vIYJrnkgSbU4g==/base.dm': No such file or directory
+2025-09-07 22:33:26.768 21017-21017 nativeloader            com.akslabs.chitralaya             D  Configuring clns-7 for other apk /data/app/~~eX9q9n9wrn2f_Hner-7KcA==/com.akslabs.chitralaya-0qlo1gmt-vIYJrnkgSbU4g==/base.apk. target_sdk_version=35, uses_libraries=, library_path=/data/app/~~eX9q9n9wrn2f_Hner-7KcA==/com.akslabs.chitralaya-0qlo1gmt-vIYJrnkgSbU4g==/lib/arm64:/data/app/~~eX9q9n9wrn2f_Hner-7KcA==/com.akslabs.chitralaya-0qlo1gmt-vIYJrnkgSbU4g==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.akslabs.chitralaya
+2025-09-07 22:33:26.850 21017-21017 GraphicsEnvironment     com.akslabs.chitralaya             V  Currently set values for:
+2025-09-07 22:33:26.850 21017-21017 GraphicsEnvironment     com.akslabs.chitralaya             V    angle_gl_driver_selection_pkgs=[com.android.angle, com.linecorp.b612.android, com.campmobile.snow, com.google.android.apps.tachyon]
+2025-09-07 22:33:26.850 21017-21017 GraphicsEnvironment     com.akslabs.chitralaya             V    angle_gl_driver_selection_values=[angle, native, native, native]
+2025-09-07 22:33:26.850 21017-21017 GraphicsEnvironment     com.akslabs.chitralaya             V  com.akslabs.chitralaya is not listed in per-application setting
+2025-09-07 22:33:26.850 21017-21017 GraphicsEnvironment     com.akslabs.chitralaya             V  Neither updatable production driver nor prerelease driver is supported.
+2025-09-07 22:33:26.897 21017-21017 WM-WrkMgrInitializer    com.akslabs.chitralaya             D  Initializing WorkManager with default configuration.
+2025-09-07 22:33:26.989 21017-21017 WM-PackageManagerHelper com.akslabs.chitralaya             D  Skipping component enablement for androidx.work.impl.background.systemjob.SystemJobService
+2025-09-07 22:33:26.990 21017-21017 WM-Schedulers           com.akslabs.chitralaya             D  Created SystemJobScheduler and enabled SystemJobService
+2025-09-07 22:33:27.031 21017-21017 SandeshVahakApp         com.akslabs.chitralaya             I  Application onCreate called
+2025-09-07 22:33:27.345 21017-21017 EngineFactory           com.akslabs.chitralaya             I  Provider GmsCore_OpenSSL not available
+2025-09-07 22:33:27.358 21017-21017 SandeshVahakApp         com.akslabs.chitralaya             D  Preferences initialized successfully
+2025-09-07 22:33:27.372 21017-21017 SandeshVahakApp         com.akslabs.chitralaya             D  Database initialized successfully
+2025-09-07 22:33:27.372 21017-21017 SandeshVahakApp         com.akslabs.chitralaya             D  WorkManager initialized successfully
+2025-09-07 22:33:27.409 21017-21017 SandeshVahakApp         com.akslabs.chitralaya             D  Keep-alive worker scheduled
+2025-09-07 22:33:27.409 21017-21017 SandeshVahakApp         com.akslabs.chitralaya             D  ConnectivityObserver initialized successfully
+2025-09-07 22:33:27.558 21017-21017 SandeshVahakApp         com.akslabs.chitralaya             D  BotApi initialized successfully
+2025-09-07 22:33:27.565 21017-21017 SandeshVahakApp         com.akslabs.chitralaya             D  Performance monitoring started
+2025-09-07 22:33:27.565 21017-21017 SandeshVahakApp         com.akslabs.chitralaya             I  Application initialization completed
+2025-09-07 22:33:27.588 21017-21017 Choreographer           com.akslabs.chitralaya             I  Skipped 33 frames!  The application may be doing too much work on its main thread.
+2025-09-07 22:33:27.720 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I  === DATABASE DEBUG REPORT ===
+2025-09-07 22:33:27.753 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I  Database version: 7
+2025-09-07 22:33:27.765 21017-21017 DesktopModeFlagsUtil    com.akslabs.chitralaya             D  Toggle override initialized to: OVERRIDE_UNSET
+2025-09-07 22:33:27.843 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I  Record counts:
+2025-09-07 22:33:27.844 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I    Total SMS messages: 504
+2025-09-07 22:33:27.844 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I    Synced SMS messages: 4
+2025-09-07 22:33:27.844 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I    Total remote SMS messages: 4
+2025-09-07 22:33:27.844 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I  Sample synced SMS messages:
+2025-09-07 22:33:27.846 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I    SMS: id=742, remoteId=3080, address=+919545154067, syncedAt=1757264516014
+2025-09-07 22:33:27.847 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I    SMS: id=741, remoteId=3079, address=+919545154067, syncedAt=1757263773228
+2025-09-07 22:33:27.847 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I    SMS: id=740, remoteId=3078, address=+919545154067, syncedAt=1757263773227
+2025-09-07 22:33:27.847 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I  Sample remote SMS messages:
+2025-09-07 22:33:27.847 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I    RemoteSMS: remoteId=3080, originalId=742, address=+919545154067
+2025-09-07 22:33:27.848 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I    RemoteSMS: remoteId=3079, originalId=741, address=+919545154067
+2025-09-07 22:33:27.848 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I    RemoteSMS: remoteId=3078, originalId=740, address=+919545154067
+2025-09-07 22:33:27.848 21017-25782 DatabaseDebugHelper     com.akslabs.chitralaya             I  === END DATABASE DEBUG REPORT ===
+2025-09-07 22:33:28.003 21017-21017 SmsContentObserver      com.akslabs.chitralaya             D  Registering content observer on URI=content://sms, notifyForDescendants=true, thread=main
+2025-09-07 22:33:28.007 21017-21017 SmsContentObserver      com.akslabs.chitralaya             I  ✅ SMS content observer started and registered
+2025-09-07 22:33:28.245 21017-25762 bs.SandeshVahak         com.akslabs.chitralaya             I  Compiler allocated 4431KB to compile void android.view.ViewRootImpl.performTraversals()
+2025-09-07 22:33:28.546 21017-21017 bs.SandeshVahak         com.akslabs.chitralaya             W  Method boolean androidx.compose.runtime.snapshots.SnapshotStateList.conditionalUpdate(boolean, kotlin.jvm.functions.Function1) failed lock verification and will run slower.
 Common causes for lock verification issues are non-optimized dex code
 and incorrect proguard optimizations.
-2025-09-07 20:49:28.817 25427-25427 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Method boolean androidx.compose.runtime.snapshots.SnapshotStateList.conditionalUpdate$default(androidx.compose.runtime.snapshots.SnapshotStateList, boolean, kotlin.jvm.functions.Function1, int, java.lang.Object) failed lock verification and will run slower.
-2025-09-07 20:49:28.817 25427-25427 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Method java.lang.Object androidx.compose.runtime.snapshots.SnapshotStateList.mutate(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
-2025-09-07 20:49:28.817 25427-25427 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Method void androidx.compose.runtime.snapshots.SnapshotStateList.update(boolean, kotlin.jvm.functions.Function1) failed lock verification and will run slower.
-2025-09-07 20:49:28.817 25427-25427 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Method void androidx.compose.runtime.snapshots.SnapshotStateList.update$default(androidx.compose.runtime.snapshots.SnapshotStateList, boolean, kotlin.jvm.functions.Function1, int, java.lang.Object) failed lock verification and will run slower.
-2025-09-07 20:49:29.378 25427-25427 AppNavHost              com.akslabs.SandeshVahak             D  Local count recomposed: 0
-2025-09-07 20:49:29.379 25427-25427 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=0, loadState=CombinedLoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:49:29.426 25427-28940 AdrenoGLES-0            com.akslabs.SandeshVahak             I  QUALCOMM build                   : 95db91f, Ifbc588260a
+2025-09-07 22:33:28.547 21017-21017 bs.SandeshVahak         com.akslabs.chitralaya             W  Method boolean androidx.compose.runtime.snapshots.SnapshotStateList.conditionalUpdate$default(androidx.compose.runtime.snapshots.SnapshotStateList, boolean, kotlin.jvm.functions.Function1, int, java.lang.Object) failed lock verification and will run slower.
+2025-09-07 22:33:28.547 21017-21017 bs.SandeshVahak         com.akslabs.chitralaya             W  Method java.lang.Object androidx.compose.runtime.snapshots.SnapshotStateList.mutate(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+2025-09-07 22:33:28.547 21017-21017 bs.SandeshVahak         com.akslabs.chitralaya             W  Method void androidx.compose.runtime.snapshots.SnapshotStateList.update(boolean, kotlin.jvm.functions.Function1) failed lock verification and will run slower.
+2025-09-07 22:33:28.547 21017-21017 bs.SandeshVahak         com.akslabs.chitralaya             W  Method void androidx.compose.runtime.snapshots.SnapshotStateList.update$default(androidx.compose.runtime.snapshots.SnapshotStateList, boolean, kotlin.jvm.functions.Function1, int, java.lang.Object) failed lock verification and will run slower.
+2025-09-07 22:33:29.184 21017-21017 AppNavHost              com.akslabs.chitralaya             D  Local count recomposed: 0
+2025-09-07 22:33:29.184 21017-21017 LocalSmsScreen          com.akslabs.chitralaya             D  Recompose LocalSmsScreen: items=0, loadState=CombinedLoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false)), mediator=null)
+2025-09-07 22:33:29.227 21017-25786 AdrenoGLES-0            com.akslabs.chitralaya             I  QUALCOMM build                   : 95db91f, Ifbc588260a
 Build Date                       : 09/24/20
 OpenGL ES Shader Compiler Version: EV031.32.02.01
 Local Branch                     : mybrancheafe5b6d-fb5b-f1b0-b904-5cb90179c3e0
 Remote Branch                    : quic/gfx-adreno.lnx.1.0.r114-rel
 Remote Branch                    : NONE
 Reconstruct Branch               : NOTHING
-2025-09-07 20:49:29.426 25427-28940 AdrenoGLES-0            com.akslabs.SandeshVahak             I  Build Config                     : S P 10.0.7 AArch64
-2025-09-07 20:49:29.426 25427-28940 AdrenoGLES-0            com.akslabs.SandeshVahak             I  Driver Path                      : /vendor/lib64/egl/libGLESv2_adreno.so
-2025-09-07 20:49:29.488 25427-28940 AdrenoGLES-0            com.akslabs.SandeshVahak             I  PFP: 0x016ee190, ME: 0x00000000
-2025-09-07 20:49:29.608 25427-28950 Gralloc4                com.akslabs.SandeshVahak             I  mapper 4.x is not supported
-2025-09-07 20:49:29.610 25427-28950 Gralloc3                com.akslabs.SandeshVahak             W  mapper 3.x is not supported
-2025-09-07 20:49:29.619 25427-28950 Gralloc2                com.akslabs.SandeshVahak             I  Adding additional valid usage bits: 0x8202000
-2025-09-07 20:49:29.685 25427-28936 SmsReaderService        com.akslabs.SandeshVahak             D  ALL mode: using incremental sync from latest DB message
-2025-09-07 20:49:29.686 25427-28936 SmsReaderService        com.akslabs.SandeshVahak             I  Starting incremental SMS sync (mode: ALL) from timestamp: 1757252140253 (lastDB=1757252140253, baseline=0, buffer=5000)
-2025-09-07 20:49:29.694 25427-28922 HWUI                    com.akslabs.SandeshVahak             I  Davey! duration=1379ms; Flags=1, FrameTimelineVsyncId=40755728, IntendedVsync=72756576253812, Vsync=72756592920326, InputEventId=0, HandleInputStart=72756595108286, AnimationStart=72756595110525, PerformTraversalsStart=72756595111515, DrawStart=72757884343650, FrameDeadline=72756597587144, FrameInterval=72756595091932, FrameStartTime=16666514, SyncQueued=72757916606462, SyncStart=72757916756567, IssueDrawCommandsStart=72757923804275, SwapBuffers=72757954396671, FrameCompleted=72757956101514, DequeueBufferDuration=15313, QueueBufferDuration=373073, GpuCompleted=72757956101514, SwapBuffersCompleted=72757955723233, DisplayPresentTime=0, CommandSubmissionCompleted=72757954396671,
-2025-09-07 20:49:29.727 25427-28936 SmsReaderService        com.akslabs.SandeshVahak             D  Timestamp details: lastDB=2025-09-07 19:05:40.253, baseline=1970-01-01 05:30:00.000, effective=2025-09-07 19:05:40.253
-2025-09-07 20:49:29.833 25427-28936 SmsReaderService        com.akslabs.SandeshVahak             I  Reading SMS messages after timestamp: 1757252140253 (2025-09-07 19:05:40.253)
-2025-09-07 20:49:29.833 25427-28936 SmsReaderService        com.akslabs.SandeshVahak             D  Query: uri=content://sms, selection='date > ?', args=[1757252140253], sort=date ASC
-2025-09-07 20:49:29.838 25427-25427 Choreographer           com.akslabs.SandeshVahak             I  Skipped 84 frames!  The application may be doing too much work on its main thread.
-2025-09-07 20:49:29.892 25427-28936 SmsReaderService        com.akslabs.SandeshVahak             D  Cursor is null? false
-2025-09-07 20:49:29.892 25427-28936 SmsReaderService        com.akslabs.SandeshVahak             D  Total rows iterated: 0
-2025-09-07 20:49:29.904 25427-28936 SmsReaderService        com.akslabs.SandeshVahak             I  Read 0 new SMS messages after timestamp
-2025-09-07 20:49:29.905 25427-28936 SmsReaderService        com.akslabs.SandeshVahak             I  Incremental SMS sync complete: 0 new messages (batch)
-2025-09-07 20:49:29.989 25427-28919 HWUI                    com.akslabs.SandeshVahak             I  Davey! duration=1548ms; Flags=0, FrameTimelineVsyncId=40755792, IntendedVsync=72756709584382, Vsync=72758109555010, InputEventId=0, HandleInputStart=72758122848806, AnimationStart=72758122851462, PerformTraversalsStart=72758209815421, DrawStart=72758239071514, FrameDeadline=72757980907806, FrameInterval=72758122396879, FrameStartTime=16666317, SyncQueued=72758251356879, SyncStart=72758251609952, IssueDrawCommandsStart=72758251719796, SwapBuffers=72758256880369, FrameCompleted=72758258581306, DequeueBufferDuration=15052, QueueBufferDuration=303437, GpuCompleted=72758258581306, SwapBuffersCompleted=72758257648077, DisplayPresentTime=72904454214516736, CommandSubmissionCompleted=72758256880369,
-2025-09-07 20:49:30.115 25427-25427 AppNavHost              com.akslabs.SandeshVahak             D  Local count recomposed: 0
-2025-09-07 20:49:30.116 25427-25427 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=0, loadState=CombinedLoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:49:30.396 25427-25427 AppNavHost              com.akslabs.SandeshVahak             D  Local count recomposed: 500
-2025-09-07 20:49:30.396 25427-25427 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=0, loadState=CombinedLoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:49:30.559 25427-25427 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:49:31.321 25427-28922 HWUI                    com.akslabs.SandeshVahak             I  Davey! duration=908ms; Flags=0, FrameTimelineVsyncId=40757085, IntendedVsync=72758676336503, Vsync=72758759686048, InputEventId=0, HandleInputStart=72758772574170, AnimationStart=72758772576358, PerformTraversalsStart=72758845407295, DrawStart=72758845521722, FrameDeadline=72758730969646, FrameInterval=72758772252139, FrameStartTime=16669909, SyncQueued=72759574303962, SyncStart=72759574362712, IssueDrawCommandsStart=72759574667868, SwapBuffers=72759581946618, FrameCompleted=72759584938233, DequeueBufferDuration=16875, QueueBufferDuration=295104, GpuCompleted=72759584938233, SwapBuffersCompleted=72759582705733, DisplayPresentTime=0, CommandSubmissionCompleted=72759581946618,
-2025-09-07 20:49:31.550 25427-25427 Choreographer           com.akslabs.SandeshVahak             I  Skipped 63 frames!  The application may be doing too much work on its main thread.
-2025-09-07 20:49:31.687 25427-28922 HWUI                    com.akslabs.SandeshVahak             I  Davey! duration=1176ms; Flags=0, FrameTimelineVsyncId=40757154, IntendedVsync=72758776281931, Vsync=72759826271935, InputEventId=0, HandleInputStart=72759835203441, AnimationStart=72759835205941, PerformTraversalsStart=72759838296618, DrawStart=72759838398545, FrameDeadline=72759614514830, FrameInterval=72759834517243, FrameStartTime=16666508, SyncQueued=72759946045576, SyncStart=72759946389535, IssueDrawCommandsStart=72759946644743, SwapBuffers=72759950498545, FrameCompleted=72759953438753, DequeueBufferDuration=16614, QueueBufferDuration=290312, GpuCompleted=72759953438753, SwapBuffersCompleted=72759951454951, DisplayPresentTime=72904454231491835, CommandSubmissionCompleted=72759950498545,
-2025-09-07 20:49:31.959 25427-25427 AppNavHost              com.akslabs.SandeshVahak             D  Local count recomposed: 500
-2025-09-07 20:49:31.960 25427-25427 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:49:32.177 25427-25427 AppNavHost              com.akslabs.SandeshVahak             D  Local count recomposed: 500
-2025-09-07 20:49:32.177 25427-25427 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:49:33.205 25427-28956 ProfileInstaller        com.akslabs.SandeshVahak             D  Installing profile for com.akslabs.SandeshVahak
-2025-09-07 20:49:52.007 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             D  Static stop() called
-2025-09-07 20:49:52.053 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             I  onCreate: Service creating.
-2025-09-07 20:49:52.061 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             D  Notification channel created.
-2025-09-07 20:49:52.061 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             I  onCreate: Preference change listener registered.
-2025-09-07 20:49:52.061 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             I  updateSyncStateBasedOnPreferences: isEnabled=false, mode=ALL, since=0, manuallyStopped=false, isInitialCall=true
-2025-09-07 20:49:52.061 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             I  updateSyncStateBasedOnPreferences: Sync is DISABLED. Stopping sync operations.
-2025-09-07 20:49:52.061 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             I  stopSmsSyncOperations: Stopping all sync activities and unregistering observer.
-2025-09-07 20:49:52.062 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             D  Creating notification with text: SMS sync is disabled.
-2025-09-07 20:49:52.073 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             D  Notification updated with text: SMS sync is disabled.
-2025-09-07 20:49:52.074 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             I  onStartCommand: Received action: ACTION_STOP_SERVICE, startId: 1
-2025-09-07 20:49:52.074 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             I  onStartCommand: ACTION_STOP_SERVICE. Stopping sync operations and service.
-2025-09-07 20:49:52.074 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             I  stopSmsSyncOperations: Stopping all sync activities and unregistering observer.
-2025-09-07 20:49:52.074 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             D  Creating notification with text: SMS sync is disabled.
-2025-09-07 20:49:52.079 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             D  Notification updated with text: SMS sync is disabled.
-2025-09-07 20:49:52.207 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             I  onDestroy: Service destroying.
-2025-09-07 20:49:52.208 25427-25427 SmsObserverService      com.akslabs.SandeshVahak             I  onDestroy: Preference change listener unregistered, jobs cancelled.
-2025-09-07 20:49:52.208 25427-25427 AndroidRuntime          com.akslabs.SandeshVahak             D  Shutting down VM
-2025-09-07 20:49:52.217 25427-25427 AndroidRuntime          com.akslabs.SandeshVahak             E  FATAL EXCEPTION: main (Ask Gemini)
-Process: com.akslabs.SandeshVahak, PID: 25427
-android.app.RemoteServiceException$ForegroundServiceDidNotStartInTimeException: Context.startForegroundService() did not then call Service.startForeground(): ServiceRecord{bfad56 u0 com.akslabs.SandeshVahak/com.akslabs.chitralaya.services.SmsObserverService c:com.akslabs.SandeshVahak}
-at android.app.ActivityThread.generateForegroundServiceDidNotStartInTimeException(ActivityThread.java:2298)
-at android.app.ActivityThread.throwRemoteServiceException(ActivityThread.java:2266)
-at android.app.ActivityThread.-$$Nest$mthrowRemoteServiceException(Unknown Source:0)
-at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2640)
-at android.os.Handler.dispatchMessage(Handler.java:109)
-at android.os.Looper.loopOnce(Looper.java:232)
-at android.os.Looper.loop(Looper.java:317)
-at android.app.ActivityThread.main(ActivityThread.java:8782)
-at java.lang.reflect.Method.invoke(Native Method)
-at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:595)
-at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:871)
-Caused by: android.app.StackTrace: Last startServiceCommon() call for this service was made here
-at android.app.ContextImpl.startServiceCommon(ContextImpl.java:2033)
-at android.app.ContextImpl.startForegroundService(ContextImpl.java:1987)
-at android.content.ContextWrapper.startForegroundService(ContextWrapper.java:853)
-at androidx.core.content.ContextCompat$Api26Impl.startForegroundService(ContextCompat.java:1128)
-at androidx.core.content.ContextCompat.startForegroundService(ContextCompat.java:700)
-at com.akslabs.chitralaya.services.SmsObserverService$Companion.stop(SmsObserverService.kt:56)
-at com.akslabs.SandeshVahak.ui.main.MainPageKt$MainPage$6$1$1$2$1.invoke(MainPage.kt:120)
-at com.akslabs.SandeshVahak.ui.main.MainPageKt$MainPage$6$1$1$2$1.invoke(MainPage.kt:116)
-at androidx.compose.foundation.ClickableNode$clickPointerInput$3.invoke-k-4lQ0M(Clickable.kt:639)
-at androidx.compose.foundation.ClickableNode$clickPointerInput$3.invoke(Clickable.kt:633)
-at androidx.compose.foundation.gestures.TapGestureDetectorKt$detectTapAndPress$2$1.invokeSuspend(TapGestureDetector.kt:255)
-at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
-at kotlinx.coroutines.DispatchedTaskKt.resume(DispatchedTask.kt:175)
-at kotlinx.coroutines.DispatchedTaskKt.dispatch(DispatchedTask.kt:164)
-at kotlinx.coroutines.CancellableContinuationImpl.dispatchResume(CancellableContinuationImpl.kt:470)
-at kotlinx.coroutines.CancellableContinuationImpl.resumeImpl(CancellableContinuationImpl.kt:504)
-at kotlinx.coroutines.CancellableContinuationImpl.resumeImpl$default(CancellableContinuationImpl.kt:493)
-at kotlinx.coroutines.CancellableContinuationImpl.resumeWith(CancellableContinuationImpl.kt:364)
-at androidx.compose.ui.input.pointer.SuspendingPointerInputModifierNodeImpl$PointerEventHandlerCoroutine.offerPointerEvent(SuspendingPointerInputFilter.kt:719)
-at androidx.compose.ui.input.pointer.SuspendingPointerInputModifierNodeImpl.dispatchPointerEvent(SuspendingPointerInputFilter.kt:598)
-at androidx.compose.ui.input.pointer.SuspendingPointerInputModifierNodeImpl.onPointerEvent-H0pRuoY(SuspendingPointerInputFilter.kt:620)
-at androidx.compose.foundation.AbstractClickableNode.onPointerEvent-H0pRuoY(Clickable.kt:1044)
-at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:387)
-at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:373)
-at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:373)
-at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:373)
-at androidx.compose.ui.input.pointer.NodeParent.dispatchMainEventPass(HitPathTracker.kt:229)
-at androidx.compose.ui.input.pointer.HitPathTracker.dispatchChanges(HitPathTracker.kt:144)
-2025-09-07 20:49:52.221 25427-25427 AndroidRuntime          com.akslabs.SandeshVahak             E  	at androidx.compose.ui.input.pointer.PointerInputEventProcessor.process-BIzXfog(PointerInputEventProcessor.kt:120) (Ask Gemini)
-at androidx.compose.ui.platform.AndroidComposeView.sendMotionEvent-8iAsVTc(AndroidComposeView.android.kt:1994)
-at androidx.compose.ui.platform.AndroidComposeView.handleMotionEvent-8iAsVTc(AndroidComposeView.android.kt:1945)
-at androidx.compose.ui.platform.AndroidComposeView.dispatchTouchEvent(AndroidComposeView.android.kt:1829)
-at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:3132)
-at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2817)
-at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:3132)
-at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2817)
-at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:3132)
-at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2817)
-at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:3132)
-at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2817)
-at com.android.internal.policy.DecorView.superDispatchTouchEvent(DecorView.java:467)
-at com.android.internal.policy.PhoneWindow.superDispatchTouchEvent(PhoneWindow.java:1982)
-at android.app.Activity.dispatchTouchEvent(Activity.java:4539)
-at com.android.internal.policy.DecorView.dispatchTouchEvent(DecorView.java:425)
-at android.view.View.dispatchPointerEvent(View.java:16743)
-at android.view.ViewRootImpl$ViewPostImeInputStage.processPointerEvent(ViewRootImpl.java:8058)
-at android.view.ViewRootImpl$ViewPostImeInputStage.onProcess(ViewRootImpl.java:7813)
-at android.view.ViewRootImpl$InputStage.deliver(ViewRootImpl.java:7202)
-at android.view.ViewRootImpl$InputStage.onDeliverToNext(ViewRootImpl.java:7259)
-at android.view.ViewRootImpl$InputStage.forward(ViewRootImpl.java:7225)
-at android.view.ViewRootImpl$AsyncInputStage.forward(ViewRootImpl.java:7391)
-at android.view.ViewRootImpl$InputStage.apply(ViewRootImpl.java:7233)
-at android.view.ViewRootImpl$AsyncInputStage.apply(ViewRootImpl.java:7448)
-at android.view.ViewRootImpl$InputStage.deliver(ViewRootImpl.java:7206)
-at android.view.ViewRootImpl$InputStage.onDeliverToNext(ViewRootImpl.java:7259)
-at android.view.ViewRootImpl$InputStage.forward(ViewRootImpl.java:7225)
-at android.view.ViewRootImpl$InputStage.apply(ViewRootImpl.java:7233)
-at android.view.ViewRootImpl$InputStage.deliver(ViewRootImpl.java:7206)
-at android.view.ViewRootImpl.deliverInputEvent(ViewRootImpl.java:10345)
-at android.view.ViewRootImpl.doProcessInputEvents(ViewRootImpl.java:10296)
-at android.view.ViewRootImpl.enqueueInputEvent(ViewRootImpl.java:10264)
-at android.view.ViewRootImpl$WindowInputEventReceiver.onInputEvent(ViewRootImpl.java:10487)
-at android.view.InputEventReceiver.dispatchInputEvent(InputEventReceiver.java:295)
-at android.os.MessageQueue.nativePollOnce(Native Method)
-at android.os.MessageQueue.next(MessageQueue.java:358)
-at android.os.Looper.loopOnce(Looper.java:189)
-... 5 more
-2025-09-07 20:49:52.246 25427-25427 Process                 com.akslabs.SandeshVahak             I  Sending signal. PID: 25427 SIG: 9
-2025-09-07 20:50:04.080 25429-25429 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Late-enabling -Xcheck:jni
-2025-09-07 20:50:04.123 25429-25429 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Using CollectorTypeCC GC.
-2025-09-07 20:50:04.156 25429-25429 nativeloader            com.akslabs.SandeshVahak             D  Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
-2025-09-07 20:50:04.213 25429-25429 re-initialized>         com.akslabs.SandeshVahak             W  type=1400 audit(0.0:11206): avc:  granted  { execute } for  path="/data/data/com.akslabs.SandeshVahak/code_cache/startup_agents/297fa85a-agent.so" dev="mmcblk0p61" ino=350042 scontext=u:r:untrusted_app:s0:c32,c259,c512,c768 tcontext=u:object_r:app_data_file:s0:c32,c259,c512,c768 tclass=file app=com.akslabs.SandeshVahak
-2025-09-07 20:50:04.225 25429-25429 nativeloader            com.akslabs.SandeshVahak             D  Load /data/user/0/com.akslabs.SandeshVahak/code_cache/startup_agents/297fa85a-agent.so using system ns (caller=<unknown>): ok
-2025-09-07 20:50:04.241 25429-25429 bs.SandeshVahak         com.akslabs.SandeshVahak             W  DexFile /data/data/com.akslabs.SandeshVahak/code_cache/.studio/instruments-9bcd9200.jar is in boot class path but is not in a known location
-2025-09-07 20:50:04.446 25429-25429 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Redefining intrinsic method java.lang.Thread java.lang.Thread.currentThread(). This may cause the unexpected use of the original definition of java.lang.Thread java.lang.Thread.currentThread()in methods that have already been compiled.
-2025-09-07 20:50:04.446 25429-25429 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Redefining intrinsic method boolean java.lang.Thread.interrupted(). This may cause the unexpected use of the original definition of boolean java.lang.Thread.interrupted()in methods that have already been compiled.
-2025-09-07 20:50:04.494 25429-25429 ApplicationLoaders      com.akslabs.SandeshVahak             D  Returning zygote-cached class loader: /system_ext/framework/androidx.window.extensions.jar
-2025-09-07 20:50:04.494 25429-25429 ApplicationLoaders      com.akslabs.SandeshVahak             D  Returning zygote-cached class loader: /system_ext/framework/androidx.window.sidecar.jar
-2025-09-07 20:50:04.500 25429-25429 ziparchive              com.akslabs.SandeshVahak             W  Unable to open '/data/data/com.akslabs.SandeshVahak/code_cache/.overlay/base.apk/classes15.dm': No such file or directory
-2025-09-07 20:50:04.510 25429-25429 ziparchive              com.akslabs.SandeshVahak             W  Unable to open '/data/app/~~mzOHmVit3iZXQJvzm4o_pQ==/com.akslabs.SandeshVahak-EEch31V4cdyQr38hBcVFPg==/base.dm': No such file or directory
-2025-09-07 20:50:04.510 25429-25429 ziparchive              com.akslabs.SandeshVahak             W  Unable to open '/data/app/~~mzOHmVit3iZXQJvzm4o_pQ==/com.akslabs.SandeshVahak-EEch31V4cdyQr38hBcVFPg==/base.dm': No such file or directory
-2025-09-07 20:50:05.185 25429-25429 nativeloader            com.akslabs.SandeshVahak             D  Configuring clns-7 for other apk /data/app/~~mzOHmVit3iZXQJvzm4o_pQ==/com.akslabs.SandeshVahak-EEch31V4cdyQr38hBcVFPg==/base.apk. target_sdk_version=35, uses_libraries=, library_path=/data/app/~~mzOHmVit3iZXQJvzm4o_pQ==/com.akslabs.SandeshVahak-EEch31V4cdyQr38hBcVFPg==/lib/arm64:/data/app/~~mzOHmVit3iZXQJvzm4o_pQ==/com.akslabs.SandeshVahak-EEch31V4cdyQr38hBcVFPg==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.akslabs.SandeshVahak
-2025-09-07 20:50:05.203 25429-25429 GraphicsEnvironment     com.akslabs.SandeshVahak             V  Currently set values for:
-2025-09-07 20:50:05.203 25429-25429 GraphicsEnvironment     com.akslabs.SandeshVahak             V    angle_gl_driver_selection_pkgs=[com.android.angle, com.linecorp.b612.android, com.campmobile.snow, com.google.android.apps.tachyon]
-2025-09-07 20:50:05.204 25429-25429 GraphicsEnvironment     com.akslabs.SandeshVahak             V    angle_gl_driver_selection_values=[angle, native, native, native]
-2025-09-07 20:50:05.204 25429-25429 GraphicsEnvironment     com.akslabs.SandeshVahak             V  com.akslabs.SandeshVahak is not listed in per-application setting
-2025-09-07 20:50:05.204 25429-25429 GraphicsEnvironment     com.akslabs.SandeshVahak             V  Neither updatable production driver nor prerelease driver is supported.
-2025-09-07 20:50:05.227 25429-25429 WM-WrkMgrInitializer    com.akslabs.SandeshVahak             D  Initializing WorkManager with default configuration.
-2025-09-07 20:50:05.305 25429-25429 WM-PackageManagerHelper com.akslabs.SandeshVahak             D  Skipping component enablement for androidx.work.impl.background.systemjob.SystemJobService
-2025-09-07 20:50:05.305 25429-25429 WM-Schedulers           com.akslabs.SandeshVahak             D  Created SystemJobScheduler and enabled SystemJobService
-2025-09-07 20:50:05.359 25429-25429 SandeshVahakApp         com.akslabs.SandeshVahak             I  Application onCreate called
-2025-09-07 20:50:05.675 25429-25429 EngineFactory           com.akslabs.SandeshVahak             I  Provider GmsCore_OpenSSL not available
-2025-09-07 20:50:05.684 25429-25429 SandeshVahakApp         com.akslabs.SandeshVahak             D  Preferences initialized successfully
-2025-09-07 20:50:05.698 25429-25429 SandeshVahakApp         com.akslabs.SandeshVahak             D  Database initialized successfully
-2025-09-07 20:50:05.698 25429-25429 SandeshVahakApp         com.akslabs.SandeshVahak             D  WorkManager initialized successfully
-2025-09-07 20:50:05.751 25429-25429 SandeshVahakApp         com.akslabs.SandeshVahak             D  Keep-alive worker scheduled
-2025-09-07 20:50:05.752 25429-25429 SandeshVahakApp         com.akslabs.SandeshVahak             D  ConnectivityObserver initialized successfully
-2025-09-07 20:50:05.929 25429-25429 SandeshVahakApp         com.akslabs.SandeshVahak             D  BotApi initialized successfully
-2025-09-07 20:50:05.943 25429-25429 SandeshVahakApp         com.akslabs.SandeshVahak             D  Performance monitoring started
-2025-09-07 20:50:05.943 25429-25429 SandeshVahakApp         com.akslabs.SandeshVahak             I  Application initialization completed
-2025-09-07 20:50:05.958 25429-25429 Choreographer           com.akslabs.SandeshVahak             I  Skipped 36 frames!  The application may be doing too much work on its main thread.
-2025-09-07 20:50:06.055 25429-29128 DatabaseDebugHelper     com.akslabs.SandeshVahak             I  === DATABASE DEBUG REPORT ===
-2025-09-07 20:50:06.070 25429-29128 DatabaseDebugHelper     com.akslabs.SandeshVahak             I  Database version: 7
-2025-09-07 20:50:06.087 25429-25429 DesktopModeFlagsUtil    com.akslabs.SandeshVahak             D  Toggle override initialized to: OVERRIDE_UNSET
-2025-09-07 20:50:06.122 25429-29128 DatabaseDebugHelper     com.akslabs.SandeshVahak             I  Record counts:
-2025-09-07 20:50:06.122 25429-29128 DatabaseDebugHelper     com.akslabs.SandeshVahak             I    Total SMS messages: 500
-2025-09-07 20:50:06.122 25429-29128 DatabaseDebugHelper     com.akslabs.SandeshVahak             I    Synced SMS messages: 0
-2025-09-07 20:50:06.122 25429-29128 DatabaseDebugHelper     com.akslabs.SandeshVahak             I    Total remote SMS messages: 0
-2025-09-07 20:50:06.122 25429-29128 DatabaseDebugHelper     com.akslabs.SandeshVahak             I  === END DATABASE DEBUG REPORT ===
-2025-09-07 20:50:06.249 25429-25429 SmsContentObserver      com.akslabs.SandeshVahak             D  Registering content observer on URI=content://sms, notifyForDescendants=true, thread=main
-2025-09-07 20:50:06.253 25429-25429 SmsContentObserver      com.akslabs.SandeshVahak             I  ✅ SMS content observer started and registered
-2025-09-07 20:50:06.469 25429-29106 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Compiler allocated 4431KB to compile void android.view.ViewRootImpl.performTraversals()
-2025-09-07 20:50:06.799 25429-25429 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Method boolean androidx.compose.runtime.snapshots.SnapshotStateList.conditionalUpdate(boolean, kotlin.jvm.functions.Function1) failed lock verification and will run slower.
-Common causes for lock verification issues are non-optimized dex code
-and incorrect proguard optimizations.
-2025-09-07 20:50:06.799 25429-25429 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Method boolean androidx.compose.runtime.snapshots.SnapshotStateList.conditionalUpdate$default(androidx.compose.runtime.snapshots.SnapshotStateList, boolean, kotlin.jvm.functions.Function1, int, java.lang.Object) failed lock verification and will run slower.
-2025-09-07 20:50:06.800 25429-25429 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Method java.lang.Object androidx.compose.runtime.snapshots.SnapshotStateList.mutate(kotlin.jvm.functions.Function1) failed lock verification and will run slower.
-2025-09-07 20:50:06.800 25429-25429 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Method void androidx.compose.runtime.snapshots.SnapshotStateList.update(boolean, kotlin.jvm.functions.Function1) failed lock verification and will run slower.
-2025-09-07 20:50:06.800 25429-25429 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Method void androidx.compose.runtime.snapshots.SnapshotStateList.update$default(androidx.compose.runtime.snapshots.SnapshotStateList, boolean, kotlin.jvm.functions.Function1, int, java.lang.Object) failed lock verification and will run slower.
-2025-09-07 20:50:07.301 25429-25429 AppNavHost              com.akslabs.SandeshVahak             D  Local count recomposed: 0
-2025-09-07 20:50:07.301 25429-25429 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=0, loadState=CombinedLoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:50:07.345 25429-29132 AdrenoGLES-0            com.akslabs.SandeshVahak             I  QUALCOMM build                   : 95db91f, Ifbc588260a
-Build Date                       : 09/24/20
-OpenGL ES Shader Compiler Version: EV031.32.02.01
-Local Branch                     : mybrancheafe5b6d-fb5b-f1b0-b904-5cb90179c3e0
-Remote Branch                    : quic/gfx-adreno.lnx.1.0.r114-rel
-Remote Branch                    : NONE
-Reconstruct Branch               : NOTHING
-2025-09-07 20:50:07.345 25429-29132 AdrenoGLES-0            com.akslabs.SandeshVahak             I  Build Config                     : S P 10.0.7 AArch64
-2025-09-07 20:50:07.345 25429-29132 AdrenoGLES-0            com.akslabs.SandeshVahak             I  Driver Path                      : /vendor/lib64/egl/libGLESv2_adreno.so
-2025-09-07 20:50:07.348 25429-29132 AdrenoGLES-0            com.akslabs.SandeshVahak             I  PFP: 0x016ee190, ME: 0x00000000
-2025-09-07 20:50:07.409 25429-29141 Gralloc4                com.akslabs.SandeshVahak             I  mapper 4.x is not supported
-2025-09-07 20:50:07.410 25429-29141 Gralloc3                com.akslabs.SandeshVahak             W  mapper 3.x is not supported
-2025-09-07 20:50:07.413 25429-29141 Gralloc2                com.akslabs.SandeshVahak             I  Adding additional valid usage bits: 0x8202000
-2025-09-07 20:50:07.441 25429-29128 SmsReaderService        com.akslabs.SandeshVahak             D  ALL mode: using incremental sync from latest DB message
-2025-09-07 20:50:07.442 25429-29128 SmsReaderService        com.akslabs.SandeshVahak             I  Starting incremental SMS sync (mode: ALL) from timestamp: 1757252140253 (lastDB=1757252140253, baseline=0, buffer=5000)
-2025-09-07 20:50:07.460 25429-29113 HWUI                    com.akslabs.SandeshVahak             I  Davey! duration=1121ms; Flags=1, FrameTimelineVsyncId=40774531, IntendedVsync=72794592920268, Vsync=72794609586480, InputEventId=0, HandleInputStart=72794616280615, AnimationStart=72794616283323, PerformTraversalsStart=72794616284469, DrawStart=72795659257021, FrameDeadline=72794614253600, FrameInterval=72794616256917, FrameStartTime=16666212, SyncQueued=72795679230042, SyncStart=72795679383271, IssueDrawCommandsStart=72795680321656, SwapBuffers=72795712154677, FrameCompleted=72795714159000, DequeueBufferDuration=22090000, QueueBufferDuration=527083, GpuCompleted=72795713884260, SwapBuffersCompleted=72795714159000, DisplayPresentTime=8929200825491172685, CommandSubmissionCompleted=72795712154677,
-2025-09-07 20:50:07.479 25429-29128 SmsReaderService        com.akslabs.SandeshVahak             D  Timestamp details: lastDB=2025-09-07 19:05:40.253, baseline=1970-01-01 05:30:00.000, effective=2025-09-07 19:05:40.253
-2025-09-07 20:50:07.587 25429-29128 SmsReaderService        com.akslabs.SandeshVahak             I  Reading SMS messages after timestamp: 1757252140253 (2025-09-07 19:05:40.253)
-2025-09-07 20:50:07.588 25429-29128 SmsReaderService        com.akslabs.SandeshVahak             D  Query: uri=content://sms, selection='date > ?', args=[1757252140253], sort=date ASC
-2025-09-07 20:50:07.589 25429-25429 Choreographer           com.akslabs.SandeshVahak             I  Skipped 71 frames!  The application may be doing too much work on its main thread.
-2025-09-07 20:50:07.624 25429-29128 SmsReaderService        com.akslabs.SandeshVahak             D  Cursor is null? false
-2025-09-07 20:50:07.624 25429-29128 SmsReaderService        com.akslabs.SandeshVahak             D  Total rows iterated: 0
-2025-09-07 20:50:07.639 25429-29128 SmsReaderService        com.akslabs.SandeshVahak             I  Read 0 new SMS messages after timestamp
-2025-09-07 20:50:07.639 25429-29128 SmsReaderService        com.akslabs.SandeshVahak             I  Incremental SMS sync complete: 0 new messages (batch)
-2025-09-07 20:50:07.739 25429-29111 HWUI                    com.akslabs.SandeshVahak             I  Davey! duration=1333ms; Flags=0, FrameTimelineVsyncId=40774592, IntendedVsync=72794676260092, Vsync=72795859595579, InputEventId=0, HandleInputStart=72795874515406, AnimationStart=72795874520146, PerformTraversalsStart=72795963700250, DrawStart=72795991061187, FrameDeadline=72795747556016, FrameInterval=72795873343792, FrameStartTime=16666697, SyncQueued=72796003684260, SyncStart=72796003740302, IssueDrawCommandsStart=72796003848115, SwapBuffers=72796007717750, FrameCompleted=72796009456083, DequeueBufferDuration=15781, QueueBufferDuration=316771, GpuCompleted=72796009456083, SwapBuffersCompleted=72796008490771, DisplayPresentTime=8169775882781153257, CommandSubmissionCompleted=72796007717750,
-2025-09-07 20:50:07.887 25429-25429 AppNavHost              com.akslabs.SandeshVahak             D  Local count recomposed: 0
-2025-09-07 20:50:07.887 25429-25429 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=0, loadState=CombinedLoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:50:08.225 25429-25429 AppNavHost              com.akslabs.SandeshVahak             D  Local count recomposed: 500
-2025-09-07 20:50:08.226 25429-25429 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:50:08.955 25429-29111 HWUI                    com.akslabs.SandeshVahak             I  Davey! duration=875ms; Flags=0, FrameTimelineVsyncId=40775714, IntendedVsync=72796342922344, Vsync=72796426254419, InputEventId=0, HandleInputStart=72796438225354, AnimationStart=72796438228010, PerformTraversalsStart=72796511815094, DrawStart=72796511912489, FrameDeadline=72796380926971, FrameInterval=72796437976239, FrameStartTime=16666415, SyncQueued=72797208884781, SyncStart=72797208940354, IssueDrawCommandsStart=72797209194677, SwapBuffers=72797216010250, FrameCompleted=72797218826031, DequeueBufferDuration=17292, QueueBufferDuration=291354, GpuCompleted=72797218826031, SwapBuffersCompleted=72797216759989, DisplayPresentTime=-2117897307869604665, CommandSubmissionCompleted=72797216010250,
-2025-09-07 20:50:09.201 25429-25429 Choreographer           com.akslabs.SandeshVahak             I  Skipped 62 frames!  The application may be doing too much work on its main thread.
-2025-09-07 20:50:09.336 25429-29111 HWUI                    com.akslabs.SandeshVahak             I  Davey! duration=1168ms; Flags=0, FrameTimelineVsyncId=40775790, IntendedVsync=72796442922600, Vsync=72797476247894, InputEventId=0, HandleInputStart=72797486440354, AnimationStart=72797486442697, PerformTraversalsStart=72797494230822, DrawStart=72797494333635, FrameDeadline=72797247575671, FrameInterval=72797485767749, FrameStartTime=16666537, SyncQueued=72797605858583, SyncStart=72797606314260, IssueDrawCommandsStart=72797606605197, SwapBuffers=72797608818166, FrameCompleted=72797611668062, DequeueBufferDuration=16406, QueueBufferDuration=225209, GpuCompleted=72797611668062, SwapBuffersCompleted=72797609504416, DisplayPresentTime=3397062778697545190, CommandSubmissionCompleted=72797608818166,
-2025-09-07 20:50:09.627 25429-25429 AppNavHost              com.akslabs.SandeshVahak             D  Local count recomposed: 500
-2025-09-07 20:50:09.628 25429-25429 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:50:09.853 25429-25429 AppNavHost              com.akslabs.SandeshVahak             D  Local count recomposed: 500
-2025-09-07 20:50:09.853 25429-25429 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:50:11.005 25429-29148 ProfileInstaller        com.akslabs.SandeshVahak             D  Installing profile for com.akslabs.SandeshVahak
-2025-09-07 20:50:15.639 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             D  Static start() called
-2025-09-07 20:50:15.681 25429-25429 WindowOnBackDispatcher  com.akslabs.SandeshVahak             W  sendCancelIfRunning: isInProgress=false callback=androidx.activity.OnBackPressedDispatcher$Api34Impl$createOnBackAnimationCallback$1@5ea46c
-2025-09-07 20:50:15.742 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  onCreate: Service creating.
-2025-09-07 20:50:15.745 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             D  Notification channel created.
-2025-09-07 20:50:15.745 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  onCreate: Preference change listener registered.
-2025-09-07 20:50:15.745 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  updateSyncStateBasedOnPreferences: isEnabled=true, mode=ALL, since=0, manuallyStopped=false, isInitialCall=true
-2025-09-07 20:50:15.745 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  updateSyncStateBasedOnPreferences: Sync ALL mode detected. Starting full sync.
-2025-09-07 20:50:15.746 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  onStartCommand: Received action: ACTION_START_SERVICE, startId: 1
-2025-09-07 20:50:15.746 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  onStartCommand: ACTION_START_SERVICE. Updating sync state.
-2025-09-07 20:50:15.746 25429-29128 SmsObserverService      com.akslabs.SandeshVahak             I  performFullSmsSync: User selected 'Sync ALL'. Initiating force sync.
-2025-09-07 20:50:15.748 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             D  Creating notification with text: Initializing SMS Sync...
-2025-09-07 20:50:15.748 25429-29128 SmsObserverService      com.akslabs.SandeshVahak             D  Creating notification with text: Starting full SMS sync...
-2025-09-07 20:50:15.764 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  updateSyncStateBasedOnPreferences: isEnabled=true, mode=ALL, since=0, manuallyStopped=false, isInitialCall=false
-2025-09-07 20:50:15.765 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  updateSyncStateBasedOnPreferences: Sync ALL mode detected. Starting full sync.
-2025-09-07 20:50:15.765 25429-29128 SmsObserverService      com.akslabs.SandeshVahak             D  Notification updated with text: Starting full SMS sync...
-2025-09-07 20:50:15.766 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             I  performFullSmsSync: User selected 'Sync ALL'. Initiating force sync.
-2025-09-07 20:50:15.768 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             D  Creating notification with text: Starting full SMS sync...
-2025-09-07 20:50:15.774 25429-29128 SmsSyncService          com.akslabs.SandeshVahak             I  Force SMS sync requested
-2025-09-07 20:50:15.775 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             D  Notification updated with text: Starting full SMS sync...
-2025-09-07 20:50:15.775 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  Force SMS sync requested
-2025-09-07 20:50:15.778 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  === STARTING FULL SMS SYNC ===
-2025-09-07 20:50:15.778 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  Preference isSmsSyncEnabledKey = true
-2025-09-07 20:50:15.779 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             I  Full Sync Progress: Batch 0, Synced 0, Complete: false, Error: null
-2025-09-07 20:50:15.779 25429-29128 SmsSyncService          com.akslabs.SandeshVahak             I  === STARTING FULL SMS SYNC ===
-2025-09-07 20:50:15.779 25429-29128 SmsSyncService          com.akslabs.SandeshVahak             D  Preference isSmsSyncEnabledKey = true
-2025-09-07 20:50:15.779 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             D  Creating notification with text: Syncing all: 0 messages so far...
-2025-09-07 20:50:15.782 25429-29128 SmsSyncService          com.akslabs.SandeshVahak             E  Exception during full SMS sync
-kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@bbb37bb
-2025-09-07 20:50:15.782 25429-29128 SmsObserverService      com.akslabs.SandeshVahak             E  Exception during forceSync collection
-kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@bbb37bb
-2025-09-07 20:50:15.783 25429-29128 SmsObserverService      com.akslabs.SandeshVahak             D  Creating notification with text: Full sync critically failed: StandaloneCoroutine was cancelled
-2025-09-07 20:50:15.785 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             D  Notification updated with text: Syncing all: 0 messages so far...
-2025-09-07 20:50:15.787 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  Configured channelId = -1002651869724
-2025-09-07 20:50:15.787 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  Syncing SMS messages to channel ID: -1002651869724
-2025-09-07 20:50:15.787 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  shouldPerformSync() -> true
-2025-09-07 20:50:15.787 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  Sync mode: ALL, baseline: 0
-2025-09-07 20:50:15.787 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📦 ALL mode - will sync all unsynced messages regardless of baseline
-2025-09-07 20:50:15.787 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ALL mode: performing full database sync
-2025-09-07 20:50:15.789 25429-29130 SmsReaderService        com.akslabs.SandeshVahak             I  🔄 Starting optimized SMS database sync...
-2025-09-07 20:50:15.789 25429-29130 SmsReaderService        com.akslabs.SandeshVahak             D  Sync mode: ALL, baseline: 0
-2025-09-07 20:50:15.789 25429-29130 SmsReaderService        com.akslabs.SandeshVahak             I  ALL mode: including all SMS messages
-2025-09-07 20:50:15.790 25429-29130 SmsReaderService        com.akslabs.SandeshVahak             I  🚀 Starting optimized SMS reading...
-2025-09-07 20:50:15.792 25429-29128 SmsObserverService      com.akslabs.SandeshVahak             D  Notification updated with text: Full sync critically failed: StandaloneCoroutine was cancelled
-2025-09-07 20:50:15.792 25429-29128 SmsObserverService      com.akslabs.SandeshVahak             E  performFullSmsSync: Full sync encountered an error: StandaloneCoroutine was cancelled. Not switching to NEW_ONLY mode automatically.
-2025-09-07 20:50:15.792 25429-29128 SmsObserverService      com.akslabs.SandeshVahak             I  performFullSmsSync: END
-2025-09-07 20:50:15.874 25429-29130 SmsReaderService        com.akslabs.SandeshVahak             I  ✅ Successfully read 500 SMS messages
-2025-09-07 20:50:15.874 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: sms_read_all took 85ms
-2025-09-07 20:50:15.874 25429-29130 SmsReaderService        com.akslabs.SandeshVahak             I  Processing 500 SMS messages (filtered for mode: ALL)
-2025-09-07 20:50:15.876 25429-29130 SmsReaderService        com.akslabs.SandeshVahak             D  Processing batch 1 with 100 messages
-2025-09-07 20:50:15.895 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             D  PreferenceChangeListener: Key 'last_sms_sync_timestamp' changed.
-2025-09-07 20:50:15.977 25429-29130 SmsReaderService        com.akslabs.SandeshVahak             D  Processing batch 2 with 100 messages
-2025-09-07 20:50:16.073 25429-29129 SmsReaderService        com.akslabs.SandeshVahak             D  Processing batch 3 with 100 messages
-2025-09-07 20:50:16.100 25429-25429 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:50:16.167 25429-29129 SmsReaderService        com.akslabs.SandeshVahak             D  Processing batch 4 with 100 messages
-2025-09-07 20:50:16.258 25429-29129 SmsReaderService        com.akslabs.SandeshVahak             D  Processing batch 5 with 100 messages
-2025-09-07 20:50:16.344 25429-29130 SmsReaderService        com.akslabs.SandeshVahak             I  ✅ SMS sync complete: 0 new, 500 updated
-2025-09-07 20:50:16.345 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: sms_sync_to_db took 557ms
-2025-09-07 20:50:16.345 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  Synced 0 new SMS messages to local database
-2025-09-07 20:50:16.346 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ALL mode: getting all unsynced messages
-2025-09-07 20:50:16.357 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ALL mode query returned 100 total unsynced messages
-2025-09-07 20:50:16.357 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  Found 100 unsynced SMS messages
-2025-09-07 20:50:16.358 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  📦 Processing batch 1 with 10 messages (oldest first)
-2025-09-07 20:50:16.358 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📅 Batch date range: 1750952058009 to 1751182359373
-2025-09-07 20:50:16.363 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 1/10: 193 (1750952058009)
-2025-09-07 20:50:16.363 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:16.451 25429-25429 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:50:16.553 25429-29106 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Compiler allocated 5021KB to compile void com.akslabs.chitralaya.ui.components.SmsListItemKt$SmsListItem$2.invoke(androidx.compose.foundation.layout.ColumnScope, androidx.compose.runtime.Composer, int)
-2025-09-07 20:50:17.066 25429-25429 Choreographer           com.akslabs.SandeshVahak             I  Skipped 37 frames!  The application may be doing too much work on its main thread.
-2025-09-07 20:50:18.971 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:18.971 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             I  ⚠️ MODERATE: telegram_send_message took 2608ms
-2025-09-07 20:50:18.972 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 193 (1/20 in current burst, total: 1)
-2025-09-07 20:50:18.972 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (2/10)
-2025-09-07 20:50:20.137 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 2/10: 194 (1750953091484)
-2025-09-07 20:50:20.138 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:20.860 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:20.860 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 722ms
-2025-09-07 20:50:20.861 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 194 (2/20 in current burst, total: 2)
-2025-09-07 20:50:20.861 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (3/10)
-2025-09-07 20:50:22.029 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 3/10: 195 (1750964221810)
-2025-09-07 20:50:22.030 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:22.635 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:22.635 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 605ms
-2025-09-07 20:50:22.636 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 195 (3/20 in current burst, total: 3)
-2025-09-07 20:50:22.636 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (4/10)
-2025-09-07 20:50:23.806 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 4/10: 196 (1751007338818)
-2025-09-07 20:50:23.807 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:24.444 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:24.444 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 637ms
-2025-09-07 20:50:24.444 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 196 (4/20 in current burst, total: 4)
-2025-09-07 20:50:24.444 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (5/10)
-2025-09-07 20:50:25.609 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 5/10: 197 (1751014554781)
-2025-09-07 20:50:25.610 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:26.178 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:26.178 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 568ms
-2025-09-07 20:50:26.178 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 197 (5/20 in current burst, total: 5)
-2025-09-07 20:50:26.179 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (6/10)
-2025-09-07 20:50:27.348 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 6/10: 198 (1751050635516)
-2025-09-07 20:50:27.349 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:27.949 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:27.949 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 600ms
-2025-09-07 20:50:27.950 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 198 (6/20 in current burst, total: 6)
-2025-09-07 20:50:27.950 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (7/10)
-2025-09-07 20:50:29.114 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 7/10: 199 (1751083237742)
-2025-09-07 20:50:29.115 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:29.739 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:29.740 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 625ms
-2025-09-07 20:50:29.740 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 199 (7/20 in current burst, total: 7)
-2025-09-07 20:50:29.740 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (8/10)
-2025-09-07 20:50:30.898 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 8/10: 200 (1751091785476)
-2025-09-07 20:50:30.899 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:31.556 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:31.556 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 657ms
-2025-09-07 20:50:31.557 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 200 (8/20 in current burst, total: 8)
-2025-09-07 20:50:31.557 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (9/10)
-2025-09-07 20:50:32.723 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 9/10: 201 (1751094777319)
-2025-09-07 20:50:32.724 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:33.194 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             D  PreferenceChangeListener: Key 'startTab' changed.
-2025-09-07 20:50:33.289 25429-25429 AppNavHost              com.akslabs.SandeshVahak             D  Local count recomposed: 500
-2025-09-07 20:50:33.289 25429-25429 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:50:33.340 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:33.340 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 616ms
-2025-09-07 20:50:33.340 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 201 (9/20 in current burst, total: 9)
-2025-09-07 20:50:33.340 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (10/10)
-2025-09-07 20:50:33.477 25429-25429 AppNavHost              com.akslabs.SandeshVahak             D  Local count recomposed: 500
-2025-09-07 20:50:33.477 25429-25429 LocalSmsScreen          com.akslabs.SandeshVahak             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false)), mediator=null)
-2025-09-07 20:50:34.506 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 10/10: 202 (1751182359373)
-2025-09-07 20:50:34.507 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:35.153 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:35.153 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 647ms
-2025-09-07 20:50:35.153 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 202 (10/20 in current burst, total: 10)
-2025-09-07 20:50:35.165 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📦 Applied DB updates in batch: synced=10, remoteInserted=10, failed=0
-2025-09-07 20:50:35.166 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  Batch 1 synced 10, globalCount now 10
-2025-09-07 20:50:35.166 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             I  Full Sync Progress: Batch 1, Synced 10, Complete: false, Error: null
-2025-09-07 20:50:35.169 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             D  Creating notification with text: Syncing all: 10 messages so far...
-2025-09-07 20:50:35.174 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             D  Notification updated with text: Syncing all: 10 messages so far...
-2025-09-07 20:50:35.174 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 2 seconds before next batch
-2025-09-07 20:50:35.301 25429-29107 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Cleared Reference was only reachable from finalizer (only reported once)
-2025-09-07 20:50:35.807 25429-25429 Choreographer           com.akslabs.SandeshVahak             I  Skipped 32 frames!  The application may be doing too much work on its main thread.
-2025-09-07 20:50:37.177 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  📦 Processing batch 2 with 10 messages (oldest first)
-2025-09-07 20:50:37.178 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📅 Batch date range: 1751205716764 to 1751525723674
-2025-09-07 20:50:37.190 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 1/10: 203 (1751205716764)
-2025-09-07 20:50:37.191 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:37.763 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:37.763 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 572ms
-2025-09-07 20:50:37.763 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 203 (11/20 in current burst, total: 11)
-2025-09-07 20:50:37.764 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (2/10)
-2025-09-07 20:50:38.928 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 2/10: 204 (1751221940556)
-2025-09-07 20:50:38.929 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:39.495 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:39.495 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 567ms
-2025-09-07 20:50:39.496 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 204 (12/20 in current burst, total: 12)
-2025-09-07 20:50:39.496 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (3/10)
-2025-09-07 20:50:40.662 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 3/10: 205 (1751249698159)
-2025-09-07 20:50:40.663 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:41.244 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:41.245 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 582ms
-2025-09-07 20:50:41.245 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 205 (13/20 in current burst, total: 13)
-2025-09-07 20:50:41.245 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (4/10)
-2025-09-07 20:50:42.410 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 4/10: 206 (1751285449650)
-2025-09-07 20:50:42.411 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:42.994 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:42.994 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 583ms
-2025-09-07 20:50:42.995 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 206 (14/20 in current burst, total: 14)
-2025-09-07 20:50:42.995 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (5/10)
-2025-09-07 20:50:44.162 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 5/10: 207 (1751369993053)
-2025-09-07 20:50:44.163 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:44.742 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:44.742 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 579ms
-2025-09-07 20:50:44.743 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 207 (15/20 in current burst, total: 15)
-2025-09-07 20:50:44.743 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (6/10)
-2025-09-07 20:50:45.905 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 6/10: 208 (1751456545212)
-2025-09-07 20:50:45.906 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:46.514 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:46.514 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 608ms
-2025-09-07 20:50:46.514 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 208 (16/20 in current burst, total: 16)
-2025-09-07 20:50:46.515 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (7/10)
-2025-09-07 20:50:47.676 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 7/10: 209 (1751471290782)
-2025-09-07 20:50:47.677 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:48.424 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:48.425 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 748ms
-2025-09-07 20:50:48.425 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 209 (17/20 in current burst, total: 17)
-2025-09-07 20:50:48.425 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (8/10)
-2025-09-07 20:50:49.587 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 8/10: 210 (1751475179017)
-2025-09-07 20:50:49.588 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:50.454 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:50.454 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 866ms
-2025-09-07 20:50:50.455 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 210 (18/20 in current burst, total: 18)
-2025-09-07 20:50:50.455 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (9/10)
-2025-09-07 20:50:51.617 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 9/10: 211 (1751482607021)
-2025-09-07 20:50:51.618 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:52.204 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:52.205 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 586ms
-2025-09-07 20:50:52.205 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 211 (19/20 in current burst, total: 19)
-2025-09-07 20:50:52.205 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 1 second before sending next message (10/10)
-2025-09-07 20:50:53.363 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📤 Sending SMS message 10/10: 212 (1751525723674)
-2025-09-07 20:50:53.364 25429-29130 BotApi                  com.akslabs.SandeshVahak             D  📤 Sending SMS message to channel: -1002651869724
-2025-09-07 20:50:53.974 25429-29130 TelegramRateLimiter     com.akslabs.SandeshVahak             D  ✅ Request successful, rate limiter reset
-2025-09-07 20:50:53.975 25429-29130 PerformanceMonitor      com.akslabs.SandeshVahak             D  ⚡ FAST: telegram_send_message took 611ms
-2025-09-07 20:50:53.975 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  ✅ Successfully synced SMS message: 212 (0/20 in current burst, total: 20)
-2025-09-07 20:50:53.992 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📦 Applied DB updates in batch: synced=10, remoteInserted=10, failed=0
-2025-09-07 20:50:53.992 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  Batch 2 synced 10, globalCount now 20
-2025-09-07 20:50:53.993 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             I  Full Sync Progress: Batch 2, Synced 20, Complete: false, Error: null
-2025-09-07 20:50:53.995 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             D  Creating notification with text: Syncing all: 20 messages so far...
-2025-09-07 20:50:54.004 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             D  Notification updated with text: Syncing all: 20 messages so far...
-2025-09-07 20:50:54.004 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  ⏳ Waiting 2 seconds before next batch
-2025-09-07 20:50:56.007 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             I  📦 Processing batch 3 with 10 messages (oldest first)
-2025-09-07 20:50:56.007 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             D  📅 Batch date range: 1751531681201 to 1751741806116
-2025-09-07 20:50:56.007 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             W  🛑 Sent 20 messages (total: 20), pausing for 25 seconds as per Telegram's requirement
-2025-09-07 20:50:56.171 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             D  PreferenceChangeListener: Key 'isSmsSyncEnabled' changed.
-2025-09-07 20:50:56.171 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  Relevant preference changed: isSmsSyncEnabled. Updating sync state.
-2025-09-07 20:50:56.172 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  updateSyncStateBasedOnPreferences: isEnabled=false, mode=ALL, since=0, manuallyStopped=false, isInitialCall=false
-2025-09-07 20:50:56.173 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  updateSyncStateBasedOnPreferences: Sync is DISABLED. Stopping sync operations.
-2025-09-07 20:50:56.173 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  stopSmsSyncOperations: Stopping all sync activities and unregistering observer.
-2025-09-07 20:50:56.174 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             E  Exception syncing SMS message 213
-kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@5a684e8
-2025-09-07 20:50:56.174 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             W  🛑 Sent 20 messages (total: 20), pausing for 25 seconds as per Telegram's requirement
-2025-09-07 20:50:56.175 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             D  Creating notification with text: SMS sync is disabled.
-2025-09-07 20:50:56.176 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             E  Exception syncing SMS message 214
-kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@5a684e8
-2025-09-07 20:50:56.176 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             W  🛑 Sent 20 messages (total: 20), pausing for 25 seconds as per Telegram's requirement
-2025-09-07 20:50:56.177 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             E  Exception syncing SMS message 215
-kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@5a684e8
-2025-09-07 20:50:56.177 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             W  🛑 Sent 20 messages (total: 20), pausing for 25 seconds as per Telegram's requirement
-2025-09-07 20:50:56.177 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             E  Exception syncing SMS message 216
-kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@5a684e8
-2025-09-07 20:50:56.177 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             W  🛑 Sent 20 messages (total: 20), pausing for 25 seconds as per Telegram's requirement
-2025-09-07 20:50:56.178 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             E  Exception syncing SMS message 217
-kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@5a684e8
-2025-09-07 20:50:56.178 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             W  🛑 Sent 20 messages (total: 20), pausing for 25 seconds as per Telegram's requirement
-2025-09-07 20:50:56.178 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             E  Exception syncing SMS message 218
-kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@5a684e8
-2025-09-07 20:50:56.179 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             W  🛑 Sent 20 messages (total: 20), pausing for 25 seconds as per Telegram's requirement
-2025-09-07 20:50:56.179 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             E  Exception syncing SMS message 219
-kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@5a684e8
-2025-09-07 20:50:56.179 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             W  🛑 Sent 20 messages (total: 20), pausing for 25 seconds as per Telegram's requirement
-2025-09-07 20:50:56.180 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             E  Exception syncing SMS message 220
-kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@5a684e8
-2025-09-07 20:50:56.180 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             W  🛑 Sent 20 messages (total: 20), pausing for 25 seconds as per Telegram's requirement
-2025-09-07 20:50:56.180 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             E  Exception syncing SMS message 221
-kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@5a684e8
-2025-09-07 20:50:56.180 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             W  🛑 Sent 20 messages (total: 20), pausing for 25 seconds as per Telegram's requirement
-2025-09-07 20:50:56.181 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             E  Exception syncing SMS message 222
-kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@5a684e8
-2025-09-07 20:50:56.181 25429-29130 SmsSyncService          com.akslabs.SandeshVahak             E  Exception during full SMS sync
-kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@5a684e8
-2025-09-07 20:50:56.182 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             E  Exception during forceSync collection
-kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@5a684e8
-2025-09-07 20:50:56.182 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             D  Notification updated with text: SMS sync is disabled.
-2025-09-07 20:50:56.182 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  Stopping service as sync is disabled and not an initial call.
-2025-09-07 20:50:56.188 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             D  Static stop() called
-2025-09-07 20:50:56.189 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             D  Creating notification with text: Full sync critically failed: StandaloneCoroutine was cancelled
-2025-09-07 20:50:56.197 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             D  Notification updated with text: Full sync critically failed: StandaloneCoroutine was cancelled
-2025-09-07 20:50:56.197 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             E  performFullSmsSync: Full sync encountered an error: StandaloneCoroutine was cancelled. Not switching to NEW_ONLY mode automatically.
-2025-09-07 20:50:56.197 25429-29130 SmsObserverService      com.akslabs.SandeshVahak             I  performFullSmsSync: END
-2025-09-07 20:50:56.228 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  onDestroy: Service destroying.
-2025-09-07 20:50:56.228 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  onDestroy: Preference change listener unregistered, jobs cancelled.
-2025-09-07 20:50:56.234 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  onCreate: Service creating.
-2025-09-07 20:50:56.235 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             D  Notification channel created.
-2025-09-07 20:50:56.235 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  onCreate: Preference change listener registered.
-2025-09-07 20:50:56.235 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  updateSyncStateBasedOnPreferences: isEnabled=false, mode=ALL, since=0, manuallyStopped=false, isInitialCall=true
-2025-09-07 20:50:56.235 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  updateSyncStateBasedOnPreferences: Sync is DISABLED. Stopping sync operations.
-2025-09-07 20:50:56.235 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  stopSmsSyncOperations: Stopping all sync activities and unregistering observer.
-2025-09-07 20:50:56.237 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             D  Creating notification with text: SMS sync is disabled.
-2025-09-07 20:50:56.250 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             D  Notification updated with text: SMS sync is disabled.
-2025-09-07 20:50:56.250 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  onStartCommand: Received action: ACTION_STOP_SERVICE, startId: 1
-2025-09-07 20:50:56.250 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  onStartCommand: ACTION_STOP_SERVICE. Stopping sync operations and service.
-2025-09-07 20:50:56.250 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  stopSmsSyncOperations: Stopping all sync activities and unregistering observer.
-2025-09-07 20:50:56.252 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             D  Creating notification with text: SMS sync is disabled.
-2025-09-07 20:50:56.257 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             D  Notification updated with text: SMS sync is disabled.
-2025-09-07 20:50:56.313 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  onDestroy: Service destroying.
-2025-09-07 20:50:56.313 25429-25429 SmsObserverService      com.akslabs.SandeshVahak             I  onDestroy: Preference change listener unregistered, jobs cancelled.
-2025-09-07 20:50:56.322 25429-25429 AndroidRuntime          com.akslabs.SandeshVahak             D  Shutting down VM
-2025-09-07 20:50:56.335 25429-25429 AndroidRuntime          com.akslabs.SandeshVahak             E  FATAL EXCEPTION: main (Ask Gemini)
-Process: com.akslabs.SandeshVahak, PID: 25429
-android.app.RemoteServiceException$ForegroundServiceDidNotStartInTimeException: Context.startForegroundService() did not then call Service.startForeground(): ServiceRecord{89faa26 u0 com.akslabs.SandeshVahak/com.akslabs.chitralaya.services.SmsObserverService c:com.akslabs.SandeshVahak}
-at android.app.ActivityThread.generateForegroundServiceDidNotStartInTimeException(ActivityThread.java:2298)
-at android.app.ActivityThread.throwRemoteServiceException(ActivityThread.java:2266)
-at android.app.ActivityThread.-$$Nest$mthrowRemoteServiceException(Unknown Source:0)
-at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2640)
-at android.os.Handler.dispatchMessage(Handler.java:109)
-at android.os.Looper.loopOnce(Looper.java:232)
-at android.os.Looper.loop(Looper.java:317)
-at android.app.ActivityThread.main(ActivityThread.java:8782)
-at java.lang.reflect.Method.invoke(Native Method)
-at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:595)
-at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:871)
-Caused by: android.app.StackTrace: Last startServiceCommon() call for this service was made here
-at android.app.ContextImpl.startServiceCommon(ContextImpl.java:2033)
-at android.app.ContextImpl.startForegroundService(ContextImpl.java:1987)
-at android.content.ContextWrapper.startForegroundService(ContextWrapper.java:853)
-at androidx.core.content.ContextCompat$Api26Impl.startForegroundService(ContextCompat.java:1128)
-at androidx.core.content.ContextCompat.startForegroundService(ContextCompat.java:700)
-at com.akslabs.chitralaya.services.SmsObserverService$Companion.stop(SmsObserverService.kt:56)
-at com.akslabs.SandeshVahak.ui.main.MainPageKt$MainPage$6$1$1$2$1.invoke(MainPage.kt:120)
-at com.akslabs.SandeshVahak.ui.main.MainPageKt$MainPage$6$1$1$2$1.invoke(MainPage.kt:116)
-at androidx.compose.foundation.ClickableNode$clickPointerInput$3.invoke-k-4lQ0M(Clickable.kt:639)
-at androidx.compose.foundation.ClickableNode$clickPointerInput$3.invoke(Clickable.kt:633)
-at androidx.compose.foundation.gestures.TapGestureDetectorKt$detectTapAndPress$2$1.invokeSuspend(TapGestureDetector.kt:255)
-at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
-at kotlinx.coroutines.DispatchedTaskKt.resume(DispatchedTask.kt:175)
-at kotlinx.coroutines.DispatchedTaskKt.dispatch(DispatchedTask.kt:164)
-at kotlinx.coroutines.CancellableContinuationImpl.dispatchResume(CancellableContinuationImpl.kt:470)
-at kotlinx.coroutines.CancellableContinuationImpl.resumeImpl(CancellableContinuationImpl.kt:504)
-at kotlinx.coroutines.CancellableContinuationImpl.resumeImpl$default(CancellableContinuationImpl.kt:493)
-at kotlinx.coroutines.CancellableContinuationImpl.resumeWith(CancellableContinuationImpl.kt:364)
-at androidx.compose.ui.input.pointer.SuspendingPointerInputModifierNodeImpl$PointerEventHandlerCoroutine.offerPointerEvent(SuspendingPointerInputFilter.kt:719)
-at androidx.compose.ui.input.pointer.SuspendingPointerInputModifierNodeImpl.dispatchPointerEvent(SuspendingPointerInputFilter.kt:598)
-at androidx.compose.ui.input.pointer.SuspendingPointerInputModifierNodeImpl.onPointerEvent-H0pRuoY(SuspendingPointerInputFilter.kt:620)
-at androidx.compose.foundation.AbstractClickableNode.onPointerEvent-H0pRuoY(Clickable.kt:1044)
-at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:387)
-at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:373)
-at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:373)
-at androidx.compose.ui.input.pointer.Node.dispatchMainEventPass(HitPathTracker.kt:373)
-at androidx.compose.ui.input.pointer.NodeParent.dispatchMainEventPass(HitPathTracker.kt:229)
-at androidx.compose.ui.input.pointer.HitPathTracker.dispatchChanges(HitPathTracker.kt:144)
-2025-09-07 20:50:56.336 25429-25429 AndroidRuntime          com.akslabs.SandeshVahak             E  	at androidx.compose.ui.input.pointer.PointerInputEventProcessor.process-BIzXfog(PointerInputEventProcessor.kt:120) (Ask Gemini)
-at androidx.compose.ui.platform.AndroidComposeView.sendMotionEvent-8iAsVTc(AndroidComposeView.android.kt:1994)
-at androidx.compose.ui.platform.AndroidComposeView.handleMotionEvent-8iAsVTc(AndroidComposeView.android.kt:1945)
-at androidx.compose.ui.platform.AndroidComposeView.dispatchTouchEvent(AndroidComposeView.android.kt:1829)
-at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:3132)
-at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2817)
-at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:3132)
-at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2817)
-at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:3132)
-at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2817)
-at android.view.ViewGroup.dispatchTransformedTouchEvent(ViewGroup.java:3132)
-at android.view.ViewGroup.dispatchTouchEvent(ViewGroup.java:2817)
-at com.android.internal.policy.DecorView.superDispatchTouchEvent(DecorView.java:467)
-at com.android.internal.policy.PhoneWindow.superDispatchTouchEvent(PhoneWindow.java:1982)
-at android.app.Activity.dispatchTouchEvent(Activity.java:4539)
-at com.android.internal.policy.DecorView.dispatchTouchEvent(DecorView.java:425)
-at android.view.View.dispatchPointerEvent(View.java:16743)
-at android.view.ViewRootImpl$ViewPostImeInputStage.processPointerEvent(ViewRootImpl.java:8058)
-at android.view.ViewRootImpl$ViewPostImeInputStage.onProcess(ViewRootImpl.java:7813)
-at android.view.ViewRootImpl$InputStage.deliver(ViewRootImpl.java:7202)
-at android.view.ViewRootImpl$InputStage.onDeliverToNext(ViewRootImpl.java:7259)
-at android.view.ViewRootImpl$InputStage.forward(ViewRootImpl.java:7225)
-at android.view.ViewRootImpl$AsyncInputStage.forward(ViewRootImpl.java:7391)
-at android.view.ViewRootImpl$InputStage.apply(ViewRootImpl.java:7233)
-at android.view.ViewRootImpl$AsyncInputStage.apply(ViewRootImpl.java:7448)
-at android.view.ViewRootImpl$InputStage.deliver(ViewRootImpl.java:7206)
-at android.view.ViewRootImpl$InputStage.onDeliverToNext(ViewRootImpl.java:7259)
-at android.view.ViewRootImpl$InputStage.forward(ViewRootImpl.java:7225)
-at android.view.ViewRootImpl$InputStage.apply(ViewRootImpl.java:7233)
-at android.view.ViewRootImpl$InputStage.deliver(ViewRootImpl.java:7206)
-at android.view.ViewRootImpl.deliverInputEvent(ViewRootImpl.java:10345)
-at android.view.ViewRootImpl.doProcessInputEvents(ViewRootImpl.java:10296)
-at android.view.ViewRootImpl.enqueueInputEvent(ViewRootImpl.java:10264)
-at android.view.ViewRootImpl$WindowInputEventReceiver.onInputEvent(ViewRootImpl.java:10487)
-at android.view.InputEventReceiver.dispatchInputEvent(InputEventReceiver.java:295)
-at android.os.MessageQueue.nativePollOnce(Native Method)
-at android.os.MessageQueue.next(MessageQueue.java:358)
-at android.os.Looper.loopOnce(Looper.java:189)
-... 5 more
-2025-09-07 20:51:01.483 25429-29103 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Thread[2,tid=29103,WaitingInMainSignalCatcherLoop,Thread*=0x7a6c1ee6f0,peer=0x149001b8,"Signal Catcher"]: reacting to signal 3
-2025-09-07 20:51:01.483 25429-29103 bs.SandeshVahak         com.akslabs.SandeshVahak             I  
-2025-09-07 20:51:01.926 25429-29107 bs.SandeshVahak         com.akslabs.SandeshVahak             W  Suspending all threads took: 8.825ms
-2025-09-07 20:51:01.931 25429-29103 bs.SandeshVahak         com.akslabs.SandeshVahak             I  Wrote stack traces to tombstoned
+2025-09-07 22:33:29.227 21017-25786 AdrenoGLES-0            com.akslabs.chitralaya             I  Build Config                     : S P 10.0.7 AArch64
+2025-09-07 22:33:29.227 21017-25786 AdrenoGLES-0            com.akslabs.chitralaya             I  Driver Path                      : /vendor/lib64/egl/libGLESv2_adreno.so
+2025-09-07 22:33:29.290 21017-25786 AdrenoGLES-0            com.akslabs.chitralaya             I  PFP: 0x016ee190, ME: 0x00000000
+2025-09-07 22:33:29.349 21017-25811 Gralloc4                com.akslabs.chitralaya             I  mapper 4.x is not supported
+2025-09-07 22:33:29.350 21017-25811 Gralloc3                com.akslabs.chitralaya             W  mapper 3.x is not supported
+2025-09-07 22:33:29.358 21017-25811 Gralloc2                com.akslabs.chitralaya             I  Adding additional valid usage bits: 0x8202000
+2025-09-07 22:33:29.416 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  NEW_ONLY mode: using baseline timestamp for incremental sync
+2025-09-07 22:33:29.417 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Starting incremental SMS sync (mode: NEW_ONLY) from timestamp: 1757263650064 (lastDB=1757263798564, baseline=1757263655064, buffer=5000)
+2025-09-07 22:33:29.429 21017-25767 HWUI                    com.akslabs.chitralaya             I  Davey! duration=1292ms; Flags=1, FrameTimelineVsyncId=44668407, IntendedVsync=78996392875543, Vsync=78996392875543, InputEventId=0, HandleInputStart=78996403841947, AnimationStart=78996403844343, PerformTraversalsStart=78996403845281, DrawStart=78997623411322, FrameDeadline=78996414208875, FrameInterval=78996403832781, FrameStartTime=16664591, SyncQueued=78997647938040, SyncStart=78997648105801, IssueDrawCommandsStart=78997649411426, SwapBuffers=78997683162572, FrameCompleted=78997685492988, DequeueBufferDuration=685781, QueueBufferDuration=586823, GpuCompleted=78997685492988, SwapBuffersCompleted=78997685252363, DisplayPresentTime=0, CommandSubmissionCompleted=78997683162572,
+2025-09-07 22:33:29.461 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Timestamp details: lastDB=2025-09-07 22:19:58.564, baseline=2025-09-07 22:17:35.064, effective=2025-09-07 22:17:30.064
+2025-09-07 22:33:29.567 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Reading SMS messages after timestamp: 1757263650064 (2025-09-07 22:17:30.064)
+2025-09-07 22:33:29.568 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Query: uri=content://sms, selection='date > ?', args=[1757263650064], sort=date ASC
+2025-09-07 22:33:29.573 21017-21017 Choreographer           com.akslabs.chitralaya             I  Skipped 83 frames!  The application may be doing too much work on its main thread.
+2025-09-07 22:33:29.662 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Cursor is null? false
+2025-09-07 22:33:29.662 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #1 -> id=739, date=1757263678038, addr=+919545154067
+2025-09-07 22:33:29.663 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #2 -> id=740, date=1757263728874, addr=+919545154067
+2025-09-07 22:33:29.663 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #3 -> id=741, date=1757263767342, addr=+919545154067
+2025-09-07 22:33:29.664 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #4 -> id=742, date=1757263798564, addr=+919545154067
+2025-09-07 22:33:29.664 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Total rows iterated: 4
+2025-09-07 22:33:29.678 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Read 4 new SMS messages after timestamp
+2025-09-07 22:33:29.684 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=739, date=1757263678038 (2025-09-07 22:17:58.038), exists=true
+2025-09-07 22:33:29.684 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 739 already exists in DB, skipping
+2025-09-07 22:33:29.689 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=740, date=1757263728874 (2025-09-07 22:18:48.874), exists=true
+2025-09-07 22:33:29.689 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 740 already exists in DB, skipping
+2025-09-07 22:33:29.695 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=741, date=1757263767342 (2025-09-07 22:19:27.342), exists=true
+2025-09-07 22:33:29.696 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 741 already exists in DB, skipping
+2025-09-07 22:33:29.700 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=742, date=1757263798564 (2025-09-07 22:19:58.564), exists=true
+2025-09-07 22:33:29.700 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 742 already exists in DB, skipping
+2025-09-07 22:33:29.700 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Incremental SMS sync complete: 0 new messages (batch)
+2025-09-07 22:33:29.741 21017-25770 HWUI                    com.akslabs.chitralaya             I  Davey! duration=1539ms; Flags=0, FrameTimelineVsyncId=44668460, IntendedVsync=78996459569897, Vsync=78997842841340, InputEventId=0, HandleInputStart=78997858564759, AnimationStart=78997858567988, PerformTraversalsStart=78997946329551, DrawStart=78997976908822, FrameDeadline=78997714046973, FrameInterval=78997857721738, FrameStartTime=16665921, SyncQueued=78997990303301, SyncStart=78997990389082, IssueDrawCommandsStart=78997990511009, SwapBuffers=78997995470540, FrameCompleted=78997998853457, DequeueBufferDuration=15469, QueueBufferDuration=318385, GpuCompleted=78997998853457, SwapBuffersCompleted=78997996588145, DisplayPresentTime=72904454214516736, CommandSubmissionCompleted=78997995470540,
+2025-09-07 22:33:29.856 21017-21017 AppNavHost              com.akslabs.chitralaya             D  Local count recomposed: 0
+2025-09-07 22:33:29.856 21017-21017 LocalSmsScreen          com.akslabs.chitralaya             D  Recompose LocalSmsScreen: items=0, loadState=CombinedLoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false)), mediator=null)
+2025-09-07 22:33:30.047 21017-21017 AppNavHost              com.akslabs.chitralaya             D  Local count recomposed: 504
+2025-09-07 22:33:30.048 21017-21017 LocalSmsScreen          com.akslabs.chitralaya             D  Recompose LocalSmsScreen: items=0, loadState=CombinedLoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false)), mediator=null)
+2025-09-07 22:33:30.330 21017-21017 LocalSmsScreen          com.akslabs.chitralaya             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false)), mediator=null)
+2025-09-07 22:33:31.037 21017-25771 HWUI                    com.akslabs.chitralaya             I  Davey! duration=880ms; Flags=0, FrameTimelineVsyncId=44669712, IntendedVsync=78998426230151, Vsync=78998542893880, InputEventId=0, HandleInputStart=78998547092519, AnimationStart=78998547094863, PerformTraversalsStart=78998615799863, DrawStart=78998615892051, FrameDeadline=78998497544754, FrameInterval=78998546705176, FrameStartTime=16666247, SyncQueued=78999297627467, SyncStart=78999297684029, IssueDrawCommandsStart=78999297954342, SwapBuffers=78999304092571, FrameCompleted=78999306943248, DequeueBufferDuration=16875, QueueBufferDuration=238907, GpuCompleted=78999306943248, SwapBuffersCompleted=78999305063717, DisplayPresentTime=0, CommandSubmissionCompleted=78999304092571,
+2025-09-07 22:33:31.256 21017-21017 Choreographer           com.akslabs.chitralaya             I  Skipped 58 frames!  The application may be doing too much work on its main thread.
+2025-09-07 22:33:31.404 21017-25771 HWUI                    com.akslabs.chitralaya             I  Davey! duration=1108ms; Flags=0, FrameTimelineVsyncId=44669776, IntendedVsync=78998559604098, Vsync=78999526364744, InputEventId=0, HandleInputStart=78999541546269, AnimationStart=78999541548925, PerformTraversalsStart=78999549964811, DrawStart=78999550121738, FrameDeadline=78999330874574, FrameInterval=78999540844602, FrameStartTime=16668287, SyncQueued=78999662956633, SyncStart=78999663273248, IssueDrawCommandsStart=78999663514290, SwapBuffers=78999665295488, FrameCompleted=78999668153665, DequeueBufferDuration=16771, QueueBufferDuration=308125, GpuCompleted=78999668153665, SwapBuffersCompleted=78999666072623, DisplayPresentTime=72904454231491835, CommandSubmissionCompleted=78999665295488,
+2025-09-07 22:33:31.652 21017-21017 AppNavHost              com.akslabs.chitralaya             D  Local count recomposed: 504
+2025-09-07 22:33:31.652 21017-21017 LocalSmsScreen          com.akslabs.chitralaya             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false)), mediator=null)
+2025-09-07 22:33:31.886 21017-21017 AppNavHost              com.akslabs.chitralaya             D  Local count recomposed: 504
+2025-09-07 22:33:31.886 21017-21017 LocalSmsScreen          com.akslabs.chitralaya             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false)), mediator=null)
+2025-09-07 22:33:32.648 21017-25819 ProfileInstaller        com.akslabs.chitralaya             D  Installing profile for com.akslabs.chitralaya
+2025-09-07 22:34:43.849 21017-21017 SmsObserverService      com.akslabs.chitralaya             D  Static stop() called
+2025-09-07 22:34:43.864 21017-21017 SmsContentObserver      com.akslabs.chitralaya             I  SMS content observer stopped
+2025-09-07 22:34:58.643 21017-21017 SmsObserverService      com.akslabs.chitralaya             D  Static start() called
+2025-09-07 22:34:58.666 21017-21017 SmsContentObserver      com.akslabs.chitralaya             D  Registering content observer on URI=content://sms, notifyForDescendants=true, thread=main
+2025-09-07 22:34:58.668 21017-21017 SmsContentObserver      com.akslabs.chitralaya             I  ✅ SMS content observer started and registered
+2025-09-07 22:34:58.723 21017-21017 WindowOnBackDispatcher  com.akslabs.chitralaya             W  sendCancelIfRunning: isInProgress=false callback=androidx.activity.OnBackPressedDispatcher$Api34Impl$createOnBackAnimationCallback$1@19eb846
+2025-09-07 22:34:58.794 21017-21017 SmsObserverService      com.akslabs.chitralaya             I  onCreate: Service creating.
+2025-09-07 22:34:58.798 21017-21017 SmsObserverService      com.akslabs.chitralaya             D  Notification channel created.
+2025-09-07 22:34:58.798 21017-21017 SmsObserverService      com.akslabs.chitralaya             I  onCreate: Preference change listener registered.
+2025-09-07 22:34:58.798 21017-21017 SmsObserverService      com.akslabs.chitralaya             I  updateSyncStateBasedOnPreferences: isEnabled=true, mode=NEW_ONLY, since=1757263655064, manuallyStopped=false, isInitialCall=true
+2025-09-07 22:34:58.798 21017-21017 SmsObserverService      com.akslabs.chitralaya             I  updateSyncStateBasedOnPreferences: Sync NEW_ONLY mode detected. Starting catch-up.
+2025-09-07 22:34:58.799 21017-21017 SmsObserverService      com.akslabs.chitralaya             D  Creating notification with text: Processing recent SMS...
+2025-09-07 22:34:58.812 21017-25782 SmsObserverService      com.akslabs.chitralaya             I  performCatchUpSyncAndMonitorNewSms: Starting with syncEnabledSince=1757263655064.
+2025-09-07 22:34:58.812 21017-25782 SmsObserverService      com.akslabs.chitralaya             D  Performing initial catch-up for NEW_ONLY mode.
+2025-09-07 22:34:58.813 21017-21017 SmsObserverService      com.akslabs.chitralaya             I  onStartCommand: Received action: ACTION_START_SERVICE, startId: 1
+2025-09-07 22:34:58.813 21017-21017 SmsObserverService      com.akslabs.chitralaya             I  onStartCommand: ACTION_START_SERVICE. Updating sync state.
+2025-09-07 22:34:58.814 21017-21017 SmsObserverService      com.akslabs.chitralaya             D  Creating notification with text: Initializing SMS Sync...
+2025-09-07 22:34:58.816 21017-25782 SmsSyncService          com.akslabs.chitralaya             D  Performing quick SMS sync
+2025-09-07 22:34:58.816 21017-25782 SmsSyncService          com.akslabs.chitralaya             D  Preference isSmsSyncEnabledKey = true
+2025-09-07 22:34:58.818 21017-21017 SmsObserverService      com.akslabs.chitralaya             I  updateSyncStateBasedOnPreferences: isEnabled=true, mode=NEW_ONLY, since=1757263655064, manuallyStopped=false, isInitialCall=false
+2025-09-07 22:34:58.819 21017-25782 SmsSyncService          com.akslabs.chitralaya             D  Configured channelId = -1002651869724
+2025-09-07 22:34:58.820 21017-21017 SmsObserverService      com.akslabs.chitralaya             I  updateSyncStateBasedOnPreferences: Sync NEW_ONLY mode detected. Starting catch-up.
+2025-09-07 22:34:58.820 21017-21017 SmsObserverService      com.akslabs.chitralaya             D  Creating notification with text: Processing recent SMS...
+2025-09-07 22:34:58.826 21017-25784 SmsObserverService      com.akslabs.chitralaya             I  performCatchUpSyncAndMonitorNewSms: Starting with syncEnabledSince=1757263655064.
+2025-09-07 22:34:58.826 21017-25784 SmsObserverService      com.akslabs.chitralaya             D  Performing initial catch-up for NEW_ONLY mode.
+2025-09-07 22:34:58.826 21017-25784 SmsSyncService          com.akslabs.chitralaya             D  Performing quick SMS sync
+2025-09-07 22:34:58.826 21017-25784 SmsSyncService          com.akslabs.chitralaya             D  Preference isSmsSyncEnabledKey = true
+2025-09-07 22:34:58.827 21017-25784 SmsSyncService          com.akslabs.chitralaya             D  Configured channelId = -1002651869724
+2025-09-07 22:34:58.829 21017-25784 SmsReaderService        com.akslabs.chitralaya             D  NEW_ONLY mode: using baseline timestamp for incremental sync
+2025-09-07 22:34:58.829 21017-25784 SmsReaderService        com.akslabs.chitralaya             I  Starting incremental SMS sync (mode: NEW_ONLY) from timestamp: 1757263650064 (lastDB=1757263798564, baseline=1757263655064, buffer=5000)
+2025-09-07 22:34:58.833 21017-25784 SmsReaderService        com.akslabs.chitralaya             D  Timestamp details: lastDB=2025-09-07 22:19:58.564, baseline=2025-09-07 22:17:35.064, effective=2025-09-07 22:17:30.064
+2025-09-07 22:34:58.835 21017-25782 SmsReaderService        com.akslabs.chitralaya             E  Error in incremental SMS sync
+kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@4a67052
+2025-09-07 22:34:58.836 21017-25782 SmsSyncService          com.akslabs.chitralaya             E  Exception during quick SMS sync
+kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@4a67052
+2025-09-07 22:34:58.837 21017-25782 SmsObserverService      com.akslabs.chitralaya             E  Exception during initial catch-up sync
+kotlinx.coroutines.JobCancellationException: StandaloneCoroutine was cancelled; job=StandaloneCoroutine{Cancelling}@4a67052
+2025-09-07 22:34:58.837 21017-25782 SmsObserverService      com.akslabs.chitralaya             I  performCatchUpSyncAndMonitorNewSms: Initial catch-up complete.
+2025-09-07 22:34:58.838 21017-25782 SmsObserverService      com.akslabs.chitralaya             D  Creating notification with text: SMS sync active (new messages handled by system observer).
+2025-09-07 22:34:58.841 21017-25782 SmsObserverService      com.akslabs.chitralaya             D  Notification updated with text: SMS sync active (new messages handled by system observer).
+2025-09-07 22:34:58.841 21017-25782 SmsObserverService      com.akslabs.chitralaya             I  performCatchUpSyncAndMonitorNewSms: END (catch-up finished)
+2025-09-07 22:34:58.936 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Reading SMS messages after timestamp: 1757263650064 (2025-09-07 22:17:30.064)
+2025-09-07 22:34:58.936 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Query: uri=content://sms, selection='date > ?', args=[1757263650064], sort=date ASC
+2025-09-07 22:34:58.968 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Cursor is null? false
+2025-09-07 22:34:58.968 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #1 -> id=739, date=1757263678038, addr=+919545154067
+2025-09-07 22:34:58.968 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #2 -> id=740, date=1757263728874, addr=+919545154067
+2025-09-07 22:34:58.968 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #3 -> id=741, date=1757263767342, addr=+919545154067
+2025-09-07 22:34:58.968 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #4 -> id=742, date=1757263798564, addr=+919545154067
+2025-09-07 22:34:58.968 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Total rows iterated: 4
+2025-09-07 22:34:58.981 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Read 4 new SMS messages after timestamp
+2025-09-07 22:34:58.984 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=739, date=1757263678038 (2025-09-07 22:17:58.038), exists=true
+2025-09-07 22:34:58.984 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 739 already exists in DB, skipping
+2025-09-07 22:34:58.987 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=740, date=1757263728874 (2025-09-07 22:18:48.874), exists=true
+2025-09-07 22:34:58.988 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 740 already exists in DB, skipping
+2025-09-07 22:34:58.991 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=741, date=1757263767342 (2025-09-07 22:19:27.342), exists=true
+2025-09-07 22:34:58.991 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 741 already exists in DB, skipping
+2025-09-07 22:34:58.993 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=742, date=1757263798564 (2025-09-07 22:19:58.564), exists=true
+2025-09-07 22:34:58.994 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 742 already exists in DB, skipping
+2025-09-07 22:34:58.994 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Incremental SMS sync complete: 0 new messages (batch)
+2025-09-07 22:34:58.994 21017-25782 SmsSyncService          com.akslabs.chitralaya             D  syncNewSmsToDatabase returned 0 new messages
+2025-09-07 22:34:58.994 21017-25782 SmsSyncService          com.akslabs.chitralaya             D  Proceeding to unsynced fetch; newLocalMessages=0
+2025-09-07 22:34:58.994 21017-25782 SmsSyncService          com.akslabs.chitralaya             D  Sync mode: NEW_ONLY, baseline: 1757263655064
+2025-09-07 22:34:58.995 21017-25782 SmsSyncService          com.akslabs.chitralaya             I  ✅ NEW_ONLY mode properly configured - baseline: 1757263655064 (2025-09-07 22:17:35)
+2025-09-07 22:34:58.995 21017-25782 SmsSyncService          com.akslabs.chitralaya             D  NEW_ONLY mode: getting unsynced messages after baseline 1757263655064
+2025-09-07 22:34:58.998 21017-25782 SmsSyncService          com.akslabs.chitralaya             D  NEW_ONLY quick sync query returned 0 messages
+2025-09-07 22:34:58.998 21017-25782 SmsSyncService          com.akslabs.chitralaya             D  Retrieved 0 unsynced messages (mode: NEW_ONLY, baseline: 1757263655064)
+2025-09-07 22:34:58.998 21017-25782 SmsSyncService          com.akslabs.chitralaya             D  No unsynced messages to sync
+2025-09-07 22:34:58.998 21017-25782 SmsObserverService      com.akslabs.chitralaya             I  Initial catch-up sync: 0 messages.
+2025-09-07 22:34:58.998 21017-25782 SmsObserverService      com.akslabs.chitralaya             I  performCatchUpSyncAndMonitorNewSms: Initial catch-up complete.
+2025-09-07 22:34:58.999 21017-25782 SmsObserverService      com.akslabs.chitralaya             D  Creating notification with text: SMS sync active (new messages handled by system observer).
+2025-09-07 22:34:59.002 21017-25782 SmsObserverService      com.akslabs.chitralaya             D  Notification updated with text: SMS sync active (new messages handled by system observer).
+2025-09-07 22:34:59.002 21017-25782 SmsObserverService      com.akslabs.chitralaya             I  performCatchUpSyncAndMonitorNewSms: END (catch-up finished)
+2025-09-07 22:35:51.905 21017-21017 SmsContentObserver      com.akslabs.chitralaya             D  onChange(selfChange=false) called with no URI
+2025-09-07 22:35:51.907 21017-21017 SmsContentObserver      com.akslabs.chitralaya             D  onChange(selfChange=false, uri=content://sms/raw/9)
+2025-09-07 22:35:51.907 21017-21017 SmsContentObserver      com.akslabs.chitralaya             D  ⏱️ SMS change debounced (2ms)
+2025-09-07 22:35:51.908 21017-25782 SmsContentObserver      com.akslabs.chitralaya             I  ⚡ SMS content changed, triggering lightning-fast sync
+2025-09-07 22:35:52.110 21017-25782 SmsContentObserver      com.akslabs.chitralaya             D  Preference isSmsSyncEnabledKey read: true
+2025-09-07 22:35:52.110 21017-25782 SmsContentObserver      com.akslabs.chitralaya             D  SMS sync enabled: true
+2025-09-07 22:35:52.110 21017-25782 SmsContentObserver      com.akslabs.chitralaya             D  Content observer triggered - Mode: NEW_ONLY, Baseline: 1757263655064, IsEnabled: true
+2025-09-07 22:35:52.112 21017-25782 SmsContentObserver      com.akslabs.chitralaya             I  ✅ NEW_ONLY mode properly configured with baseline: 1757263655064 (2025-09-07 22:17:35)
+2025-09-07 22:35:52.117 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  NEW_ONLY mode: using baseline timestamp for incremental sync
+2025-09-07 22:35:52.117 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Starting incremental SMS sync (mode: NEW_ONLY) from timestamp: 1757263650064 (lastDB=1757263798564, baseline=1757263655064, buffer=5000)
+2025-09-07 22:35:52.120 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Timestamp details: lastDB=2025-09-07 22:19:58.564, baseline=2025-09-07 22:17:35.064, effective=2025-09-07 22:17:30.064
+2025-09-07 22:35:52.225 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Reading SMS messages after timestamp: 1757263650064 (2025-09-07 22:17:30.064)
+2025-09-07 22:35:52.226 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Query: uri=content://sms, selection='date > ?', args=[1757263650064], sort=date ASC
+2025-09-07 22:35:52.251 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Cursor is null? false
+2025-09-07 22:35:52.251 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #1 -> id=739, date=1757263678038, addr=+919545154067
+2025-09-07 22:35:52.251 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #2 -> id=740, date=1757263728874, addr=+919545154067
+2025-09-07 22:35:52.251 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #3 -> id=741, date=1757263767342, addr=+919545154067
+2025-09-07 22:35:52.252 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #4 -> id=742, date=1757263798564, addr=+919545154067
+2025-09-07 22:35:52.252 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Total rows iterated: 4
+2025-09-07 22:35:52.264 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Read 4 new SMS messages after timestamp
+2025-09-07 22:35:52.268 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=739, date=1757263678038 (2025-09-07 22:17:58.038), exists=true
+2025-09-07 22:35:52.268 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 739 already exists in DB, skipping
+2025-09-07 22:35:52.271 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=740, date=1757263728874 (2025-09-07 22:18:48.874), exists=true
+2025-09-07 22:35:52.271 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 740 already exists in DB, skipping
+2025-09-07 22:35:52.275 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=741, date=1757263767342 (2025-09-07 22:19:27.342), exists=true
+2025-09-07 22:35:52.275 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 741 already exists in DB, skipping
+2025-09-07 22:35:52.278 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=742, date=1757263798564 (2025-09-07 22:19:58.564), exists=true
+2025-09-07 22:35:52.278 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 742 already exists in DB, skipping
+2025-09-07 22:35:52.278 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Incremental SMS sync complete: 0 new messages (batch)
+2025-09-07 22:35:52.278 21017-25782 SmsContentObserver      com.akslabs.chitralaya             I  📱 DB update: inserted 0 new messages into local database (incremental, mode: NEW_ONLY)
+2025-09-07 22:35:52.278 21017-25782 SmsContentObserver      com.akslabs.chitralaya             D  ✅ No new SMS messages found (370ms)
+2025-09-07 22:35:52.939 21017-21017 SmsContentObserver      com.akslabs.chitralaya             D  onChange(selfChange=false) called with no URI
+2025-09-07 22:35:52.940 21017-21017 SmsContentObserver      com.akslabs.chitralaya             D  onChange(selfChange=false, uri=content://sms/743)
+2025-09-07 22:35:52.940 21017-21017 SmsContentObserver      com.akslabs.chitralaya             D  ⏱️ SMS change debounced (1ms)
+2025-09-07 22:35:52.940 21017-25782 SmsContentObserver      com.akslabs.chitralaya             I  ⚡ SMS content changed, triggering lightning-fast sync
+2025-09-07 22:35:53.143 21017-25782 SmsContentObserver      com.akslabs.chitralaya             D  Preference isSmsSyncEnabledKey read: true
+2025-09-07 22:35:53.143 21017-25782 SmsContentObserver      com.akslabs.chitralaya             D  SMS sync enabled: true
+2025-09-07 22:35:53.143 21017-25782 SmsContentObserver      com.akslabs.chitralaya             D  Content observer triggered - Mode: NEW_ONLY, Baseline: 1757263655064, IsEnabled: true
+2025-09-07 22:35:53.145 21017-25782 SmsContentObserver      com.akslabs.chitralaya             I  ✅ NEW_ONLY mode properly configured with baseline: 1757263655064 (2025-09-07 22:17:35)
+2025-09-07 22:35:53.149 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  NEW_ONLY mode: using baseline timestamp for incremental sync
+2025-09-07 22:35:53.150 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Starting incremental SMS sync (mode: NEW_ONLY) from timestamp: 1757263650064 (lastDB=1757263798564, baseline=1757263655064, buffer=5000)
+2025-09-07 22:35:53.156 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Timestamp details: lastDB=2025-09-07 22:19:58.564, baseline=2025-09-07 22:17:35.064, effective=2025-09-07 22:17:30.064
+2025-09-07 22:35:53.262 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Reading SMS messages after timestamp: 1757263650064 (2025-09-07 22:17:30.064)
+2025-09-07 22:35:53.262 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Query: uri=content://sms, selection='date > ?', args=[1757263650064], sort=date ASC
+2025-09-07 22:35:53.283 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Cursor is null? false
+2025-09-07 22:35:53.284 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #1 -> id=739, date=1757263678038, addr=+919545154067
+2025-09-07 22:35:53.284 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #2 -> id=740, date=1757263728874, addr=+919545154067
+2025-09-07 22:35:53.284 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #3 -> id=741, date=1757263767342, addr=+919545154067
+2025-09-07 22:35:53.285 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #4 -> id=742, date=1757263798564, addr=+919545154067
+2025-09-07 22:35:53.285 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #5 -> id=743, date=1757264752417, addr=+919545154067
+2025-09-07 22:35:53.285 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Total rows iterated: 5
+2025-09-07 22:35:53.298 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Read 5 new SMS messages after timestamp
+2025-09-07 22:35:53.301 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=739, date=1757263678038 (2025-09-07 22:17:58.038), exists=true
+2025-09-07 22:35:53.301 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 739 already exists in DB, skipping
+2025-09-07 22:35:53.304 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=740, date=1757263728874 (2025-09-07 22:18:48.874), exists=true
+2025-09-07 22:35:53.304 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 740 already exists in DB, skipping
+2025-09-07 22:35:53.307 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=741, date=1757263767342 (2025-09-07 22:19:27.342), exists=true
+2025-09-07 22:35:53.307 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 741 already exists in DB, skipping
+2025-09-07 22:35:53.310 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=742, date=1757263798564 (2025-09-07 22:19:58.564), exists=true
+2025-09-07 22:35:53.310 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 742 already exists in DB, skipping
+2025-09-07 22:35:53.313 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=743, date=1757264752417 (2025-09-07 22:35:52.417), exists=false
+2025-09-07 22:35:53.313 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  ✅ New message queued for insert: 743 from +919545154067 at 1757264752417
+2025-09-07 22:35:53.347 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Incremental SMS sync complete: 1 new messages (batch)
+2025-09-07 22:35:53.348 21017-25784 SmsContentObserver      com.akslabs.chitralaya             I  📱 DB update: inserted 1 new messages into local database (incremental, mode: NEW_ONLY)
+2025-09-07 22:35:53.348 21017-25784 SmsContentObserver      com.akslabs.chitralaya             I  🚀 Found 1 new SMS messages in 408ms
+2025-09-07 22:35:53.348 21017-25784 SmsContentObserver      com.akslabs.chitralaya             I  ☁️ Triggering immediate cloud sync (Instant worker) since SMS sync is enabled (mode: NEW_ONLY)
+2025-09-07 22:35:53.636 21017-21017 AppNavHost              com.akslabs.chitralaya             D  Local count recomposed: 505
+2025-09-07 22:35:53.640 21017-21017 LocalSmsScreen          com.akslabs.chitralaya             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false)), mediator=null)
+2025-09-07 22:35:53.741 21017-21017 LocalSmsScreen          com.akslabs.chitralaya             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false)), mediator=null)
+2025-09-07 22:35:53.850 21017-25782 WorkModule.SmsSync      com.akslabs.chitralaya             D  enqueueInstant() called -> InstantSmsSyncWorker expedited
+2025-09-07 22:35:53.864 21017-25782 SmsContentObserver      com.akslabs.chitralaya             D  ✅ Instant sync worker enqueued successfully
+2025-09-07 22:35:53.915 21017-25762 bs.SandeshVahak         com.akslabs.chitralaya             I  Compiler allocated 5009KB to compile void com.akslabs.chitralaya.ui.components.SmsListItemKt$SmsListItem$2.invoke(androidx.compose.foundation.layout.ColumnScope, androidx.compose.runtime.Composer, int)
+2025-09-07 22:35:54.356 21017-21017 SmsContentObserver      com.akslabs.chitralaya             D  onChange(selfChange=false) called with no URI
+2025-09-07 22:35:54.356 21017-21017 SmsContentObserver      com.akslabs.chitralaya             D  onChange(selfChange=false, uri=content://sms/raw)
+2025-09-07 22:35:54.356 21017-21017 SmsContentObserver      com.akslabs.chitralaya             D  ⏱️ SMS change debounced (0ms)
+2025-09-07 22:35:54.357 21017-25782 SmsContentObserver      com.akslabs.chitralaya             I  ⚡ SMS content changed, triggering lightning-fast sync
+2025-09-07 22:35:54.386 21017-26006 HWUI                    com.akslabs.chitralaya             I  Davey! duration=802ms; Flags=0, FrameTimelineVsyncId=44740511, IntendedVsync=79141842911097, Vsync=79141959578578, InputEventId=0, HandleInputStart=79141973901840, AnimationStart=79141973906788, PerformTraversalsStart=79142026986892, DrawStart=79142027096944, FrameDeadline=79141964248655, FrameInterval=79141973386683, FrameStartTime=16666783, SyncQueued=79142639388610, SyncStart=79142639773089, IssueDrawCommandsStart=79142640104912, SwapBuffers=79142642540798, FrameCompleted=79142645350173, DequeueBufferDuration=16302, QueueBufferDuration=388281, GpuCompleted=79142645350173, SwapBuffersCompleted=79142643382725, DisplayPresentTime=0, CommandSubmissionCompleted=79142642540798,
+2025-09-07 22:35:54.426 21017-21017 Choreographer           com.akslabs.chitralaya             I  Skipped 44 frames!  The application may be doing too much work on its main thread.
+2025-09-07 22:35:54.449 21017-25782 InstantSmsSyncWorker    com.akslabs.chitralaya             D  Instant SMS sync worker started
+2025-09-07 22:35:54.449 21017-25782 InstantSmsSyncWorker    com.akslabs.chitralaya             D  Instant sync worker - Enabled: true, Mode: NEW_ONLY, Baseline: 1757263655064
+2025-09-07 22:35:54.449 21017-25782 InstantSmsSyncWorker    com.akslabs.chitralaya             D  Invoking performQuickSync() from InstantSmsSyncWorker
+2025-09-07 22:35:54.451 21017-25782 SmsSyncService          com.akslabs.chitralaya             D  Performing quick SMS sync
+2025-09-07 22:35:54.451 21017-25782 SmsSyncService          com.akslabs.chitralaya             D  Preference isSmsSyncEnabledKey = true
+2025-09-07 22:35:54.453 21017-25782 SmsSyncService          com.akslabs.chitralaya             D  Configured channelId = -1002651869724
+2025-09-07 22:35:54.453 21017-26006 HWUI                    com.akslabs.chitralaya             I  Davey! duration=739ms; Flags=0, FrameTimelineVsyncId=44740589, IntendedVsync=79141976242692, Vsync=79142709577536, InputEventId=0, HandleInputStart=79142710956579, AnimationStart=79142710959027, PerformTraversalsStart=79142710959964, DrawStart=79142711047048, FrameDeadline=79142680916796, FrameInterval=79142710248350, FrameStartTime=16666701, SyncQueued=79142711389704, SyncStart=79142711552100, IssueDrawCommandsStart=79142711740225, SwapBuffers=79142713474704, FrameCompleted=79142716334808, DequeueBufferDuration=17500, QueueBufferDuration=262969, GpuCompleted=79142716334808, SwapBuffersCompleted=79142714203766, DisplayPresentTime=0, CommandSubmissionCompleted=79142713474704,
+2025-09-07 22:35:54.457 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  NEW_ONLY mode: using baseline timestamp for incremental sync
+2025-09-07 22:35:54.457 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Starting incremental SMS sync (mode: NEW_ONLY) from timestamp: 1757263650064 (lastDB=1757264752417, baseline=1757263655064, buffer=5000)
+2025-09-07 22:35:54.460 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Timestamp details: lastDB=2025-09-07 22:35:52.417, baseline=2025-09-07 22:17:35.064, effective=2025-09-07 22:17:30.064
+2025-09-07 22:35:54.558 21017-25782 SmsContentObserver      com.akslabs.chitralaya             D  Preference isSmsSyncEnabledKey read: true
+2025-09-07 22:35:54.559 21017-25782 SmsContentObserver      com.akslabs.chitralaya             D  SMS sync enabled: true
+2025-09-07 22:35:54.559 21017-25782 SmsContentObserver      com.akslabs.chitralaya             D  Content observer triggered - Mode: NEW_ONLY, Baseline: 1757263655064, IsEnabled: true
+2025-09-07 22:35:54.559 21017-25782 SmsContentObserver      com.akslabs.chitralaya             I  ✅ NEW_ONLY mode properly configured with baseline: 1757263655064 (2025-09-07 22:17:35)
+2025-09-07 22:35:54.562 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  NEW_ONLY mode: using baseline timestamp for incremental sync
+2025-09-07 22:35:54.562 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Starting incremental SMS sync (mode: NEW_ONLY) from timestamp: 1757263650064 (lastDB=1757264752417, baseline=1757263655064, buffer=5000)
+2025-09-07 22:35:54.564 21017-25783 SmsReaderService        com.akslabs.chitralaya             I  Reading SMS messages after timestamp: 1757263650064 (2025-09-07 22:17:30.064)
+2025-09-07 22:35:54.564 21017-25783 SmsReaderService        com.akslabs.chitralaya             D  Query: uri=content://sms, selection='date > ?', args=[1757263650064], sort=date ASC
+2025-09-07 22:35:54.566 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Timestamp details: lastDB=2025-09-07 22:35:52.417, baseline=2025-09-07 22:17:35.064, effective=2025-09-07 22:17:30.064
+2025-09-07 22:35:54.586 21017-25783 SmsReaderService        com.akslabs.chitralaya             D  Cursor is null? false
+2025-09-07 22:35:54.586 21017-25783 SmsReaderService        com.akslabs.chitralaya             V  Row #1 -> id=739, date=1757263678038, addr=+919545154067
+2025-09-07 22:35:54.586 21017-25783 SmsReaderService        com.akslabs.chitralaya             V  Row #2 -> id=740, date=1757263728874, addr=+919545154067
+2025-09-07 22:35:54.587 21017-25783 SmsReaderService        com.akslabs.chitralaya             V  Row #3 -> id=741, date=1757263767342, addr=+919545154067
+2025-09-07 22:35:54.587 21017-25783 SmsReaderService        com.akslabs.chitralaya             V  Row #4 -> id=742, date=1757263798564, addr=+919545154067
+2025-09-07 22:35:54.587 21017-25783 SmsReaderService        com.akslabs.chitralaya             V  Row #5 -> id=743, date=1757264752417, addr=+919545154067
+2025-09-07 22:35:54.587 21017-25783 SmsReaderService        com.akslabs.chitralaya             D  Total rows iterated: 5
+2025-09-07 22:35:54.602 21017-25783 SmsReaderService        com.akslabs.chitralaya             I  Read 5 new SMS messages after timestamp
+2025-09-07 22:35:54.608 21017-25783 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=739, date=1757263678038 (2025-09-07 22:17:58.038), exists=true
+2025-09-07 22:35:54.608 21017-25783 SmsReaderService        com.akslabs.chitralaya             D  Message 739 already exists in DB, skipping
+2025-09-07 22:35:54.614 21017-25783 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=740, date=1757263728874 (2025-09-07 22:18:48.874), exists=true
+2025-09-07 22:35:54.614 21017-25783 SmsReaderService        com.akslabs.chitralaya             D  Message 740 already exists in DB, skipping
+2025-09-07 22:35:54.619 21017-25783 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=741, date=1757263767342 (2025-09-07 22:19:27.342), exists=true
+2025-09-07 22:35:54.619 21017-25783 SmsReaderService        com.akslabs.chitralaya             D  Message 741 already exists in DB, skipping
+2025-09-07 22:35:54.624 21017-25783 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=742, date=1757263798564 (2025-09-07 22:19:58.564), exists=true
+2025-09-07 22:35:54.624 21017-25783 SmsReaderService        com.akslabs.chitralaya             D  Message 742 already exists in DB, skipping
+2025-09-07 22:35:54.629 21017-25783 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=743, date=1757264752417 (2025-09-07 22:35:52.417), exists=true
+2025-09-07 22:35:54.630 21017-25783 SmsReaderService        com.akslabs.chitralaya             D  Message 743 already exists in DB, skipping
+2025-09-07 22:35:54.630 21017-25783 SmsReaderService        com.akslabs.chitralaya             I  Incremental SMS sync complete: 0 new messages (batch)
+2025-09-07 22:35:54.630 21017-25783 SmsSyncService          com.akslabs.chitralaya             D  syncNewSmsToDatabase returned 0 new messages
+2025-09-07 22:35:54.630 21017-25783 SmsSyncService          com.akslabs.chitralaya             D  Proceeding to unsynced fetch; newLocalMessages=0
+2025-09-07 22:35:54.630 21017-25783 SmsSyncService          com.akslabs.chitralaya             D  Sync mode: NEW_ONLY, baseline: 1757263655064
+2025-09-07 22:35:54.631 21017-25783 SmsSyncService          com.akslabs.chitralaya             I  ✅ NEW_ONLY mode properly configured - baseline: 1757263655064 (2025-09-07 22:17:35)
+2025-09-07 22:35:54.631 21017-25783 SmsSyncService          com.akslabs.chitralaya             D  NEW_ONLY mode: getting unsynced messages after baseline 1757263655064
+2025-09-07 22:35:54.636 21017-25783 SmsSyncService          com.akslabs.chitralaya             D  NEW_ONLY quick sync query returned 1 messages
+2025-09-07 22:35:54.636 21017-25783 SmsSyncService          com.akslabs.chitralaya             D  Retrieved 1 unsynced messages (mode: NEW_ONLY, baseline: 1757263655064)
+2025-09-07 22:35:54.647 21017-25783 SmsSyncService          com.akslabs.chitralaya             D  📤 Sending SMS message 1/1: 743 (1757264752417)
+2025-09-07 22:35:54.651 21017-25783 BotApi                  com.akslabs.chitralaya             D  📤 Sending SMS message to channel: -1002651869724
+2025-09-07 22:35:54.669 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Reading SMS messages after timestamp: 1757263650064 (2025-09-07 22:17:30.064)
+2025-09-07 22:35:54.669 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Query: uri=content://sms, selection='date > ?', args=[1757263650064], sort=date ASC
+2025-09-07 22:35:54.690 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Cursor is null? false
+2025-09-07 22:35:54.690 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #1 -> id=739, date=1757263678038, addr=+919545154067
+2025-09-07 22:35:54.690 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #2 -> id=740, date=1757263728874, addr=+919545154067
+2025-09-07 22:35:54.690 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #3 -> id=741, date=1757263767342, addr=+919545154067
+2025-09-07 22:35:54.691 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #4 -> id=742, date=1757263798564, addr=+919545154067
+2025-09-07 22:35:54.691 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Row #5 -> id=743, date=1757264752417, addr=+919545154067
+2025-09-07 22:35:54.691 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Total rows iterated: 5
+2025-09-07 22:35:54.703 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Read 5 new SMS messages after timestamp
+2025-09-07 22:35:54.707 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=739, date=1757263678038 (2025-09-07 22:17:58.038), exists=true
+2025-09-07 22:35:54.707 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 739 already exists in DB, skipping
+2025-09-07 22:35:54.709 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=740, date=1757263728874 (2025-09-07 22:18:48.874), exists=true
+2025-09-07 22:35:54.709 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 740 already exists in DB, skipping
+2025-09-07 22:35:54.712 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=741, date=1757263767342 (2025-09-07 22:19:27.342), exists=true
+2025-09-07 22:35:54.712 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 741 already exists in DB, skipping
+2025-09-07 22:35:54.716 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=742, date=1757263798564 (2025-09-07 22:19:58.564), exists=true
+2025-09-07 22:35:54.716 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 742 already exists in DB, skipping
+2025-09-07 22:35:54.718 21017-25782 SmsReaderService        com.akslabs.chitralaya             V  Evaluating message id=743, date=1757264752417 (2025-09-07 22:35:52.417), exists=true
+2025-09-07 22:35:54.719 21017-25782 SmsReaderService        com.akslabs.chitralaya             D  Message 743 already exists in DB, skipping
+2025-09-07 22:35:54.719 21017-25782 SmsReaderService        com.akslabs.chitralaya             I  Incremental SMS sync complete: 0 new messages (batch)
+2025-09-07 22:35:54.719 21017-25782 SmsContentObserver      com.akslabs.chitralaya             I  📱 DB update: inserted 0 new messages into local database (incremental, mode: NEW_ONLY)
+2025-09-07 22:35:54.719 21017-25782 SmsContentObserver      com.akslabs.chitralaya             D  ✅ No new SMS messages found (362ms)
+2025-09-07 22:35:58.737 21017-25783 TelegramRateLimiter     com.akslabs.chitralaya             D  ✅ Request successful, rate limiter reset
+2025-09-07 22:35:58.738 21017-25783 PerformanceMonitor      com.akslabs.chitralaya             I  ⚠️ MODERATE: telegram_send_message took 4087ms
+2025-09-07 22:35:58.738 21017-25783 SmsSyncService          com.akslabs.chitralaya             I  ✅ Successfully synced SMS message: 743 (1/20 in current burst, total: 1)
+2025-09-07 22:35:58.744 21017-25783 SmsSyncService          com.akslabs.chitralaya             D  📦 Applied DB updates in batch: synced=1, remoteInserted=1, failed=0
+2025-09-07 22:35:58.744 21017-25783 SmsSyncService          com.akslabs.chitralaya             D  Quick sync complete: 1 messages synced
+2025-09-07 22:35:58.747 21017-25782 InstantSmsSyncWorker    com.akslabs.chitralaya             D  performQuickSync() returned Success(messagesSynced=1)
+2025-09-07 22:35:58.747 21017-25782 InstantSmsSyncWorker    com.akslabs.chitralaya             D  Instant sync completed: 1 messages synced
+2025-09-07 22:35:58.747 21017-25782 InstantSmsSyncWorker    com.akslabs.chitralaya             D  Attempting to show instant sync notification for 1 messages
+2025-09-07 22:35:58.760 21017-25780 WM-WorkerWrapper        com.akslabs.chitralaya             I  Worker result SUCCESS for Work [ id=27250e0c-e112-4e4d-9b00-520f864ece4f, tags={ com.akslabs.chitralaya.workers.InstantSmsSyncWorker } ]
+2025-09-07 22:35:58.836 21017-21017 LocalSmsScreen          com.akslabs.chitralaya             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=Loading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=false), append=NotLoading(endOfPaginationReached=false)), mediator=null)
+2025-09-07 22:35:58.898 21017-21017 LocalSmsScreen          com.akslabs.chitralaya             D  Recompose LocalSmsScreen: items=60, loadState=CombinedLoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false), source=LoadStates(refresh=NotLoading(endOfPaginationReached=false), prepend=NotLoading(endOfPaginationReached=true), append=NotLoading(endOfPaginationReached=false)), mediator=null)
+2025-09-07 22:35:59.465 21017-21017 Choreographer           com.akslabs.chitralaya             I  Skipped 34 frames!  The application may be doing too much work on its main thread.
+2025-09-07 22:36:07.447 21017-21017 WindowOnBackDispatcher  com.akslabs.chitralaya             W  sendCancelIfRunning: isInProgress=false callback=androidx.activity.OnBackPressedDispatcher$Api34Impl$createOnBackAnimationCallback$1@c35e92b
+2025-09-07 22:36:07.477 21017-21017 SmsContentObserver      com.akslabs.chitralaya             I  SMS content observer stopped
+2025-09-07 22:36:11.850 21017-21017 WindowOnBackDispatcher  com.akslabs.chitralaya             W  sendCancelIfRunning: isInProgress=false callback=android.app.Activity$$ExternalSyntheticLambda0@777fbc6

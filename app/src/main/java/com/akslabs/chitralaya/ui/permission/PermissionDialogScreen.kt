@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.ui.permission
+package com.akslabs.chitralaya.ui.permission // Corrected package declaration
 
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -20,9 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.akslabs.SandeshVahak.R
-import com.akslabs.SandeshVahak.ui.components.PermissionDialog
-import com.akslabs.SandeshVahak.ui.components.SmsPermissionTextProvider
+import com.akslabs.chitralaya.R // Corrected R import
+import com.akslabs.chitralaya.ui.components.PermissionDialog // Corrected import
+import com.akslabs.chitralaya.ui.components.SmsPermissionTextProvider // Corrected import
 
 @Composable
 fun PermissionDialogScreen(

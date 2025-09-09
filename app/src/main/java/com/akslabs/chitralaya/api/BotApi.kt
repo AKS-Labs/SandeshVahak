@@ -1,8 +1,8 @@
-package com.akslabs.SandeshVahak.api
+package com.akslabs.chitralaya.api
 
 import android.util.Log
-import com.akslabs.SandeshVahak.data.localdb.Preferences
-import com.akslabs.SandeshVahak.utils.Constants.SAMPLE_API_KEY
+import com.akslabs.chitralaya.data.localdb.Preferences // Corrected import
+import com.akslabs.chitralaya.utils.Constants.SAMPLE_API_KEY
 import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch

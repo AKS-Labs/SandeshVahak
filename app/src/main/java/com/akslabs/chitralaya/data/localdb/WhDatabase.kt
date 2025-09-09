@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.data.localdb
+package com.akslabs.chitralaya.data.localdb
 
 import android.content.Context
 import androidx.room.Database

@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.ui.onboarding
+package com.akslabs.chitralaya.ui.onboarding // Corrected package declaration
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
@@ -12,8 +12,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.akslabs.SandeshVahak.R
-import com.akslabs.SandeshVahak.api.BotApi
+import com.akslabs.chitralaya.R // Corrected R import
+import com.akslabs.chitralaya.api.BotApi // Corrected BotApi import
+import com.akslabs.chitralaya.ui.onboarding.DisclaimerScreen // Added import
+import com.akslabs.chitralaya.ui.onboarding.GettingStartedScreen // Added import
 
 import kotlinx.coroutines.delay
 

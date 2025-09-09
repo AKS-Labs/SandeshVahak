@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.ui.main.nav
+package com.akslabs.chitralaya.ui.main.nav
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,12 +13,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.akslabs.SandeshVahak.ui.main.screens.about.AboutScreen
+import com.akslabs.chitralaya.ui.main.screens.about.AboutScreen
 import com.akslabs.chitralaya.ui.main.screens.local.LocalSmsScreen
 import com.akslabs.chitralaya.ui.main.screens.local.LocalSmsViewModel
 import com.akslabs.chitralaya.ui.main.screens.remote.RemoteSmsScreen
 import com.akslabs.chitralaya.ui.main.screens.remote.RemoteSmsViewModel
-import com.akslabs.SandeshVahak.ui.main.screens.settings.SettingsScreen
+import com.akslabs.chitralaya.ui.main.screens.settings.SettingsScreen
 
 @Composable
 fun AppNavHost(

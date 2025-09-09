@@ -1,4 +1,4 @@
-package com.akslabs.SandeshVahak.utils.connectivity
+package com.akslabs.chitralaya.utils.connectivity
 
 import android.content.Context
 import android.net.ConnectivityManager
