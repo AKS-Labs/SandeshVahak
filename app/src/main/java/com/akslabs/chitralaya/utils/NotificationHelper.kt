@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.utils
+package com.akslabs.SandeshVahak.utils
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -8,8 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import com.akslabs.chitralaya.R
-import com.akslabs.chitralaya.ui.MainActivity
+//import com.akslabs.SandeshVahak.R
+import com.akslabs.SandeshVahak.ui.MainActivity
 
 object NotificationHelper {
 

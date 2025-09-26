@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.ui.main
+package com.akslabs.SandeshVahak.ui.main
 
 enum class SyncState {
     SYNCING,

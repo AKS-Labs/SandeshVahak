@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.ui.components
+package com.akslabs.SandeshVahak.ui.components
 
 import android.os.Parcel
 import android.os.Parcelable

@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.services
+package com.akslabs.SandeshVahak.services
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -13,9 +13,9 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.akslabs.chitralaya.R
-import com.akslabs.chitralaya.data.localdb.Preferences
-import com.akslabs.chitralaya.ui.MainActivity
+import com.akslabs.SandeshVahak.R
+import com.akslabs.SandeshVahak.data.localdb.Preferences
+import com.akslabs.SandeshVahak.ui.MainActivity
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.isActive

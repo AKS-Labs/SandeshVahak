@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.ui.components
+package com.akslabs.SandeshVahak.ui.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.akslabs.chitralaya.data.localdb.Preferences // Corrected import
+import com.akslabs.SandeshVahak.data.localdb.Preferences // Corrected import
 
 @Composable
 fun ListDialogCard(

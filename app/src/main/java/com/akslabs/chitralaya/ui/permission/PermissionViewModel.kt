@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.ui.permission // Corrected package declaration
+package com.akslabs.SandeshVahak.ui.permission // Corrected package declaration
 
 import android.Manifest
 import androidx.compose.runtime.mutableStateListOf

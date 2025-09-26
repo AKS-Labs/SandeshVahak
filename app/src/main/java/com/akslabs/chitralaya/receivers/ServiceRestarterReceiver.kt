@@ -1,11 +1,11 @@
-package com.akslabs.chitralaya.receivers
+package com.akslabs.SandeshVahak.receivers
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.akslabs.chitralaya.data.localdb.Preferences // Corrected import
-import com.akslabs.chitralaya.services.SmsObserverService
+import com.akslabs.SandeshVahak.data.localdb.Preferences // Corrected import
+import com.akslabs.SandeshVahak.services.SmsObserverService
 
 /**
  * Receives restart intents (from AlarmManager) to bring the SmsObserverService back

@@ -1,13 +1,13 @@
-package com.akslabs.chitralaya.receivers
+package com.akslabs.SandeshVahak.receivers
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import com.akslabs.chitralaya.data.localdb.Preferences
-import com.akslabs.chitralaya.workers.WorkModule
-import com.akslabs.chitralaya.utils.NotificationHelper
+import com.akslabs.SandeshVahak.data.localdb.Preferences
+import com.akslabs.SandeshVahak.workers.WorkModule
+import com.akslabs.SandeshVahak.utils.NotificationHelper
 
 /**
  * Broadcast receiver to restart SMS syncing after device boot

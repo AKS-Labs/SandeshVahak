@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.ui.main.screens.remote
+package com.akslabs.SandeshVahak.ui.main.screens.remote
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,10 +20,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import com.akslabs.chitralaya.data.localdb.entities.RemoteSmsMessage
-import com.akslabs.chitralaya.ui.components.LoadAnimation
-import com.akslabs.chitralaya.ui.components.RemoteSmsListItem
-import com.akslabs.chitralaya.ui.components.itemsPaging
+import com.akslabs.SandeshVahak.data.localdb.entities.RemoteSmsMessage
+import com.akslabs.SandeshVahak.ui.components.LoadAnimation
+import com.akslabs.SandeshVahak.ui.components.RemoteSmsListItem
+import com.akslabs.SandeshVahak.ui.components.itemsPaging
 
 @Composable
 fun RemoteSmsScreen(

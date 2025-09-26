@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.services
+package com.akslabs.SandeshVahak.services
 
 import android.content.Context
 import android.database.ContentObserver
@@ -7,8 +7,8 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.Telephony
 import android.util.Log
-import com.akslabs.chitralaya.workers.WorkModule // Corrected import
-import com.akslabs.chitralaya.data.localdb.Preferences
+import com.akslabs.SandeshVahak.workers.WorkModule // Corrected import
+import com.akslabs.SandeshVahak.data.localdb.Preferences
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

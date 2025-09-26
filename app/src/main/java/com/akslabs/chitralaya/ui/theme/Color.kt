@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.ui.theme
+package com.akslabs.SandeshVahak.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF8F4B3A)

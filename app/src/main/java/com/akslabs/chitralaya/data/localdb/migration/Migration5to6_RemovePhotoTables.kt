@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.data.localdb.migration
+package com.akslabs.SandeshVahak.data.localdb.migration
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase

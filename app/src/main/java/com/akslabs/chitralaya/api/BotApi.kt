@@ -1,8 +1,8 @@
-package com.akslabs.chitralaya.api
+package com.akslabs.SandeshVahak.api
 
 import android.util.Log
-import com.akslabs.chitralaya.data.localdb.Preferences // Corrected import
-import com.akslabs.chitralaya.utils.Constants.SAMPLE_API_KEY
+import com.akslabs.SandeshVahak.data.localdb.Preferences // Corrected import
+import com.akslabs.SandeshVahak.utils.Constants.SAMPLE_API_KEY
 import com.github.kotlintelegrambot.Bot
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
@@ -15,8 +15,8 @@ import com.github.kotlintelegrambot.entities.files.Document
 import com.github.kotlintelegrambot.entities.files.PhotoSize
 import com.github.kotlintelegrambot.network.Response
 import com.github.kotlintelegrambot.types.TelegramBotResult
-import com.akslabs.chitralaya.utils.Operations
-import com.akslabs.chitralaya.utils.PerformanceMonitor
+import com.akslabs.SandeshVahak.utils.Operations
+import com.akslabs.SandeshVahak.utils.PerformanceMonitor
 import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

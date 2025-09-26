@@ -1,8 +1,8 @@
-package com.akslabs.chitralaya.data.localdb.backup
+package com.akslabs.SandeshVahak.data.localdb.backup
 
 import androidx.annotation.Keep
-import com.akslabs.chitralaya.data.localdb.entities.SmsMessage
-import com.akslabs.chitralaya.data.localdb.entities.RemoteSmsMessage
+import com.akslabs.SandeshVahak.data.localdb.entities.SmsMessage
+import com.akslabs.SandeshVahak.data.localdb.entities.RemoteSmsMessage
 
 @Keep
 data class BackupFile(

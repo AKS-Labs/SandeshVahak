@@ -1,16 +1,16 @@
-package com.akslabs.chitralaya.data.localdb
+package com.akslabs.SandeshVahak.data.localdb
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.akslabs.chitralaya.data.localdb.dao.SmsMessageDao
-import com.akslabs.chitralaya.data.localdb.dao.RemoteSmsMessageDao
-import com.akslabs.chitralaya.data.localdb.entities.SmsMessage
-import com.akslabs.chitralaya.data.localdb.entities.RemoteSmsMessage
-import com.akslabs.chitralaya.data.localdb.migration.Migration4to5_AddSmsSupport
-import com.akslabs.chitralaya.data.localdb.migration.Migration5to6_RemovePhotoTables
-import com.akslabs.chitralaya.data.localdb.migration.Migration6to7_FixSchemaIntegrity
+import com.akslabs.SandeshVahak.data.localdb.dao.SmsMessageDao
+import com.akslabs.SandeshVahak.data.localdb.dao.RemoteSmsMessageDao
+import com.akslabs.SandeshVahak.data.localdb.entities.SmsMessage
+import com.akslabs.SandeshVahak.data.localdb.entities.RemoteSmsMessage
+import com.akslabs.SandeshVahak.data.localdb.migration.Migration4to5_AddSmsSupport
+import com.akslabs.SandeshVahak.data.localdb.migration.Migration5to6_RemovePhotoTables
+import com.akslabs.SandeshVahak.data.localdb.migration.Migration6to7_FixSchemaIntegrity
 
 @Database(
     entities = [

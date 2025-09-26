@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.ui
+package com.akslabs.SandeshVahak.ui
 
 import android.Manifest
 import android.app.Activity
@@ -21,20 +21,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import com.akslabs.chitralaya.data.localdb.Preferences
-import com.akslabs.chitralaya.debug.DatabaseDebugHelper // Corrected import
-import com.akslabs.chitralaya.ui.main.MainPage // Corrected import
-import com.akslabs.chitralaya.ui.main.MainViewModel // Corrected import
-import com.akslabs.chitralaya.ui.main.nav.screenScopedViewModel // Corrected import
-import com.akslabs.chitralaya.ui.onboarding.OnboardingPage // Corrected import
-import com.akslabs.chitralaya.ui.permission.PermissionDialogScreen // Corrected import
-import com.akslabs.chitralaya.ui.permission.PermissionViewModel // Corrected import
-import com.akslabs.chitralaya.ui.theme.AppTheme // Corrected import
-import com.akslabs.chitralaya.utils.NotificationHelper // Assuming this is correct, or will be flagged by build
-import com.akslabs.chitralaya.workers.WorkModule // Corrected import
-import com.akslabs.chitralaya.services.SmsContentObserver
-import com.akslabs.chitralaya.services.SmsObserverService
-import com.akslabs.chitralaya.data.localdb.DbHolder // Added import
+import com.akslabs.SandeshVahak.data.localdb.Preferences
+import com.akslabs.SandeshVahak.debug.DatabaseDebugHelper // Corrected import
+import com.akslabs.SandeshVahak.ui.main.MainPage // Corrected import
+import com.akslabs.SandeshVahak.ui.main.MainViewModel // Corrected import
+import com.akslabs.SandeshVahak.ui.main.nav.screenScopedViewModel // Corrected import
+import com.akslabs.SandeshVahak.ui.onboarding.OnboardingPage // Corrected import
+import com.akslabs.SandeshVahak.ui.permission.PermissionDialogScreen // Corrected import
+import com.akslabs.SandeshVahak.ui.permission.PermissionViewModel // Corrected import
+import com.akslabs.SandeshVahak.ui.theme.AppTheme // Corrected import
+import com.akslabs.SandeshVahak.utils.NotificationHelper // Assuming this is correct, or will be flagged by build
+import com.akslabs.SandeshVahak.workers.WorkModule // Corrected import
+import com.akslabs.SandeshVahak.services.SmsContentObserver
+import com.akslabs.SandeshVahak.services.SmsObserverService
+import com.akslabs.SandeshVahak.data.localdb.DbHolder // Added import
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -117,7 +117,7 @@ class MainActivity : ComponentActivity() {
                                         // Read existing device SMS into local DB so Device screen shows content even if sync is off
                                         lifecycleScope.launch {
                                             try {
-                                                com.akslabs.chitralaya.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
+                                                com.akslabs.SandeshVahak.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
                                             } catch (_: Exception) {}
                                         }
                                         triggerInitialSmsReading()
@@ -193,15 +193,15 @@ class MainActivity : ComponentActivity() {
                         if (syncMode == "NEW_ONLY" && baseline > 0L) {
                             // NEW_ONLY mode: only import messages after baseline
                             android.util.Log.i("MainActivity", "NEW_ONLY mode: importing only messages after baseline ${'$'}baseline")
-                            com.akslabs.chitralaya.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
+                            com.akslabs.SandeshVahak.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
                         } else {
                             // ALL mode or no baseline: import all messages
                             android.util.Log.i("MainActivity", "ALL mode: importing all SMS messages")
-                            com.akslabs.chitralaya.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
+                            com.akslabs.SandeshVahak.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
                         }
                     } else {
                         // Database has messages - just sync new ones
-                        com.akslabs.chitralaya.services.SmsReaderService.syncNewSmsToDatabase(this@MainActivity)
+                        com.akslabs.SandeshVahak.services.SmsReaderService.syncNewSmsToDatabase(this@MainActivity)
                     }
                 } catch (_: Exception) {}
             }

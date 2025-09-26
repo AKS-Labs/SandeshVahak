@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.ui.components
+package com.akslabs.SandeshVahak.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,8 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.akslabs.chitralaya.data.localdb.entities.RemoteSmsMessage
-import com.akslabs.chitralaya.data.localdb.entities.SmsMessage
+import com.akslabs.SandeshVahak.data.localdb.entities.RemoteSmsMessage
+import com.akslabs.SandeshVahak.data.localdb.entities.SmsMessage
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
-        android:name="com.akslabs.chitralaya.App"
+        android:name="com.akslabs.SandeshVahak.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -30,7 +30,7 @@
 
         <!-- SMS Content Observer Service -->
         <service
-            android:name="com.akslabs.chitralaya.services.SmsObserverService"
+            android:name="com.akslabs.SandeshVahak.services.SmsObserverService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="dataSync"
@@ -39,13 +39,13 @@
 
         <!-- Receiver to restart foreground service after kill/task removal -->
         <receiver
-            android:name="com.akslabs.chitralaya.receivers.ServiceRestarterReceiver"
+            android:name="com.akslabs.SandeshVahak.receivers.ServiceRestarterReceiver"
             android:enabled="true"
             android:exported="false" />
 
         <!-- Boot Receiver for restarting SMS sync after reboot -->
         <receiver
-            android:name="com.akslabs.chitralaya.receivers.BootReceiver"
+            android:name="com.akslabs.SandeshVahak.receivers.BootReceiver"
             android:enabled="true"
             android:exported="true"
             android:directBootAware="true">
@@ -68,7 +68,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
         <activity
-            android:name="com.akslabs.chitralaya.ui.MainActivity"
+            android:name="com.akslabs.SandeshVahak.ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Telegramdrive">
             <intent-filter>

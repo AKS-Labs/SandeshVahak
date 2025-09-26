@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.utils
+package com.akslabs.SandeshVahak.utils
 
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope

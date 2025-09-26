@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.ui.theme // Corrected package declaration
+package com.akslabs.SandeshVahak.ui.theme // Corrected package declaration
 
 import android.app.Activity
 import android.os.Build
@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.akslabs.chitralaya.ui.theme.AppTypography // Corrected import for AppTypography
+import com.akslabs.SandeshVahak.ui.theme.AppTypography // Corrected import for AppTypography
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,

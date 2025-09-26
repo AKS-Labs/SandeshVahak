@@ -1,16 +1,16 @@
-package com.akslabs.chitralaya
+package com.akslabs.SandeshVahak
 
 import android.app.Application
 import android.util.Log
 
-import com.akslabs.chitralaya.api.BotApi // Corrected import
-import com.akslabs.chitralaya.data.localdb.DbHolder // Corrected import
-import com.akslabs.chitralaya.data.localdb.Preferences
+import com.akslabs.SandeshVahak.api.BotApi // Corrected import
+import com.akslabs.SandeshVahak.data.localdb.DbHolder // Corrected import
+import com.akslabs.SandeshVahak.data.localdb.Preferences
 
-import com.akslabs.chitralaya.utils.connectivity.ConnectivityObserver // Corrected import
-import com.akslabs.chitralaya.workers.WorkModule // Corrected import
-import com.akslabs.chitralaya.services.SmsContentObserver
-import com.akslabs.chitralaya.utils.PerformanceMonitor
+import com.akslabs.SandeshVahak.utils.connectivity.ConnectivityObserver // Corrected import
+import com.akslabs.SandeshVahak.workers.WorkModule // Corrected import
+import com.akslabs.SandeshVahak.services.SmsContentObserver
+import com.akslabs.SandeshVahak.utils.PerformanceMonitor
 
 
 class App : Application() {

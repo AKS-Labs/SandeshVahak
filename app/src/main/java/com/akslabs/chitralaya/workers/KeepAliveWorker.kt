@@ -1,12 +1,12 @@
-package com.akslabs.chitralaya.workers
+package com.akslabs.SandeshVahak.workers
 
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.akslabs.chitralaya.data.localdb.Preferences // Corrected import
-import com.akslabs.chitralaya.services.SmsObserverService
+import com.akslabs.SandeshVahak.data.localdb.Preferences // Corrected import
+import com.akslabs.SandeshVahak.services.SmsObserverService
 
 /**
  * Periodic lightweight worker to ensure the foreground SMS observer service is running
@@ -53,8 +53,8 @@ class KeepAliveWorker(
             try {
                 val mode = Preferences.getString(Preferences.smsSyncModeKey, "ALL")
                 if (mode == "ALL") {
-                    // Assuming com.akslabs.chitralaya.workers.WorkModule is the correct path for WorkModule
-                    com.akslabs.chitralaya.workers.WorkModule.SmsSync.enqueue()
+                    // Assuming com.akslabs.SandeshVahak.workers.WorkModule is the correct path for WorkModule
+                    com.akslabs.SandeshVahak.workers.WorkModule.SmsSync.enqueue()
                 }
             } catch (e: Exception) {
                 Log.w(TAG, "KeepAlive: Failed to ensure periodic sync scheduling", e)

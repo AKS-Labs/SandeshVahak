@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.services
+package com.akslabs.SandeshVahak.services
 
 import android.content.ContentResolver
 import android.content.Context
@@ -6,11 +6,11 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.Telephony
 import android.util.Log
-import com.akslabs.chitralaya.data.localdb.DbHolder
-import com.akslabs.chitralaya.data.localdb.Preferences // Corrected import
-import com.akslabs.chitralaya.data.localdb.entities.SmsMessage
-import com.akslabs.chitralaya.utils.Operations
-import com.akslabs.chitralaya.utils.PerformanceMonitor
+import com.akslabs.SandeshVahak.data.localdb.DbHolder
+import com.akslabs.SandeshVahak.data.localdb.Preferences // Corrected import
+import com.akslabs.SandeshVahak.data.localdb.entities.SmsMessage
+import com.akslabs.SandeshVahak.utils.Operations
+import com.akslabs.SandeshVahak.utils.PerformanceMonitor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield

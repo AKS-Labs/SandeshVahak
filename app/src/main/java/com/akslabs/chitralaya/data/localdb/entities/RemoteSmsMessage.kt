@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.data.localdb.entities
+package com.akslabs.SandeshVahak.data.localdb.entities
 
 import android.os.Parcelable
 import androidx.annotation.Keep

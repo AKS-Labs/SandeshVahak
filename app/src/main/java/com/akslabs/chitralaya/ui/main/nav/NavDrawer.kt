@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.ui.main.nav
+package com.akslabs.SandeshVahak.ui.main.nav
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -38,8 +38,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.akslabs.chitralaya.R
-import com.akslabs.chitralaya.ui.main.MainViewModel
+import com.akslabs.SandeshVahak.R
+import com.akslabs.SandeshVahak.ui.main.MainViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

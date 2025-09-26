@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.workers // Corrected package declaration
+package com.akslabs.SandeshVahak.workers // Corrected package declaration
 
 import android.content.Context
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
@@ -7,11 +7,11 @@ import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import com.akslabs.chitralaya.R // Corrected R import
-import com.akslabs.chitralaya.data.localdb.backup.BackupHelper // Corrected import
-import com.akslabs.chitralaya.utils.toastFromMainThread // Corrected import
-import com.akslabs.chitralaya.workers.WorkModule.NOTIFICATION_ID // Corrected import
-import com.akslabs.chitralaya.workers.makeStatusNotification // Corrected import
+import com.akslabs.SandeshVahak.R // Corrected R import
+import com.akslabs.SandeshVahak.data.localdb.backup.BackupHelper // Corrected import
+import com.akslabs.SandeshVahak.utils.toastFromMainThread // Corrected import
+import com.akslabs.SandeshVahak.workers.WorkModule.NOTIFICATION_ID // Corrected import
+import com.akslabs.SandeshVahak.workers.makeStatusNotification // Corrected import
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.data.localdb.dao
+package com.akslabs.SandeshVahak.data.localdb.dao
 
 import androidx.annotation.Keep
 import androidx.paging.PagingSource
@@ -8,7 +8,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.akslabs.chitralaya.data.localdb.entities.RemoteSmsMessage
+import com.akslabs.SandeshVahak.data.localdb.entities.RemoteSmsMessage
 import kotlinx.coroutines.flow.Flow
 
 @Keep

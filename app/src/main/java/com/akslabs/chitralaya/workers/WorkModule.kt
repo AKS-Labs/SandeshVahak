@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.workers
+package com.akslabs.SandeshVahak.workers
 
 import android.content.Context
 
@@ -13,12 +13,12 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.akslabs.chitralaya.data.localdb.Preferences
-import com.akslabs.chitralaya.workers.SmsSyncWorker
-import com.akslabs.chitralaya.workers.InstantSmsSyncWorker
-import com.akslabs.chitralaya.workers.QuickSmsSyncWorker
-import com.akslabs.chitralaya.workers.KeepAliveWorker
-import com.akslabs.chitralaya.workers.StartupSyncWorker
+import com.akslabs.SandeshVahak.data.localdb.Preferences
+import com.akslabs.SandeshVahak.workers.SmsSyncWorker
+import com.akslabs.SandeshVahak.workers.InstantSmsSyncWorker
+import com.akslabs.SandeshVahak.workers.QuickSmsSyncWorker
+import com.akslabs.SandeshVahak.workers.KeepAliveWorker
+import com.akslabs.SandeshVahak.workers.StartupSyncWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import java.time.Duration

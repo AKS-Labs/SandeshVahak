@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.workers
+package com.akslabs.SandeshVahak.workers
 
 import android.Manifest
 import android.app.NotificationManager
@@ -10,12 +10,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.akslabs.chitralaya.R
-import com.akslabs.chitralaya.data.localdb.Preferences // Corrected import
-import com.akslabs.chitralaya.services.SmsContentObserver
-import com.akslabs.chitralaya.services.SmsSyncService
-import com.akslabs.chitralaya.services.SmsSyncResult
-import com.akslabs.chitralaya.utils.NotificationHelper // Assuming NotificationHelper is in this package
+import com.akslabs.SandeshVahak.R
+import com.akslabs.SandeshVahak.data.localdb.Preferences // Corrected import
+import com.akslabs.SandeshVahak.services.SmsContentObserver
+import com.akslabs.SandeshVahak.services.SmsSyncService
+import com.akslabs.SandeshVahak.services.SmsSyncResult
+import com.akslabs.SandeshVahak.utils.NotificationHelper // Assuming NotificationHelper is in this package
 
 class StartupSyncWorker(
     private val context: Context, // Changed to val

@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.data.localdb // Corrected package declaration
+package com.akslabs.SandeshVahak.data.localdb // Corrected package declaration
 
 import android.content.Context
 

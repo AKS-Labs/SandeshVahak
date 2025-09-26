@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.ui.onboarding
+package com.akslabs.SandeshVahak.ui.onboarding
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.akslabs.chitralaya.R
+import com.akslabs.SandeshVahak.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

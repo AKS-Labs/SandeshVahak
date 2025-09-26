@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.workers
+package com.akslabs.SandeshVahak.workers
 
 import android.content.Context
 import android.content.pm.ServiceInfo
@@ -6,15 +6,15 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import com.akslabs.chitralaya.R
-import com.akslabs.chitralaya.services.SmsSyncService
-import com.akslabs.chitralaya.services.SmsSyncResult
-import com.akslabs.chitralaya.utils.NotificationHelper
+import com.akslabs.SandeshVahak.R
+import com.akslabs.SandeshVahak.services.SmsSyncService
+import com.akslabs.SandeshVahak.services.SmsSyncResult
+import com.akslabs.SandeshVahak.utils.NotificationHelper
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.Constraints
 import androidx.work.NetworkType
-import com.akslabs.chitralaya.data.localdb.Preferences // Added import for clarity, though FQNs are being replaced
+import com.akslabs.SandeshVahak.data.localdb.Preferences // Added import for clarity, though FQNs are being replaced
 
 /**
  * Background worker for syncing SMS messages to Telegram channel
@@ -143,7 +143,7 @@ class SmsSyncWorker(
             try {
                 // Ensure keep-alive is scheduled
                 // Assuming WorkModule's Preferences usage will be handled separately if needed
-                com.akslabs.chitralaya.workers.WorkModule.SmsSync.enqueueKeepAlive()
+                com.akslabs.SandeshVahak.workers.WorkModule.SmsSync.enqueueKeepAlive()
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to enqueue keep-alive worker", e)
             }

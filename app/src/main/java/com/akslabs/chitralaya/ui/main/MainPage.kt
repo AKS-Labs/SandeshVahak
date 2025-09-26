@@ -1,4 +1,4 @@
-package com.akslabs.chitralaya.ui.main
+package com.akslabs.SandeshVahak.ui.main
 
 import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
@@ -32,16 +32,16 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.work.WorkInfo
-import com.akslabs.chitralaya.R
-import com.akslabs.chitralaya.data.localdb.Preferences
-import com.akslabs.chitralaya.services.SmsObserverService
-import com.akslabs.chitralaya.services.SmsContentObserver
-import com.akslabs.chitralaya.ui.components.ConnectivityStatusPopup // Corrected import
-import com.akslabs.chitralaya.ui.main.nav.AppNavHost // Corrected import
-import com.akslabs.chitralaya.ui.main.nav.Screens // Corrected import
-import com.akslabs.chitralaya.ui.main.nav.screenScopedViewModel // Corrected import
-import com.akslabs.chitralaya.workers.WorkModule // Corrected import
-import com.akslabs.chitralaya.ui.main.SyncState // Assuming SyncState will be in this package or imported correctly later
+import com.akslabs.SandeshVahak.R
+import com.akslabs.SandeshVahak.data.localdb.Preferences
+import com.akslabs.SandeshVahak.services.SmsObserverService
+import com.akslabs.SandeshVahak.services.SmsContentObserver
+import com.akslabs.SandeshVahak.ui.components.ConnectivityStatusPopup // Corrected import
+import com.akslabs.SandeshVahak.ui.main.nav.AppNavHost // Corrected import
+import com.akslabs.SandeshVahak.ui.main.nav.Screens // Corrected import
+import com.akslabs.SandeshVahak.ui.main.nav.screenScopedViewModel // Corrected import
+import com.akslabs.SandeshVahak.workers.WorkModule // Corrected import
+import com.akslabs.SandeshVahak.ui.main.SyncState // Assuming SyncState will be in this package or imported correctly later
 
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
