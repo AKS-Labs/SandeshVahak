@@ -1,6 +1,7 @@
 package com.akslabs.SandeshVahak.ui.main
 
 import android.content.Intent
+import android.util.Log // Added import
 import androidx.compose.animation.AnimatedVisibility
 import androidx.activity.compose.BackHandler // Keep if used, though not visible in snippet for this change
 
@@ -119,6 +120,14 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
         isSyncEnabledForTopAppBar = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
     }
 
+    // New LaunchedEffect to ensure service is started in foreground if sync is enabled when UI is active
+    LaunchedEffect(isSyncEnabledForTopAppBar, context) {
+        if (isSyncEnabledForTopAppBar) {
+            Log.d("MainPage", "Sync is enabled, ensuring SmsObserverService is started with ACTION_START_SERVICE.")
+            SmsObserverService.start(context, SmsObserverService.ACTION_START_SERVICE)
+        }
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             modifier = Modifier
@@ -231,6 +240,7 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                                     putLong(Preferences.smsSyncEnabledSinceKey, 0L) 
                                 }
                                 isSyncEnabledForTopAppBar = true
+                                // ACTION_START_SERVICE is the default, ensuring foreground promotion
                                 SmsObserverService.start(context) 
                                 SmsContentObserver.startObserving(context)
                                 showModeDialog = false
@@ -249,6 +259,7 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                                     }
                                 }
                                 isSyncEnabledForTopAppBar = true
+                                // ACTION_START_SERVICE is the default, ensuring foreground promotion
                                 SmsObserverService.start(context)
                                 SmsContentObserver.startObserving(context)
                                 showModeDialog = false

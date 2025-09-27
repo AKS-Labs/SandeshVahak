@@ -17,15 +17,14 @@ class BootServiceStartWorker(
     }
 
     override suspend fun doWork(): Result {
-        Log.d(TAG, "doWork CALLED - Attempting to start SmsObserverService from boot.")
+        Log.d(TAG, "doWork CALLED - Attempting to send ACTION_START_SERVICE to SmsObserverService.")
         return try {
-            // It's important that SmsObserverService.start() eventually calls 
-            // ContextCompat.startForegroundService() and then service.startForeground()
-            SmsObserverService.start(applicationContext)
-            Log.i(TAG, "SmsObserverService.start() called successfully from worker.")
+            // Start the service with ACTION_START_SERVICE to promote it to foreground
+            SmsObserverService.start(applicationContext, SmsObserverService.ACTION_START_SERVICE)
+            Log.i(TAG, "ACTION_START_SERVICE sent to SmsObserverService successfully from worker.")
             Result.success()
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start SmsObserverService from worker.", e)
+            Log.e(TAG, "Failed to send ACTION_START_SERVICE to SmsObserverService from worker.", e)
             Result.failure() 
         }
     }
