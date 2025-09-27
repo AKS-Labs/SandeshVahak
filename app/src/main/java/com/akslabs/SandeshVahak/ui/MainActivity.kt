@@ -2,6 +2,8 @@ package com.akslabs.SandeshVahak.ui
 
 import android.Manifest
 import android.app.Activity
+import android.app.NotificationManager // Added import
+import android.content.Context // Added import
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -166,6 +168,22 @@ class MainActivity : ComponentActivity() {
             }
 
             Log.d("MainActivity", "Core services ready. Proceeding with onResume logic.")
+
+            // --- New logic for starting service and dismissing notification ---
+            val isSyncEnabled = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
+            if (isSyncEnabled) {
+                Log.i("MainActivity", "onResume: SMS Sync is enabled, ensuring SmsObserverService is started.")
+                SmsObserverService.start(this@MainActivity)
+
+                // Dismiss the "Reactivate Sync" notification
+                val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.cancel(NotificationHelper.NOTIFICATION_ID_REACTIVATE_SYNC)
+                Log.d("MainActivity", "onResume: Attempted to cancel NOTIFICATION_ID_REACTIVATE_SYNC.")
+            } else {
+                Log.i("MainActivity", "onResume: SMS Sync is disabled.")
+            }
+            // --- End of new logic ---
+
             withContext(Dispatchers.Main) {
                 val currentHasSmsPerm = ContextCompat.checkSelfPermission(
                     this@MainActivity,
@@ -191,7 +209,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            if (hasSmsPerm) {
+            if (hasSmsPerm) { // This block seems to be for initial SMS import if permissions were just granted. Keep as is.
                 try {
                     val syncMode = Preferences.getString(Preferences.smsSyncModeKey, "ALL") ?: "ALL"
                     val baseline = Preferences.getLong(Preferences.smsSyncEnabledSinceKey, 0L)
