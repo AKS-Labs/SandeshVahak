@@ -3,74 +3,94 @@ package com.akslabs.SandeshVahak.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
+import android.os.UserManager
 import android.util.Log
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.akslabs.SandeshVahak.data.localdb.Preferences
-import com.akslabs.SandeshVahak.services.SmsObserverService
-import com.akslabs.SandeshVahak.utils.NotificationHelper
-import com.akslabs.SandeshVahak.workers.WorkModule
+import com.akslabs.SandeshVahak.utils.NotificationHelper // Kept for potential future use or if createNotificationChannels is called
+import com.akslabs.SandeshVahak.workers.BootServiceStartWorker
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class BootReceiver : BroadcastReceiver() {
 
     companion object {
         private const val TAG = "BootReceiver_DEBUG"
+        // Flag to ensure initialization only happens once after the first unlock post-boot
+        private var isUserUnlockedAtleastOnce = false
+        // Flag to prevent re-initialization attempts if multiple boot-related intents arrive closely
+        private var isInitializationAttemptedPostBoot = false
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        // ADD THIS LINE:
-        Log.i(TAG, "IMMEDIATE onReceive ENTRY - Action: ${intent.action}")
+        Log.i(TAG, "onReceive ENTRY - Action: ${intent.action}, isUserUnlockedAtleastOnce: $isUserUnlockedAtleastOnce, isInitAttempted: $isInitializationAttemptedPostBoot")
 
-        when (intent.action) {
+        val action = intent.action
+        val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
+        val isUserCurrentlyUnlocked = userManager.isUserUnlocked
+
+        if (isUserCurrentlyUnlocked) {
+            if (!isUserUnlockedAtleastOnce) {
+                Log.i(TAG, "User is now unlocked. Setting isUserUnlockedAtleastOnce to true.")
+                isUserUnlockedAtleastOnce = true
+            }
+        }
+
+        when (action) {
             Intent.ACTION_BOOT_COMPLETED,
-            Intent.ACTION_LOCKED_BOOT_COMPLETED, // Will still log entry, but logic below might wait
+            Intent.ACTION_LOCKED_BOOT_COMPLETED, // Will be handled, but full init waits for unlock
             Intent.ACTION_USER_UNLOCKED,
-            Intent.ACTION_MY_PACKAGE_REPLACED,
-            Intent.ACTION_PACKAGE_REPLACED -> {
-                Log.i(TAG, "Boot/Package event received: ${intent.action}. Starting new thread for initialization.")
+            Intent.ACTION_MY_PACKAGE_REPLACED -> {
+
+                // For ACTION_BOOT_COMPLETED, if we already tried initializing (e.g., due to a quick USER_UNLOCKED), skip.
+                if (action == Intent.ACTION_BOOT_COMPLETED && isInitializationAttemptedPostBoot && isUserUnlockedAtleastOnce) {
+                    Log.w(TAG, "BOOT_COMPLETED received, but initialization already done post-unlock. Skipping.")
+                    return
+                }
                 
-                // Only proceed with full initialization if user is unlocked or it's a regular boot completed
-                // (for non-Direct Boot aware part or if device is already unlocked)
-                // or if it's a package replacement event.
-                if (intent.action == Intent.ACTION_USER_UNLOCKED ||
-                    intent.action == Intent.ACTION_BOOT_COMPLETED || // BOOT_COMPLETED might fire after unlock on some devices/setups
-                    intent.action == Intent.ACTION_MY_PACKAGE_REPLACED || // Package updates usually happen when unlocked
-                    intent.action == Intent.ACTION_PACKAGE_REPLACED) {
+                // If user becomes unlocked, and we haven't tried init yet, OR if it's BOOT_COMPLETED and user is already unlocked
+                if (isUserUnlockedAtleastOnce && !isInitializationAttemptedPostBoot) {
+                    isInitializationAttemptedPostBoot = true // Set flag to prevent re-runs from subsequent related intents
+                    Log.i(TAG, "Conditions met for initialization (User unlocked, init not yet attempted). Action: $action")
+                    
+                    val pendingResult: PendingResult = goAsync()
 
-                    Thread {
-                        Log.d(TAG, "Thread for initializeSmsSync START (Action: ${intent.action})")
-                        // Pass a flag indicating if storage is likely unlocked
-                        initializeSmsSync(context.applicationContext, true)
-                        Log.d(TAG, "Thread for initializeSmsSync END (Action: ${intent.action})")
-                    }.start()
-
-                } else if (intent.action == Intent.ACTION_LOCKED_BOOT_COMPLETED) {
-                    Log.i(TAG, "Device is in LOCKED_BOOT_COMPLETED state. Deferring full sync initialization until USER_UNLOCKED.")
-                    // Optional: You could enqueue a very simple worker here that waits for user unlock
-                    // or simply rely on the USER_UNLOCKED broadcast to come later.
-                    // For now, we'll just log and wait for USER_UNLOCKED.
-                    // You could also try initializing Preferences in device-protected storage if needed here.
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            Log.d(TAG, "Coroutine for initializeSmsSync START (Action: $action)")
+                            initializeSmsSync(context.applicationContext)
+                            Log.d(TAG, "Coroutine for initializeSmsSync END (Action: $action)")
+                        } finally {
+                            pendingResult.finish()
+                        }
+                    }
+                } else if (!isUserUnlockedAtleastOnce) {
+                    Log.i(TAG, "Device not yet unlocked for the first time post-boot. Deferring initialization. Action: $action")
+                    // If BOOT_COMPLETED arrives before USER_UNLOCKED, ensure isInitializationAttemptedPostBoot is false
+                    // so that the subsequent USER_UNLOCKED can trigger initialization.
+                    if (action == Intent.ACTION_BOOT_COMPLETED) {
+                         isInitializationAttemptedPostBoot = false
+                    }
+                } else if (isInitializationAttemptedPostBoot) {
+                     Log.i(TAG, "Initialization already attempted/done post-unlock. Skipping for action: $action")
                 }
             }
             else -> {
-                Log.w(TAG, "Received unhandled action: ${intent.action}")
+                Log.w(TAG, "Received unhandled action: $action")
             }
         }
-        Log.d(TAG, "onReceive END - Action: ${intent.action}")
+        Log.d(TAG, "onReceive EXIT - Action: $action")
     }
 
-    // Changed isUserUnlocked to isStorageLikelyUnlocked for clarity
-    private fun initializeSmsSync(context: Context, isStorageLikelyUnlocked: Boolean) {
-        Log.d(TAG, "initializeSmsSync START - isStorageLikelyUnlocked: $isStorageLikelyUnlocked")
-        
-        if (!isStorageLikelyUnlocked) {
-            Log.w(TAG, "initializeSmsSync: Storage not likely unlocked. Aborting preference-dependent sync.")
-            // Potentially show a notification or schedule a check for later when user unlocks.
-            return
-        }
+    private fun initializeSmsSync(context: Context) {
+        Log.d(TAG, "initializeSmsSync START")
 
         try {
             Log.d(TAG, "Attempting Preferences.init()")
-            Preferences.init(context) // This requires credential-encrypted storage
+            Preferences.init(context) 
             Log.d(TAG, "Preferences.init() successful.")
 
             val autoStartAllowed = Preferences.getBoolean(Preferences.isAutoStartOnBootEnabledKey, true)
@@ -79,32 +99,32 @@ class BootReceiver : BroadcastReceiver() {
             Log.i(TAG, "Preference state: autoStartAllowed=$autoStartAllowed, isSmsSyncEnabled=$isEnabled")
 
             if (autoStartAllowed && isEnabled) {
-                Log.i(TAG, "Sync conditions met. Proceeding to start service.")
-
-                Log.d(TAG, "Attempting NotificationHelper.createNotificationChannels()")
-                NotificationHelper.createNotificationChannels(context)
-                Log.d(TAG, "NotificationHelper.createNotificationChannels() successful.")
+                Log.i(TAG, "Sync conditions met. Proceeding to schedule service start worker.")
                 
-                Log.d(TAG, "Attempting SmsObserverService.start()")
+                // Ensure notification channels are created. SmsObserverService also does this, but good to have fallback.
+                // NotificationHelper.createNotificationChannels(context) 
+
+                Log.d(TAG, "Attempting to enqueue BootServiceStartWorker")
                 try {
-                    SmsObserverService.start(context)
-                    Log.i(TAG, "SmsObserverService.start() called successfully.")
+                    val bootServiceStartWorkRequest = OneTimeWorkRequestBuilder<BootServiceStartWorker>().build()
+                    WorkManager.getInstance(context).enqueueUniqueWork(
+                        BootServiceStartWorker.UNIQUE_WORK_NAME,
+                        ExistingWorkPolicy.KEEP, // KEEP: If work already exists, do nothing. Suitable for boot operation.
+                        bootServiceStartWorkRequest
+                    )
+                    Log.i(TAG, "BootServiceStartWorker enqueued successfully.")
                 } catch (e: Exception) {
-                    Log.e(TAG, "SmsObserverService.start() FAILED.", e)
-                    Log.d(TAG, "Attempting to show service start failure notification.")
-                    NotificationHelper.showServiceStartFailedNotification(context)
-                    Log.d(TAG, "Service start failure notification call completed.")
+                    Log.e(TAG, "BootServiceStartWorker enqueue FAILED.", e)
+                    // NotificationHelper.showServiceStartFailedNotification(context) // Optional: Notify if enqueueing fails
                 }
             } else {
-                Log.w(TAG, "Sync conditions NOT met (autoStartAllowed=$autoStartAllowed, isSmsSyncEnabled=$isEnabled). Cancelling workers.")
-                // Cancel workers if sync is not supposed to run
-                // WorkModule.SmsSync.cancel() // Let's be careful with cancelling; ensure this is the desired logic
-                // WorkModule.SmsSync.cancelKeepAlive()
-                Log.i(TAG,"Sync not started due to preference settings. Consider if workers should be cancelled here.")
+                Log.w(TAG, "Sync conditions NOT met (autoStartAllowed=$autoStartAllowed, isSmsSyncEnabled=$isEnabled). No service start scheduled.")
+                // If sync is not supposed to run, cancel any potentially scheduled BootServiceStartWorker
+                WorkManager.getInstance(context).cancelUniqueWork(BootServiceStartWorker.UNIQUE_WORK_NAME)
+                Log.i(TAG, "Cancelled any pending BootServiceStartWorker as sync conditions not met.")
             }
         } catch (e: Exception) {
-            // Catching exceptions during Preferences.init() if storage isn't ready.
-            Log.e(TAG, "CRITICAL error in initializeSmsSync. Potentially due to storage access before unlock.", e)
+            Log.e(TAG, "CRITICAL error in initializeSmsSync. Check for storage access or other init issues.", e)
         }
         Log.d(TAG, "initializeSmsSync END")
     }

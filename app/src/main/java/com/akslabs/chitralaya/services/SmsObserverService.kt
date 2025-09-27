@@ -37,6 +37,7 @@ class SmsObserverService : Service() {
         const val ACTION_START_SERVICE = "ACTION_START_SERVICE"
         const val ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE"
         const val UNIQUE_WORK_NAME = "SmsSyncWork"
+        var isServiceCurrentlyActive = false // Flag to indicate service active state
 
         fun start(context: Context) {
             Log.d(TAG, "Companion.start() CALLED")
@@ -82,6 +83,7 @@ class SmsObserverService : Service() {
 
     override fun onCreate() {
         Log.d(TAG, "onCreate() CALLED")
+        isServiceCurrentlyActive = true // Service is now active
         super.onCreate()
         preferences = getSharedPreferences("preferences", Context.MODE_PRIVATE)
         preferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
@@ -223,6 +225,7 @@ class SmsObserverService : Service() {
 
     override fun onDestroy() {
         Log.d(TAG, "onDestroy() CALLED")
+        isServiceCurrentlyActive = false // Service is no longer active
         super.onDestroy()
         preferences.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
         SmsContentObserver.stopObserving(this)

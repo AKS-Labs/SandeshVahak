@@ -5,8 +5,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.akslabs.SandeshVahak.data.localdb.Preferences
-// Remove direct import of SmsObserverService if no longer directly called
-// import com.akslabs.SandeshVahak.services.SmsObserverService
+import com.akslabs.SandeshVahak.services.SmsObserverService // Added import
 import com.akslabs.SandeshVahak.utils.NotificationHelper // Import NotificationHelper
 
 class KeepAliveWorker(
@@ -16,6 +15,13 @@ class KeepAliveWorker(
 
     override suspend fun doWork(): Result {
         Log.d(TAG, "doWork() CALLED")
+
+        // Check if SmsObserverService is already active
+        if (SmsObserverService.isServiceCurrentlyActive) {
+            Log.i(TAG, "SmsObserverService is already active. KeepAliveWorker will not run.")
+            return Result.success()
+        }
+
         try {
             // Initialize preferences to ensure they're available
             try {
@@ -29,9 +35,8 @@ class KeepAliveWorker(
             Log.d(TAG, "Current SMS Sync enabled state: $isSyncEnabled")
 
             if (isSyncEnabled) {
-                Log.i(TAG, "SMS Sync is enabled. KeepAliveWorker will show notification to reactivate service.")
-                // Instead of starting the service directly, show a notification to prompt user.
-                NotificationHelper.showReactivateSyncNotification(applicationContext) // Use appContext
+                Log.i(TAG, "SMS Sync is enabled. KeepAliveWorker will ensure sync worker is scheduled.")
+                // NotificationHelper.showReactivateSyncNotification(applicationContext) // Removed this line
 
                 // Also, ensure your periodic background sync worker is scheduled.
                 WorkModule.SmsSync.enqueue() // Corrected method call
