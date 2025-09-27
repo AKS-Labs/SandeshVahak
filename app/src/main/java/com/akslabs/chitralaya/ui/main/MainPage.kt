@@ -2,7 +2,7 @@ package com.akslabs.SandeshVahak.ui.main
 
 import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.activity.compose.BackHandler
+import androidx.activity.compose.BackHandler // Keep if used, though not visible in snippet for this change
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,7 +11,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material3.* // Existing M3 import, should cover ripple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight // Added for fontWeight access
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.view.WindowCompat
@@ -29,6 +30,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.statusBars
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination // For popUpTo
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.work.WorkInfo
@@ -36,14 +38,16 @@ import com.akslabs.SandeshVahak.R
 import com.akslabs.SandeshVahak.data.localdb.Preferences
 import com.akslabs.SandeshVahak.services.SmsObserverService
 import com.akslabs.SandeshVahak.services.SmsContentObserver
-import com.akslabs.SandeshVahak.ui.components.ConnectivityStatusPopup // Corrected import
-import com.akslabs.SandeshVahak.ui.main.nav.AppNavHost // Corrected import
-import com.akslabs.SandeshVahak.ui.main.nav.Screens // Corrected import
-import com.akslabs.SandeshVahak.ui.main.nav.screenScopedViewModel // Corrected import
-import com.akslabs.SandeshVahak.workers.WorkModule // Corrected import
-import com.akslabs.SandeshVahak.ui.main.SyncState // Assuming SyncState will be in this package or imported correctly later
+import com.akslabs.SandeshVahak.ui.components.ConnectivityStatusPopup
+import com.akslabs.SandeshVahak.ui.main.nav.AppNavHost
+import com.akslabs.SandeshVahak.ui.main.nav.Screens
+import com.akslabs.SandeshVahak.ui.main.nav.screenScopedViewModel
+import com.akslabs.SandeshVahak.workers.WorkModule
+import com.akslabs.SandeshVahak.ui.main.SyncState
 
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull // To wait for non-null navBackStackEntry
+import kotlinx.coroutines.flow.first // To take the first non-null value
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,6 +57,7 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
     val syncState by viewModel.syncState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
+    // Effect for WindowCompat - KEEP
     LaunchedEffect(Unit) {
         val activity = context as? androidx.activity.ComponentActivity
         activity?.let {
@@ -67,31 +72,50 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
     var localSmsCount by remember { mutableIntStateOf(0) }
     var remoteSmsCount by remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(viewModel) {
-        navController.navigate(Screens.LocalSms.route)
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (Screens.mainScreens.any { it.route == destination.route }) {
-                Preferences.edit { putString(Preferences.startTabKey, destination.route) }
+    // Refactored Effect for initial setup using snapshotFlow
+    LaunchedEffect(Unit) { // Runs once when MainPage enters composition
+        // Wait for NavHost to be ready by observing currentBackStackEntry
+        snapshotFlow { navController.currentBackStackEntry }
+            .filterNotNull() // Wait until it's not null
+            .first() // Take the first non-null value, ensuring this block runs once
+
+        // Now that NavHost is ready and we have an entry, proceed with setup
+        viewModel.resetToDeviceScreen()
+
+        if (navController.currentDestination?.route != Screens.LocalSms.route || navController.previousBackStackEntry != null) {
+            navController.navigate(Screens.LocalSms.route) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    inclusive = true
+                }
+                launchSingleTop = true
             }
         }
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.resetToDeviceScreen()
-        navController.navigate(Screens.LocalSms.route) {
-            popUpTo(navController.graph.startDestinationId) { inclusive = true }
+    // DisposableEffect to manage the NavController listener - KEEP
+    DisposableEffect(navController) {
+        val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
+            if (Screens.mainScreens.any { it.route == destination.route }) {
+                Preferences.edit { putString(Preferences.startTabKey, destination.route) }
+            }
+        }
+        navController.addOnDestinationChangedListener(listener)
+        onDispose {
+            navController.removeOnDestinationChangedListener(listener)
         }
     }
-
+    
+    // Original LaunchedEffect for viewModel.updateSyncState - KEEP
     LaunchedEffect(viewModel) {
         viewModel.updateSyncState(SyncState.IDLE)
     }
 
     var isSyncEnabledForTopAppBar by remember { mutableStateOf(Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)) }
-    var showModeDialog by remember { mutableStateOf(false) }
+    var showModeDialog by remember { mutableStateOf(false) } 
     val greenAccentColor = Color(0xFF2E7D32)
 
-    LaunchedEffect(currentDestination, Unit) { // Re-check on navigation or initial load
+    // Original LaunchedEffect for isSyncEnabledForTopAppBar - KEEP
+    LaunchedEffect(currentDestination, Unit) { 
         isSyncEnabledForTopAppBar = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
     }
 
@@ -108,7 +132,7 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                                 Screens.LocalSms.route -> if (localSmsCount > 0) "Device ($localSmsCount)" else "Device"
                                 Screens.RemoteSms.route -> if (remoteSmsCount > 0) "Cloud ($remoteSmsCount)" else "Cloud"
                                 Screens.Settings.route -> Screens.Settings.displayTitle
-                                else -> "SMS Sync"
+                                else -> "SMS Sync" // Default title
                             }
                             Text(text = titleWithCount, color = MaterialTheme.colorScheme.onSurface)
                         },
@@ -119,8 +143,8 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                                         if (isSyncEnabledForTopAppBar) {
                                             Preferences.edit { putBoolean(Preferences.isSmsSyncEnabledKey, false) }
                                             isSyncEnabledForTopAppBar = false
-                                            SmsObserverService.stop(context) // STOP SERVICE
-                                            SmsContentObserver.stopObserving(context) // STOP STATIC OBSERVER
+                                            SmsObserverService.stop(context)
+                                            SmsContentObserver.stopObserving(context)
                                         } else {
                                             showModeDialog = true
                                         }
@@ -140,7 +164,11 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                             }
 
                             IconButton(
-                                onClick = { navController.navigate(Screens.Settings.route) }
+                                onClick = { 
+                                    if (currentDestination != Screens.Settings.route) {
+                                        navController.navigate(Screens.Settings.route)
+                                    }
+                                }
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Settings,
@@ -154,15 +182,15 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                             containerColor = MaterialTheme.colorScheme.surface,
                             scrolledContainerColor = MaterialTheme.colorScheme.surface
                         ),
-                        windowInsets = WindowInsets.statusBars
+                        windowInsets = WindowInsets.statusBars 
                     )
-                    ConnectivityStatusPopup()
+                    ConnectivityStatusPopup() 
                 }
             },
-            contentWindowInsets = WindowInsets(0, 0, 0, 0)
+            contentWindowInsets = WindowInsets(0,0,0,0) 
         ) { paddingValues ->
             Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
-                AppNavHost(
+                AppNavHost( 
                     modifier = Modifier.fillMaxSize(),
                     navController = navController,
                     onLocalSmsCountChanged = { count -> localSmsCount = count },
@@ -182,7 +210,11 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
         if (showModeDialog) {
             val currentSyncModeFromPrefs = Preferences.getString(Preferences.smsSyncModeKey, Preferences.SMS_SYNC_MODE_NEW_ONLY)
             val isCurrentlyEnabledInPrefs = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
-            val initialDialogSelection = if (isCurrentlyEnabledInPrefs) currentSyncModeFromPrefs else "OFF"
+            val initialDialogSelection = when {
+                isCurrentlyEnabledInPrefs && currentSyncModeFromPrefs == Preferences.SMS_SYNC_MODE_ALL -> Preferences.SMS_SYNC_MODE_ALL
+                isCurrentlyEnabledInPrefs && currentSyncModeFromPrefs == Preferences.SMS_SYNC_MODE_NEW_ONLY -> Preferences.SMS_SYNC_MODE_NEW_ONLY
+                else -> "OFF" 
+            }
 
             AlertDialog(
                 onDismissRequest = { showModeDialog = false },
@@ -196,11 +228,11 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                                 Preferences.edit {
                                     putBoolean(Preferences.isSmsSyncEnabledKey, true)
                                     putString(Preferences.smsSyncModeKey, Preferences.SMS_SYNC_MODE_ALL)
-                                    putLong(Preferences.smsSyncEnabledSinceKey, 0L) // Reset baseline for full sync
+                                    putLong(Preferences.smsSyncEnabledSinceKey, 0L) 
                                 }
                                 isSyncEnabledForTopAppBar = true
-                                SmsObserverService.start(context) // START SERVICE
-                                SmsContentObserver.startObserving(context) // START STATIC OBSERVER
+                                SmsObserverService.start(context) 
+                                SmsContentObserver.startObserving(context)
                                 showModeDialog = false
                             }
                         )
@@ -212,13 +244,13 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                                 Preferences.edit {
                                     putBoolean(Preferences.isSmsSyncEnabledKey, true)
                                     putString(Preferences.smsSyncModeKey, Preferences.SMS_SYNC_MODE_NEW_ONLY)
-                                    if (currentSinceKeyValue == 0L) { // Only set new timestamp if switching from ALL or freshly enabling
+                                    if (currentSinceKeyValue == 0L || initialDialogSelection == Preferences.SMS_SYNC_MODE_ALL) { 
                                         putLong(Preferences.smsSyncEnabledSinceKey, System.currentTimeMillis())
                                     }
                                 }
                                 isSyncEnabledForTopAppBar = true
-                                SmsObserverService.start(context) // START SERVICE
-                                SmsContentObserver.startObserving(context) // START STATIC OBSERVER
+                                SmsObserverService.start(context)
+                                SmsContentObserver.startObserving(context)
                                 showModeDialog = false
                             }
                         )
@@ -228,8 +260,8 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
                             onClick = {
                                 Preferences.edit { putBoolean(Preferences.isSmsSyncEnabledKey, false) }
                                 isSyncEnabledForTopAppBar = false
-                                SmsObserverService.stop(context) // STOP SERVICE
-                                SmsContentObserver.stopObserving(context) // STOP STATIC OBSERVER
+                                SmsObserverService.stop(context) 
+                                SmsContentObserver.stopObserving(context) 
                                 showModeDialog = false
                             }
                         )
@@ -241,21 +273,21 @@ fun MainPage(viewModel: MainViewModel = screenScopedViewModel()) {
         }
 
         AnimatedVisibility(visible = syncState == SyncState.SYNCING && currentDestination == Screens.RemoteSms.route) {
-            Dialog({}) {
+            Dialog(onDismissRequest = { /* Sync in progress, usually not dismissible */ }) {
                 Column(
                     modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        strokeCap = StrokeCap.Square
+                        color = MaterialTheme.colorScheme.primary, 
+                        strokeWidth = 4.dp 
                     )
                     Spacer(Modifier.size(16.dp))
                     Text(
                         text = stringResource(R.string.syncing_your_sms),
-                        color = MaterialTheme.colorScheme.secondaryContainer,
-                        fontStyle = FontStyle.Italic
+                        color = MaterialTheme.colorScheme.onSurface, 
+                        style = MaterialTheme.typography.bodyMedium 
                     )
                 }
             }
@@ -273,15 +305,16 @@ private fun DialogRadioOption(text: String, selected: Boolean, onClick: () -> Un
                 onClick = onClick, 
                 role = Role.RadioButton
             )
-            .padding(vertical = 12.dp),
+            .padding(vertical = 12.dp), 
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
             selected = selected,
-            onClick = null 
+            onClick = null, 
+            colors = RadioButtonDefaults.colors(selectedColor = MaterialTheme.colorScheme.primary) 
         )
         Spacer(Modifier.width(16.dp))
-        Text(text)
+        Text(text, style = MaterialTheme.typography.bodyLarge) 
     }
 }
 
@@ -294,16 +327,18 @@ private fun TrulyFloatingBottomNavigation(
 ) {
     Surface(
         modifier = modifier
-            .padding(horizontal = 32.dp, vertical = 16.dp)
-            .wrapContentWidth(),
-        shape = RoundedCornerShape(24.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.9f),
-        tonalElevation = 12.dp,
-        shadowElevation = 12.dp
+            .padding(horizontal = 32.dp, vertical = 24.dp) 
+            .wrapContentSize(), 
+        shape = RoundedCornerShape(28.dp), 
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.95f), 
+        tonalElevation = 8.dp, 
+        shadowElevation = 8.dp
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier
+                .padding(horizontal = 12.dp, vertical = 8.dp) 
+                .selectableGroup(), 
+            horizontalArrangement = Arrangement.spacedBy(12.dp) 
         ) {
             FloatingNavItem(
                 icon = Icons.Default.Smartphone,
@@ -312,7 +347,7 @@ private fun TrulyFloatingBottomNavigation(
                 onClick = {
                     if (currentDestination != Screens.LocalSms.route) {
                         navController.navigate(Screens.LocalSms.route) {
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -326,7 +361,7 @@ private fun TrulyFloatingBottomNavigation(
                 onClick = {
                     if (currentDestination != Screens.RemoteSms.route) {
                         navController.navigate(Screens.RemoteSms.route) {
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -345,27 +380,33 @@ private fun FloatingNavItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
     Surface(
-        modifier = modifier.clickable { onClick() },
-        shape = RoundedCornerShape(16.dp),
-        color = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent
+        modifier = modifier.clickable(
+            interactionSource = interactionSource,
+            indication = ripple(bounded = false, radius = 40.dp), // Corrected: Using M3 ripple
+            onClick = onClick,
+            role = Role.Tab 
+        ),
+        shape = RoundedCornerShape(20.dp), 
+        color = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
+        contentColor = if (isSelected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp), 
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp) 
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = label,
-                tint = if (isSelected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(20.dp)
+                contentDescription = null, 
+                modifier = Modifier.size(20.dp) 
             )
-            if (isSelected) {
+            AnimatedVisibility(visible = isSelected) { 
                 Text(
                     text = label,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                    style = MaterialTheme.typography.labelLarge, 
+                    fontWeight = FontWeight.Medium // Corrected fontWeight access
                 )
             }
         }

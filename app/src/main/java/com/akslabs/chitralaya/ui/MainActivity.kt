@@ -21,22 +21,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
+import com.akslabs.SandeshVahak.App // Import App class
 import com.akslabs.SandeshVahak.data.localdb.Preferences
-import com.akslabs.SandeshVahak.debug.DatabaseDebugHelper // Corrected import
-import com.akslabs.SandeshVahak.ui.main.MainPage // Corrected import
-import com.akslabs.SandeshVahak.ui.main.MainViewModel // Corrected import
-import com.akslabs.SandeshVahak.ui.main.nav.screenScopedViewModel // Corrected import
-import com.akslabs.SandeshVahak.ui.onboarding.OnboardingPage // Corrected import
-import com.akslabs.SandeshVahak.ui.permission.PermissionDialogScreen // Corrected import
-import com.akslabs.SandeshVahak.ui.permission.PermissionViewModel // Corrected import
-import com.akslabs.SandeshVahak.ui.theme.AppTheme // Corrected import
-import com.akslabs.SandeshVahak.utils.NotificationHelper // Assuming this is correct, or will be flagged by build
-import com.akslabs.SandeshVahak.workers.WorkModule // Corrected import
+import com.akslabs.SandeshVahak.debug.DatabaseDebugHelper
+import com.akslabs.SandeshVahak.ui.main.MainPage
+import com.akslabs.SandeshVahak.ui.main.MainViewModel
+import com.akslabs.SandeshVahak.ui.main.nav.screenScopedViewModel
+import com.akslabs.SandeshVahak.ui.onboarding.OnboardingPage
+import com.akslabs.SandeshVahak.ui.permission.PermissionDialogScreen
+import com.akslabs.SandeshVahak.ui.permission.PermissionViewModel
+import com.akslabs.SandeshVahak.ui.theme.AppTheme
+import com.akslabs.SandeshVahak.utils.NotificationHelper
+import com.akslabs.SandeshVahak.workers.WorkModule
 import com.akslabs.SandeshVahak.services.SmsContentObserver
 import com.akslabs.SandeshVahak.services.SmsObserverService
-import com.akslabs.SandeshVahak.data.localdb.DbHolder // Added import
+import com.akslabs.SandeshVahak.data.localdb.DbHolder
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
 
@@ -47,93 +50,104 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize Preferences first
-        Preferences.init(applicationContext)
-
-        // Initialize notification channels
-        NotificationHelper.createNotificationChannels(this)
-
-        // Debug database state on app startup
         lifecycleScope.launch {
-            DatabaseDebugHelper.debugDatabaseState(this@MainActivity)
-        }
+            val allCoreServicesReady = withContext(Dispatchers.IO) {
+                App.awaitCoreInitializations()
+            }
 
-        // Do not auto-initialize SMS sync on startup; wait for user to enable via toggle
+            if (!allCoreServicesReady) {
+                Log.e("MainActivity", "Core services failed to initialize in onCreate. Cannot proceed.")
+                // Optionally, inform the user or finish the activity
+                // finish() 
+                return@launch // IMPORTANT: Stop execution if core services are not ready
+            }
 
-        // Start daily database backup
-        WorkModule.DailyDatabaseBackup.enqueuePeriodic()
+            // Core services are ready, proceed with MainActivity setup
+            Log.d("MainActivity", "Core services ready. Proceeding with onCreate setup.")
 
-        // Ensure notification channels exist and keep-alive worker is scheduled
-        try {
-            WorkModule.SmsSync.enqueueKeepAlive() // Rely on corrected import
-        } catch (e: Exception) {
-            android.util.Log.w("MainActivity", "Failed to enqueue keep-alive worker", e)
-        }
+            NotificationHelper.createNotificationChannels(this@MainActivity)
+            DatabaseDebugHelper.debugDatabaseState(this@MainActivity) // Safe now
+            WorkModule.DailyDatabaseBackup.enqueuePeriodic() // Safe now
 
-        setContent {
-            AppTheme {
-                val topNavController = rememberNavController()
-                NavHost(navController = topNavController, startDestination = startDestination) {
-                    composable(ScreenFlow.Onboarding.route) {
-                        OnboardingPage(onOnboardingComplete = {
-                            val navigateToRoute = if (hasSmsPerm) {
-                                ScreenFlow.Main.route
-                            } else {
-                                ScreenFlow.Permission.route
+            try {
+                WorkModule.SmsSync.enqueueKeepAlive() // Safe now
+            } catch (e: Exception) {
+                Log.w("MainActivity", "Failed to enqueue keep-alive worker", e)
+            }
+
+            withContext(Dispatchers.Main) {
+                hasSmsPerm = ContextCompat.checkSelfPermission(
+                    this@MainActivity,
+                    Manifest.permission.READ_SMS
+                ) == PackageManager.PERMISSION_GRANTED
+
+                startDestination = when {
+                    Preferences.getEncryptedLong(Preferences.channelId, 0) == 0L -> ScreenFlow.Onboarding.route
+                    !hasSmsPerm -> ScreenFlow.Permission.route
+                    else -> ScreenFlow.Main.route
+                }
+                Log.d("MainActivity", "Initial startDestination set to: $startDestination")
+
+                setContent {
+                    AppTheme {
+                        val topNavController = rememberNavController()
+                        NavHost(navController = topNavController, startDestination = startDestination) {
+                            composable(ScreenFlow.Onboarding.route) {
+                                OnboardingPage(onOnboardingComplete = {
+                                    val navigateToRoute = if (hasSmsPerm) {
+                                        ScreenFlow.Main.route
+                                    } else {
+                                        ScreenFlow.Permission.route
+                                    }
+                                    topNavController.navigate(navigateToRoute) {
+                                        popUpTo(ScreenFlow.Onboarding.route) { inclusive = true }
+                                    }
+                                })
                             }
-                            topNavController.navigate(navigateToRoute) {
-                                popUpTo(ScreenFlow.Onboarding.route) { inclusive = true }
+                            composable(ScreenFlow.Main.route) {
+                                val viewModel: MainViewModel = screenScopedViewModel()
+                                MainPage(viewModel)
                             }
-                        })
-                    }
-                    composable(ScreenFlow.Main.route) {
-                        val viewModel: MainViewModel = screenScopedViewModel()
-                        MainPage(viewModel)
-                    }
-                    dialog(ScreenFlow.Permission.route) {
-                        val viewModel: PermissionViewModel = screenScopedViewModel()
-                        val dialogQueue = viewModel.visiblePermissionDialogQueue
-
-                        val permissionsToRequest = remember {
-                            arrayOf(
-                                Manifest.permission.READ_SMS,
-                                Manifest.permission.POST_NOTIFICATIONS
-                            )
-                        }
-
-                        PermissionDialogScreen(
-                            permissionsToRequest = permissionsToRequest,
-                            onPermissionLauncherResult = { perms: Map<String, Boolean> ->
-                                permissionsToRequest.forEach { permission ->
-                                    viewModel.onPermissionResult(
-                                        permission,
-                                        isGranted = perms[permission] == true
+                            dialog(ScreenFlow.Permission.route) {
+                                val viewModel: PermissionViewModel = screenScopedViewModel()
+                                val dialogQueue = viewModel.visiblePermissionDialogQueue
+                                val permissionsToRequest = remember {
+                                    arrayOf(
+                                        Manifest.permission.READ_SMS,
+                                        Manifest.permission.POST_NOTIFICATIONS
                                     )
                                 }
-                                perms[Manifest.permission.READ_SMS]?.let { isGranted ->
-                                    hasSmsPerm = isGranted
-                                    if (isGranted) {
-                                        // Trigger initial SMS reading when permission is granted
-                                        // Read existing device SMS into local DB so Device screen shows content even if sync is off
-                                        lifecycleScope.launch {
-                                            try {
-                                                com.akslabs.SandeshVahak.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
-                                            } catch (_: Exception) {}
+                                PermissionDialogScreen(
+                                    permissionsToRequest = permissionsToRequest,
+                                    onPermissionLauncherResult = { perms: Map<String, Boolean> ->
+                                        permissionsToRequest.forEach { permission ->
+                                            viewModel.onPermissionResult(
+                                                permission,
+                                                isGranted = perms[permission] == true
+                                            )
                                         }
-                                        triggerInitialSmsReading()
-                                    }
-                                }
-                            },
-                            dialogQueue = dialogQueue,
-                            isPermanentyDeclined = { permission ->
-                                !shouldShowRequestPermissionRationale(
-                                    permission
+                                        perms[Manifest.permission.READ_SMS]?.let { isGranted ->
+                                            hasSmsPerm = isGranted
+                                            if (isGranted) {
+                                                lifecycleScope.launch {
+                                                    try {
+                                                        com.akslabs.SandeshVahak.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
+                                                    } catch (_: Exception) {}
+                                                }
+                                                triggerInitialSmsReading()
+                                            }
+                                        }
+                                    },
+                                    dialogQueue = dialogQueue,
+                                    isPermanentyDeclined = { permission ->
+                                        !shouldShowRequestPermissionRationale(permission)
+                                    },
+                                    onGoToAppSettingsClick = { openAppSettings() },
+                                    onDismissDialog = { viewModel.dismissDialog() },
+                                    onOkClick = { viewModel.dismissDialog() }
                                 )
-                            },
-                            onGoToAppSettingsClick = { openAppSettings() },
-                            onDismissDialog = { viewModel.dismissDialog() },
-                            onOkClick = { viewModel.dismissDialog() }
-                        )
+                            }
+                        }
                     }
                 }
             }
@@ -142,139 +156,130 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        hasSmsPerm = ContextCompat.checkSelfPermission(
-            this@MainActivity,
-            Manifest.permission.READ_SMS
-        ) == PackageManager.PERMISSION_GRANTED
-
-        startDestination = when {
-            Preferences.getEncryptedLong(Preferences.channelId, 0) == 0L -> ScreenFlow.Onboarding.route
-            !hasSmsPerm -> ScreenFlow.Permission.route
-            else -> ScreenFlow.Main.route
-        }
-
-        // Always ensure we're on the main screen when app is opened
-        if (startDestination == ScreenFlow.Main.route) {
-            Preferences.edit { 
-                putString(Preferences.startTabKey, "") 
+        lifecycleScope.launch {
+            val allCoreServicesReady = withContext(Dispatchers.IO) {
+                App.awaitCoreInitializations(timeoutMillis = 5000)
             }
-        }
+            if (!allCoreServicesReady) {
+                Log.e("MainActivity", "Core services not ready in onResume. Skipping onResume logic.")
+                return@launch
+            }
 
-        // Keep Device screen populated from device SMS provider regardless of sync toggle
-        if (hasSmsPerm) {
-            lifecycleScope.launch {
+            Log.d("MainActivity", "Core services ready. Proceeding with onResume logic.")
+            withContext(Dispatchers.Main) {
+                val currentHasSmsPerm = ContextCompat.checkSelfPermission(
+                    this@MainActivity,
+                    Manifest.permission.READ_SMS
+                ) == PackageManager.PERMISSION_GRANTED
+                if (currentHasSmsPerm != hasSmsPerm) {
+                    hasSmsPerm = currentHasSmsPerm
+                }
+
+                val newStartDestination = when {
+                    Preferences.getEncryptedLong(Preferences.channelId, 0) == 0L -> ScreenFlow.Onboarding.route
+                    !hasSmsPerm -> ScreenFlow.Permission.route
+                    else -> ScreenFlow.Main.route
+                }
+
+                if (newStartDestination != startDestination) {
+                    startDestination = newStartDestination
+                    Log.d("MainActivity", "onResume: startDestination updated to: $startDestination. NavHost should recompose if key is used or NavController handles state.")
+                }
+
+                if (startDestination == ScreenFlow.Main.route) {
+                    Preferences.edit { putString(Preferences.startTabKey, "") }
+                }
+            }
+
+            if (hasSmsPerm) {
                 try {
-                    // Check sync mode to determine how to populate the database
-                    val syncMode = try {
-                        Preferences.getString(
-                            Preferences.smsSyncModeKey,
-                            "ALL"
-                        )
-                    } catch (e: Exception) {
-                        "ALL"
-                    }
-
-                    val baseline = try {
-                        Preferences.getLong(
-                            Preferences.smsSyncEnabledSinceKey,
-                            0L
-                        )
-                    } catch (e: Exception) {
-                        0L
-                    }
-
-                    val count = DbHolder.database // Rely on new import
-                        .smsMessageDao()
-                        .getAllCountFlow()
-                        .first()
+                    val syncMode = Preferences.getString(Preferences.smsSyncModeKey, "ALL") ?: "ALL"
+                    val baseline = Preferences.getLong(Preferences.smsSyncEnabledSinceKey, 0L)
+                    val count = DbHolder.database.smsMessageDao().getAllCountFlow().first()
 
                     if (count == 0) {
-                        // Database is empty - populate based on sync mode
                         if (syncMode == "NEW_ONLY" && baseline > 0L) {
-                            // NEW_ONLY mode: only import messages after baseline
-                            android.util.Log.i("MainActivity", "NEW_ONLY mode: importing only messages after baseline ${'$'}baseline")
+                            Log.i("MainActivity", "NEW_ONLY mode: importing only messages after baseline $baseline")
                             com.akslabs.SandeshVahak.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
                         } else {
-                            // ALL mode or no baseline: import all messages
-                            android.util.Log.i("MainActivity", "ALL mode: importing all SMS messages")
+                            Log.i("MainActivity", "ALL mode: importing all SMS messages")
                             com.akslabs.SandeshVahak.services.SmsReaderService.syncAllSmsToDatabase(this@MainActivity)
                         }
                     } else {
-                        // Database has messages - just sync new ones
                         com.akslabs.SandeshVahak.services.SmsReaderService.syncNewSmsToDatabase(this@MainActivity)
                     }
-                } catch (_: Exception) {}
+                } catch (e: Exception) {
+                    Log.e("MainActivity", "Error during SMS sync in onResume", e)
+                }
             }
         }
     }
 
     override fun onStart() {
         super.onStart()
-        // While app is visible, observe SMS changes to keep Device tab live, independent of cloud sync
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
-            // Preferences already initialized in onCreate
-            SmsContentObserver.startObserving(this)
+        lifecycleScope.launch {
+            val allCoreServicesReady = withContext(Dispatchers.IO) {
+                App.awaitCoreInitializations(timeoutMillis = 5000)
+            }
+            if (!allCoreServicesReady) {
+                Log.e("MainActivity", "Core services not ready in onStart. Skipping SmsContentObserver start.")
+                return@launch
+            }
+            Log.d("MainActivity", "Core services ready. Proceeding with onStart logic.")
+            if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
+                SmsContentObserver.startObserving(this@MainActivity)
+            }
         }
     }
 
     override fun onStop() {
         super.onStop()
-        // Only stop the observer if SMS sync is NOT enabled.
-        // If sync is enabled, the observer (and service) should continue running for background sync.
-        val smsSyncEnabled = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
-        if (!smsSyncEnabled) {
-            Log.i("MainActivity", "onStop: SMS Sync is disabled, stopping SmsContentObserver.")
-            SmsContentObserver.stopObserving(this)
+        if (App.coreServicesInitialized) { // Check the flag directly for onStop, as it's synchronous.
+            Log.d("MainActivity", "Core services were initialized. Proceeding with onStop logic.")
+            val smsSyncEnabled = Preferences.getBoolean(Preferences.isSmsSyncEnabledKey, false)
+            if (!smsSyncEnabled) {
+                Log.i("MainActivity", "onStop: SMS Sync is disabled, stopping SmsContentObserver.")
+                SmsContentObserver.stopObserving(this)
+            } else {
+                Log.i("MainActivity", "onStop: SMS Sync is enabled, SmsContentObserver will continue running.")
+            }
         } else {
-            Log.i("MainActivity", "onStop: SMS Sync is enabled, SmsContentObserver will continue running.")
+            Log.w("MainActivity", "onStop: Core services not initialized (or check failed). Defaulting to stopping observer.")
+            SmsContentObserver.stopObserving(this)
         }
     }
 
-    /**
-     * Initialize SMS sync workers for automatic background sync
-     */
     private fun initializeSmsSync() {
         lifecycleScope.launch {
+            if (!App.awaitCoreInitializations(5000)) { // This already has a timeout
+                 Log.e("MainActivity", "initializeSmsSync: Core services not ready. Aborting.")
+                return@launch
+            }
+            Log.d("MainActivity", "Core services ready. Proceeding with initializeSmsSync.")
             try {
-                // Start periodic SMS sync (every 6 hours)
                 WorkModule.SmsSync.enqueue()
-
-                // SMS sync is handled by SmsObserverService
-
-                // Start SMS observer service for real-time monitoring
                 if (hasSmsPerm) {
                     val serviceIntent = Intent(this@MainActivity, SmsObserverService::class.java)
                     startForegroundService(serviceIntent)
                 }
-
-                // Trigger an immediate one-time sync if this is a fresh install
-                // or if it's been a while since last sync
                 val lastSyncTime = Preferences.getLong("last_sms_sync_timestamp", 0L)
                 val hoursSinceLastSync = (System.currentTimeMillis() - lastSyncTime) / (1000 * 60 * 60)
-
                 if (lastSyncTime == 0L || hoursSinceLastSync > 6) {
-                    // Trigger immediate sync for new installs or if it's been more than 6 hours
                     WorkModule.SmsSync.enqueueOneTime()
                 }
-
             } catch (e: Exception) {
-                // Log error but don't crash the app
-                android.util.Log.e("MainActivity", "Error initializing SMS sync", e)
+                Log.e("MainActivity", "Error initializing SMS sync", e)
             }
         }
     }
 
-    /**
-     * Trigger initial SMS reading when permission is first granted
-     */
     private fun triggerInitialSmsReading() {
         lifecycleScope.launch {
-            try {
-                android.util.Log.i("MainActivity", "SMS permission granted; waiting for user to enable sync")
-                // Do not start observer or sync automatically; user will enable via toggle
-            } catch (e: Exception) {
-                android.util.Log.e("MainActivity", "Error after SMS permission grant", e)
+             if (!App.awaitCoreInitializations(5000)) {
+                 Log.e("MainActivity", "triggerInitialSmsReading: Core services not ready. Aborting.")
+                return@launch
             }
+            Log.i("MainActivity", "SMS permission granted; sync will be handled by settings/service after core init.")
         }
     }
 }
