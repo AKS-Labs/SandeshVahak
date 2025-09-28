@@ -34,6 +34,7 @@ import com.akslabs.SandeshVahak.utils.connectivity.ConnectivityStatus
 import com.akslabs.SandeshVahak.utils.toastFromMainThread
 import com.akslabs.SandeshVahak.workers.WorkModule
 import android.os.PowerManager
+import androidx.compose.ui.res.painterResource
 import android.provider.Settings as AndroidSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -245,11 +246,17 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
         // About Section
         SettingsSectionHeader(title = "About")
 
+        AboutMoreAppsItem()
+
+        AboutTelegramItem()
+
         AboutAppItem()
 
         AboutSourceCodeItem()
 
         AboutLicenseItem()
+
+        AboutDonateItem()
 
         AboutContributorsItem()
 
@@ -365,6 +372,7 @@ private fun DatabaseStatusItem(modifier: Modifier = Modifier) {
     )
 }
 
+
 @Composable
 private fun AboutAppItem(modifier: Modifier = Modifier) {
     val context = LocalContext.current
@@ -409,6 +417,81 @@ private fun AboutSourceCodeItem(modifier: Modifier = Modifier) {
 }
 
 @Composable
+private fun AboutMoreAppsItem(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    SettingsListItem(
+        title = "More Apps",
+        subtitle = "More Apps By AKS-Labs",
+        icon = Icons.Rounded.Android,
+        modifier = modifier,
+        onClick = {
+            try {
+                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                    data = android.net.Uri.parse("https://play.google.com/store/apps/dev?id=5379443231912092235&hl=en")
+                }
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                scope.launch {
+                    context.toastFromMainThread("Unable to open link")
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun AboutTelegramItem(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    SettingsListItem(
+        title = "Join Telegram",
+        subtitle = "Join Telegram Community 0f AKS-Labs",
+        iconPainter = painterResource(id = R.drawable.telegram),
+        modifier = modifier,
+        onClick = {
+            try {
+                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                    data = android.net.Uri.parse("https://t.me/AKSLabs")
+                }
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                scope.launch {
+                    context.toastFromMainThread("Unable to open link")
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun AboutDonateItem(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    SettingsListItem(
+        icon = Icons.Rounded.ThumbUp,
+        title = "Donate",
+        subtitle = "Help me keep the app alive",
+        modifier = modifier,
+        onClick = {
+            try {
+                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                    data = android.net.Uri.parse("https://github.com/sponsors/AKS-Labs")
+                }
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                scope.launch {
+                    context.toastFromMainThread("Unable to open link")
+                }
+            }
+        }
+    )
+}
+
+@Composable
 private fun AboutLicenseItem(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -416,7 +499,7 @@ private fun AboutLicenseItem(modifier: Modifier = Modifier) {
     SettingsListItem(
         title = "License",
         subtitle = "View the app license information",
-        icon = Icons.Rounded.Gavel,
+        icon = Icons.Rounded.Balance,
         modifier = modifier,
         onClick = {
             try {
@@ -441,7 +524,7 @@ private fun AboutContributorsItem(modifier: Modifier = Modifier) {
     SettingsListItem(
         title = "Contributors",
         subtitle = "See all contributors on GitHub",
-        icon = Icons.Rounded.People,
+        icon = Icons.Rounded.ArrowOutward,
         modifier = modifier,
         onClick = {
             try {

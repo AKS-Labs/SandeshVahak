@@ -42,9 +42,9 @@ android {
         // Use the new app ID to match your renamed package
         applicationId = "com.akslabs.SandeshVahak"
         minSdk = 29
-        targetSdk = 35
-        versionCode = 2
-        versionName = "0.2"
+        targetSdk = 36
+        versionCode = 3
+        versionName = "0.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true

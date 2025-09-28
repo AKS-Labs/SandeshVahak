@@ -1,18 +1,17 @@
 ---
 Categories:
-  - Connectivity
-  - Internet
-  - System
+    - Networking
+    - Communication
 License: Apache-2.0
 WebSite: https://github.com/AKS-Labs/SandeshVahak
 SourceCode: https://github.com/AKS-Labs/SandeshVahak
 IssueTracker: https://github.com/AKS-Labs/SandeshVahak/issues
-Changelog: https://github.com/AKS-Labs/SandeshVahak/blob/main/CHANGELOG.md
-Liberapay: 
-OpenCollective: 
-Name: SandeshVahak
-AutoName: SandeshVahak
-Summary: Never miss SMS messages across devices - sync via your own Telegram bot!
+Changelog: https://github.com/AKS-Labs/SandeshVahak/documentation/CHANGELOG.md
+Liberapay:
+OpenCollective:
+Name: SandeshVahak App
+AutoName: SandeshVahak App
+Summary: Never miss SMS messages across devices via your own Telegram bot
 Description: |
   Never Miss a Message Again! 📱✨
 
@@ -83,30 +82,21 @@ RequiresRoot: false
 RepoType: git
 Repo: https://github.com/AKS-Labs/SandeshVahak
 Builds:
-  - versionName: '0.2'
-    versionCode: 2
-    commit: v0.2
+  - versionName: '0.3'
+    versionCode: 3
+    commit: v0.3
     subdir: app
-    sudo:
-      - apt-get update
-      - apt-get install -y openjdk-11-jdk-headless
-      - update-alternatives --auto java
     gradle:
       - yes
-    prebuild: sed -i -e '/LeakCanary/d' build.gradle*
-    scanignore:
-      - app/build
-    scandelete:
-      - app/src/main/java/com/bera/whitehole
-      - app/src/test/java/com/bera/whitehole
-      - app/src/androidTest/java/com/bera/whitehole
 
 MaintainerNotes: |
-  The app uses Telegram Bot API for SMS synchronization.
-  No proprietary dependencies or anti-features.
-  Built with standard Android toolchain.
+    The app uses Telegram Bot API for SMS synchronization.
+    The app uploads device sms to user-controlled Telegram bot only.
+    No proprietary dependencies, no telemetry, no ads.
+    Built with standard Android toolchain.
+
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: '0.2'
-CurrentVersionCode: 2
+CurrentVersion: '0.3'
+CurrentVersionCode: 3
