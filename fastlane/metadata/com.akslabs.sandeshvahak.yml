@@ -82,9 +82,9 @@ RequiresRoot: false
 RepoType: git
 Repo: https://github.com/AKS-Labs/SandeshVahak
 Builds:
-  - versionName: '0.3'
-    versionCode: 3
-    commit: v0.3
+  - versionName: '0.2'
+    versionCode: 2
+    commit: v0.2
     subdir: app
     gradle:
       - yes
@@ -98,5 +98,5 @@ MaintainerNotes: |
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: '0.3'
-CurrentVersionCode: 3
+CurrentVersion: '0.2'
+CurrentVersionCode: 2
